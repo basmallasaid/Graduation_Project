@@ -16,9 +16,6 @@ body {
     line-height: 1.5;
     text-align: right;
   }
-  
- 
-  
   .footer_container {
     display: flex;
     flex-wrap: wrap;

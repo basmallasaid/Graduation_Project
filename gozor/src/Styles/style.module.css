@@ -9,7 +9,7 @@ body {
    
   }
   .footer {
-    background-color: #24231D;
+    background-color: #1F1E17;
     color: #ffffff;
     padding: 90px;
     margin-top: 500px;
@@ -61,3 +61,56 @@ body {
   padding: 20px;
   color: #ffffff;
 }
+/* Style.module.css */
+.Nav {
+  background-color:#1F1E17; 
+  color: #ffffff; /* لون النص */
+  margin: 0;
+  padding: 0;
+}
+
+.navList {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 0 60px;
+  margin: 0;
+  list-style: none;
+  gap:8%;
+}
+
+.nav-item {
+  margin-right: 20px; /* إضافة مسافة بين العناصر في القائمة */
+}
+
+.loginButton {
+  font-size: 14px;
+  font-weight: bold;
+  width: 150px;
+  margin: 0 20px; /* تقليل المسافة بين الأزرار */
+}
+
+.registerButton {
+  font-size: 14px;
+  font-weight: bold;
+  width: 150px;
+  border-color: #28a745; /* تحديد اللون الأخضر */
+  background-color: #ffffff;
+}
+
+/* إضافة تنسيق لأزرار البحث */
+form .form-control {
+  border-radius: 50px; /* جعل حدود شريط البحث دائرية */
+  width: 200px; /* تحديد عرض شريط البحث */
+}
+
+button svg {
+  width: 20px; /* ضبط حجم الأيقونة */
+  height: 20px;
+}
+
+
+
+
+
+

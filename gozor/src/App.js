@@ -7,13 +7,17 @@ import Notfound from './Components/Notfound';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Footer from './Components/Footer';
 import Navbar from './Components/Navbar';
+import Contact from './Components/Contact';
+import Home from './Components/Home';
 function App() {
   return (
       <StanderErrorBoundary>
         <BrowserRouter>
           <Routes>
           {/* <Route path="/Home" element={<Footer/>} /> */}
-          <Route path="/" element={<><Navbar/> <Footer/></>} />
+          <Route path="/" element={<><Navbar/>
+          <Home/>
+           <Footer/></>} />
           {/* <Route path="*" element={<Notfound />} /> */}
           </Routes>
         </BrowserRouter>

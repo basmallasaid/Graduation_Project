@@ -4,35 +4,68 @@ import Footer from "./Footer";
 export default function Home() {
   return (
     <>
-    <header className=" vh-100">
+    <header className={styles.slide}>
     <div classNameName="slider position-relative">
         <div id="carouselExampleControls" className="carousel slide" data-bs-ride="carousel">
             <div className="carousel-inner">
                 <div className="carousel-item active ">
-                    <img src="/assets/home.jpg" className="d-block w-100  h-100 " alt="slideshow image" />
-                    <div className=" text position-absolute top-50 start-20 ">
-                    <button className={`btn me-2 ${styles.loginButton}`}>تسجيل الدخول</button>
+                <div className="position-relative">
+    <button
+        className={`btn position-absolute  start-0  ${styles.frameButton}`}
+    >
+        انشاء حساب 
+        </button>
+    <img
+        src="/assets/frame1.png"
+        className="d-block w-100 h-100"
+        alt="slideshow image"
+    />
+</div>
 
-                        <h1 className={styles.intro}  >استثمار زراعي يجمع بين فرص النمو للمستثمرين، وصول واسع للأسواق للتجار، ودعم متكامل للمزارعين لإنتاج محاصيل ذات جودة عالية. منصة جذور المدينة، تجمع بين التمويل، التسويق، والإنتاج لتحقيق التنمية الزراعية المستدامة.</h1>
-                    </div>
+
+
                 </div>
                 <div className="carousel-item  ">
-                    <img src="/assets/home2.jpg" className="d-block w-100  h-100" alt="slideshow image"/>
-                    <div className=" text position-absolute top-50 start-50 translate-middle  text-center">
-                        <h1 className="text-white" >Focused <br/> on Strategy.</h1>
-                    </div>
+                <div className="position-relative">
+    <button
+        className={`btn position-absolute  start-0  ${styles.frame_1Button}`}
+    >
+        انشاء حساب 
+        </button>
+    <img
+        src="/assets/frame 2.png"
+        className="d-block w-100 h-100"
+        alt="slideshow image"
+    />
+</div>
                 </div>
                 <div className="carousel-item  ">
-                    <img src="/assets/home3.jpg" className="d-block w-100   h-100" alt="slideshow image"/>
-                    <div className="  text position-absolute top-50 start-50 translate-middle  text-center">
-                        <h1 className="text-white " > Advanced in<br/>  digital works.</h1>
-                    </div>
+                <div className="position-relative">
+    <button
+        className={`btn position-absolute  start-0  ${styles.frame_2Button}`}
+    >
+        انشاء حساب 
+    </button>
+    <img
+        src="/assets/frame 3.png"
+        className="d-block w-100 h-100"
+        alt="slideshow image"
+    />
+</div>
                 </div>
                 <div className="carousel-item  ">
-                    <img src="/assets/home4.jpg" className="d-block w-100   h-100" alt="slideshow image"/>
-                    <div className="  text position-absolute top-50 start-50 translate-middle  text-center">
-                        <h1 className="text-white " > Advanced in<br/>  digital works.</h1>
-                    </div>
+                <div className="position-relative">
+    <button
+        className={`btn position-absolute  start-0  ${styles.frame_3Button}`}
+    >
+        انشاء حساب 
+        </button>
+    <img
+        src="/assets/frame 4.png"
+        className="d-block w-100 h-100"
+        alt="slideshow image"
+    />
+</div>
                 </div>
             </div>
             <button  className="carousel-control-prev d-md-inline-block d-none" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
@@ -49,6 +82,69 @@ export default function Home() {
         </a>
     </div>
 </header>
+<section>
+<div style={{ display: "flex", justifyContent: "center", alignItems: "center",marginBottom:"70px" }}>
+  <div>
+    <img src="/assets/circlestext.png" alt="Circles Text" style={{ maxWidth: "100%" }} />
+  </div>
+  <div>
+    <img src="/assets/circles.png" alt="Circles" style={{ maxWidth: "100%" }} />
+  </div>
+</div>
+
+</section>
+<section>
+    <div className={styles.gridtext}>
+        <h2 className={styles.textgrid}>نبذه عن ما نقدمه</h2>
+    </div>
+    <div className="container text-center">
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4" style={{ marginTop: "-70px" }}>
+            <div className="col">
+                <img src="/assets/grid1.png" className="img-fluid" alt="Grid Image 1" />
+            </div>
+            <div className="col">
+                <img src="/assets/grid2.png" className="img-fluid" alt="Grid Image 2" />
+            </div>
+            <div className="col">
+                <img src="/assets/grid3.png" className="img-fluid" alt="Grid Image 3" />
+            </div>
+            <div className="col">
+                <img src="/assets/grid4.png" className="img-fluid" alt="Grid Image 4" />
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <h2 className={styles.greentext}>ميزات منصتنا</h2>
+    <div className="container text-center">
+      <div className="row">
+        <div className="col-12 col-md-6 col-lg-4">
+          <img src="/assets/feature1.png" alt="Feature 1" className="img-fluid" />
+        </div>
+        <div className="col-12 col-md-6 col-lg-4">
+          <img src="/assets/feature2.png" alt="Feature 2" className="img-fluid" />
+        </div>
+        <div className="col-12 col-md-6 col-lg-4">
+          <img src="/assets/feature3.png" alt="Feature 3" className="img-fluid" />
+        </div>
+      </div>
+      <div className="row justify-content-center">
+        <div className="col-12 col-md-6 col-lg-4">
+          <img src="/assets/feature4.png" alt="Feature 1" className="img-fluid" />
+        </div>
+        <div className="col-12 col-md-6 col-lg-4">
+          <img src="/assets/feature5.png" alt="Feature 2" className="img-fluid" />
+        </div>
+      </div>
+    </div>
+</section>
+<section>
+<div className="position-relative d-flex justify-content-center align-items-center" style={{marginTop:"100px"}}>
+    <img src="/assets/video.png" alt="Feature 1" className="img-fluid" style={{ marginBottom:" 100px"}}/>
+    <img src="/assets/green.png" alt="Feature 1" className="img-fluid position-absolute" style={{ top: '-90px' }} />
+</div>
+
+</section>
 <Footer/>
 
 </>

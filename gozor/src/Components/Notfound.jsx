@@ -6,7 +6,7 @@ const Notfound = () => {
   const navigate = useNavigate();
 
   const handleNav = () => {
-    navigate("/Home");
+    navigate("/");
   };
 
   

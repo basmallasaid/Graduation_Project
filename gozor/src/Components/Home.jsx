@@ -1,4 +1,5 @@
 import styles from "../Styles/style.module.css"; 
+import Footer from "./Footer";
 
 export default function Home() {
   return (
@@ -48,6 +49,7 @@ export default function Home() {
         </a>
     </div>
 </header>
+<Footer/>
 
 </>
   );

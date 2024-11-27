@@ -6,6 +6,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    
    
   }
   .footer {
@@ -14,13 +15,14 @@ body {
     padding: 90px;
     line-height: 1.5;
     text-align: right;
+    width: 100%;
   }
   .footer_container {
     display: flex;
     flex-wrap: wrap;
     justify-content:space-around;
     gap:30px;
-    max-width: 1200px;
+    width:100% ;
     margin: 0 auto;
     font-size: 18px;
   }
@@ -420,4 +422,66 @@ h1 {
   }
   }
 
+/*instruction page*/
+.instimg{
+  height: 100%;
+   width: 100%;
+  scroll-behavior: smooth;
+}
+.divtitle{
+  text-align: center;
+  margin:100px 50px 50px 50px;
+  font-weight: bold;
+ word-spacing: 2px;
+ font-size: 25px;
+}
+.card{
+  display: flex;
+  justify-Content: center;
+  align-Items:center;
+  margin: 50px;
+  
+}
+.cardtxt{
+  font-size: 18px;
+  letter-spacing: 1px;
+  font-weight:bold;
+  color: #878680;
+}
+/*about page*/
+.grid{
+  text-align: right;
+  display: flex;
+  justify-Content: center;
+  align-Items:center;
+  margin: 250px 300px 150px 100px ;
 
+}
+.graytxt{
+  color: #878680;
+}
+.yetxt{
+  color:#EEC044;
+}
+.boxshadowabout{
+  box-Shadow:5px 5px 15px rgba(0, 0, 0, 0.3);
+  border-Radius:10px;
+   width: 50% ;
+   border-top:0px;
+   margin-bottom:100px ;
+}
+.card {
+  margin: 20px auto;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-body {
+  background-color: #fff;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}

@@ -37,22 +37,22 @@ const Navbar = () => {
             {!showSearch && (
               <ul className={`navbar-nav me-auto mb-2 mb-lg-0 ${styles.navList}`}>
                 <li className="nav-item">
-                  <Link className="nav-link text-white" to="#">
+                  <Link className="nav-link text-white" to="/">
                     الرئيسيه
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link text-white" to="#">
+                  <Link className="nav-link text-white" to="/About">
                     عنا
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link text-white" to="#">
+                  <Link className="nav-link text-white" to="/instruction">
                     التعليمات
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link text-white" to="#">
+                  <Link className="nav-link text-white" to="/Services">
                     الخدمات
                   </Link>
                 </li>
@@ -62,7 +62,7 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link text-white" to="#">
+                  <Link className="nav-link text-white" to="/Contact">
                     التواصل
                   </Link>
                 </li>
@@ -95,12 +95,10 @@ const Navbar = () => {
                 </form>
               )}
             </div>
-          </div>
-
-          {/* Login and Register Buttons (Always Visible) */}
           <div className="d-flex ms-auto">
             <button className={`btn me-2 ${styles.loginButton}`}>تسجيل الدخول</button>
             <button className={`btn ${styles.registerButton}`}>انضم إلينا</button>
+          </div>
           </div>
         </div>
       </nav>

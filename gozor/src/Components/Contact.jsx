@@ -1,10 +1,13 @@
 // import Header from "./Header";
 // import Footer from "./Footer";
  import styles from  "../Styles/style.module.css";
+import Footer from "./Footer";
+import Navbar from "./Navbar";
  function Contact() {
     return (
         <>
-            {/* <Header/> */}
+            
+            <Navbar/>
             <section className={styles.contact}>
                 <div className={styles.contact_container}>
                     <h3 >
@@ -47,9 +50,10 @@
         </form>
       </div>
     </div>
+    <Footer/>
   
-
-            {/* <Footer/> */}
+       
+   
         </>
     )
 }

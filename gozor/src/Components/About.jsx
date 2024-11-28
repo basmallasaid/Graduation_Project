@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from './Navbar';
 import styles from "../Styles/style.module.css";
 import Footer from './Footer';
+
 const About = () => {
     return (
         <>
@@ -19,7 +20,7 @@ const About = () => {
                             <li>منصة تجارية شاملة:<span className={styles.graytxt}> يمكن للتجار عرض وبيع منتجاتهم الزراعية على منصتنا للوصول إلى جمهور أوسع. </span></li>
                         </ul>
                         <div style={{ textAlign: "center", margin: "50px" }}>
-                        <button type="submit" className={styles.subbutton}>أكتشف المزيد</button>
+                            <button type="submit" className={styles.subbutton}>أكتشف المزيد</button>
                         </div>
                     </div>
                     <div className="col-sm-3"><img src="assets/farmgirl.png" /></div>
@@ -47,36 +48,139 @@ const About = () => {
                     <img src="assets/farmb.png" className="card-img-bottom" alt="farmer" />
                 </div>
             </div>
-           
-                <h2 className={styles.green_text} style={{ textAlign: "center",marginBottom:"80px" }}><b>خدماتنا</b></h2>
-                <div className={`container ${styles.card}`} style={{marginBottom:"90px"}}>
+
+            <h2 className={styles.green_text} style={{ textAlign: "center", marginBottom: "80px" }}><b>خدماتنا</b></h2>
+            <div className={`container ${styles.card}`} style={{ marginBottom: "90px" }}>
                 <div className="row">
                     <div className="col">
-                        <div className="card" style={{width:"18rem"}}>
+                        <div className="card" style={{ width: "18rem" }}>
                             <img src="assets/fr.png" className="card-img-top" alt="..." />
-                            <div className="card-body">
-                                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <div className="card-body" style={{ textAlign: "center", lineHeight: "5px" }}>
+                                <h3 ><b>خدماتنا للمزراعين</b></h3>
+                                <p className={`card-text ${styles.graytxt}`}>إدارة الدورة الزراعية </p>
+                                <p className={`card-text ${styles.graytxt}`}>مراقبة صحة المحاصيل</p>
+                                <p className={`card-text ${styles.graytxt}`}> جدولة المهام </p>
+                                <p className={`card-text ${styles.graytxt}`}>التحكم في الحسابات</p>
                             </div>
                         </div>
                     </div>
                     <div className="col">
-                        <div className="card" style={{width:"18rem"}}>
+                        <div className="card" style={{ width: "18rem" }}>
                             <img src="assets/frr.png" className="card-img-top" alt="..." />
-                            <div className="card-body">
-                                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <div className="card-body" style={{ textAlign: "center", lineHeight: "5px" }}>
+                                <h3 ><b>خدماتنا للمستثمرين</b></h3>
+                                <p className={`card-text ${styles.graytxt}`}>استعراض فرص الاستثمار</p>
+                                <p className={`card-text ${styles.graytxt}`}>متابعة التحديثات</p>
+                                <p className={`card-text ${styles.graytxt}`}>  إدارة العوائد</p>
+
                             </div>
                         </div>
                     </div>
                     <div className="col">
-                        <div className="card" style={{width:"18rem"}}>
+                        <div className="card" style={{ width: "18rem" }}>
                             <img src="assets/frrr.png" className="card-img-top" alt="..." />
-                            <div className="card-body">
-                                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <div className="card-body" style={{ textAlign: "center", lineHeight: "5px" }}>
+                                <h3 ><b>خدماتنا للتجار</b></h3>
+                                <p className={`card-text ${styles.graytxt}`}>استعراض المحاصيل المتاحة  </p>
+                                <p className={`card-text ${styles.graytxt}`}>طلبات الشراء</p>
+                                <p className={`card-text ${styles.graytxt}`}> إدارة السجل المالي</p>
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div className={`${styles.aboutimg}`}>
+                <h1 className={styles.sliderTitle}><b>قصص نجاح</b></h1>
+                <div
+                    id="customSlider"
+                    className={`carousel slide ${styles.sliderContainer}`}
+                    data-bs-ride="carousel"
+                    style={{
+                        maxWidth: "800px",
+                        margin: "0 auto",
+                        borderRadius: "15px",
+                        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+                        background: "white"
+                    }}
+                >
+                    {/* Indicators */}
+                    <div className="carousel-indicators">
+                        <button
+                            type="button"
+                            data-bs-target="#customSlider"
+                            data-bs-slide-to="0"
+                            className="active"
+                            aria-current="true"
+                            aria-label="Slide 1"
+                        ></button>
+                        <button type="button" data-bs-target="#customSlider" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#customSlider" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    </div>
+
+                    {/* Slider Content */}
+                    <div className={styles.carousel_inner}>
+                        {/* Slide 1 */}
+                        <div className="carousel-item active">
+                            <img src="assets/slider.png" className="d-block w-100" alt="Farmer" />
+                            <div className="carousel-caption d-md-block">
+                                <p className={styles.sliderText}>
+                                    <b>
+                                        مزارع من قرية صغيرة تمكن من زيادة إنتاجه بنسبة 40% بعد استخدام المنصة لتنظيم الدورة الزراعية وإدارة المحاصيل.
+                                    </b>
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Slide 2 */}
+                        <div className="carousel-item">
+                            <img src="assets/slider2.png" className="d-block w-100" alt="Farmer" />
+                            <div className="carousel-caption d-md-block">
+                                <p className={styles.sliderText}>
+                                    <b>
+                                        تاجر مواد غذائية تمكن من تأمين مصدر دائم من المحاصيل الطازجة بعد التعامل مباشرة مع المزارعين المحليين عبر المنصة.
+                                    </b>
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Slide 3 */}
+                        <div className="carousel-item">
+                            <img src="assets/slider3.png" className="d-block w-100" alt="Farmer" />
+                            <div className="carousel-caption d-md-block">
+                                <p className={styles.sliderText}>
+                                    <b>
+                                        مستثمر شاب تمكن من استثمار مبلغ بسيط وحصل على عائدات ثابتة وسريعة في وقت قصير عبر التعاون مع عدة مزارعين.
+                                    </b>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Controls */}
+                    <button
+                        className="carousel-control-prev"
+                        type="button"
+                        data-bs-target="#customSlider"
+                        data-bs-slide="prev"
+                    >
+                        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span className="visually-hidden">Previous</span>
+                    </button>
+                    <button
+                        className="carousel-control-next"
+                        type="button"
+                        data-bs-target="#customSlider"
+                        data-bs-slide="next"
+                    >
+                        <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span className="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+
+
+
 
             <Footer />
 

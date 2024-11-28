@@ -47,7 +47,7 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link text-white" to="/instruction">
+                  <Link className="nav-link text-white" to="/Instructions">
                     التعليمات
                   </Link>
                 </li>

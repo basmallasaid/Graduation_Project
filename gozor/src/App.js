@@ -10,6 +10,8 @@ import Contact from './Components/Contact';
 import Home from './Components/Home';
 import Services from './Components/Services';
 import About from './Components/About';
+import Instructions from './Components/Instructions';
+
 function App() {
   return (
       <StanderErrorBoundary>
@@ -20,6 +22,7 @@ function App() {
           <Route path="Services" element={<><Services/></>}/>
           <Route path="Contact" element={<><Contact/></>}/>
           <Route path="About" element={<><About/></>}/>
+          <Route path="Instructions" element={<><Instructions/></>}/>
           <Route path="*" element={<Notfound />} />
           </Routes>
         </BrowserRouter>

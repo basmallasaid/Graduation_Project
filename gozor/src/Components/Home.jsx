@@ -1,7 +1,21 @@
 import styles from "../Styles/style.module.css"; 
 import Footer from "./Footer";
-
+import Register from '../Authentication/Register';
+import Modal from 'react-modal';
+import { useState } from "react";
 export default function Home() {
+    const [visible, setVisible] = useState(false);
+    const customStyles = {
+      content: {
+        maxWidth: '500px', // Set your desired width
+        margin: 'auto', // Centers the modal horizontally
+        padding: '10px', // Add padding for better spacing
+        borderRadius: '10px', // Optional: round corners
+      },
+      overlay: {
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: dim background
+      },
+    };
   return (
     <>
     <header className={styles.slide}>
@@ -11,10 +25,25 @@ export default function Home() {
                 <div className="carousel-item active ">
                 <div className="position-relative">
     <button
-        className={`btn position-absolute  start-0  ${styles.frameButton}`}
+        className={`btn position-absolute  start-0  ${styles.frameButton}`} onClick={()=>setVisible(true)}
     >
         انشاء حساب 
         </button>
+        <Modal isOpen={visible} onRequestClose={()=>setVisible(false)} style={customStyles}>
+              <button onClick={()=>setVisible(false)}><i className="fa-solid fa-xmark"
+                style={{
+                  backgroundColor: 'transparent', 
+                  border: 'none', 
+                  fontSize: '24px', 
+                  color: '#333', 
+                  cursor: 'pointer', 
+                  position: 'absolute',
+                  top: '10px', 
+                  right: '10px', 
+                }} ></i></button>
+              <Register/>
+
+            </Modal>
     <img
         src="/assets/frame1.png"
         className="d-block w-100 h-100"
@@ -28,10 +57,25 @@ export default function Home() {
                 <div className="carousel-item  ">
                 <div className="position-relative">
     <button
-        className={`btn position-absolute  start-0  ${styles.frame_1Button}`}
+        className={`btn position-absolute  start-0  ${styles.frame_1Button}`} onClick={()=>setVisible(true)}
     >
         انشاء حساب 
         </button>
+        <Modal isOpen={visible} onRequestClose={()=>setVisible(false)} style={customStyles}>
+              <button onClick={()=>setVisible(false)}><i className="fa-solid fa-xmark"
+                style={{
+                  backgroundColor: 'transparent', 
+                  border: 'none', 
+                  fontSize: '24px', 
+                  color: '#333', 
+                  cursor: 'pointer', 
+                  position: 'absolute',
+                  top: '10px', 
+                  right: '10px', 
+                }} ></i></button>
+              <Register/>
+
+            </Modal>
     <img
         src="/assets/frame 2.png"
         className="d-block w-100 h-100"
@@ -42,10 +86,25 @@ export default function Home() {
                 <div className="carousel-item  ">
                 <div className="position-relative">
     <button
-        className={`btn position-absolute  start-0  ${styles.frame_2Button}`}
+        className={`btn position-absolute  start-0  ${styles.frame_2Button}`} onClick={()=>setVisible(true)}
     >
         انشاء حساب 
     </button>
+    <Modal isOpen={visible} onRequestClose={()=>setVisible(false)} style={customStyles}>
+              <button onClick={()=>setVisible(false)}><i className="fa-solid fa-xmark"
+                style={{
+                  backgroundColor: 'transparent', 
+                  border: 'none', 
+                  fontSize: '24px', 
+                  color: '#333', 
+                  cursor: 'pointer', 
+                  position: 'absolute',
+                  top: '10px', 
+                  right: '10px', 
+                }} ></i></button>
+              <Register/>
+
+            </Modal>
     <img
         src="/assets/frame 3.png"
         className="d-block w-100 h-100"
@@ -56,10 +115,25 @@ export default function Home() {
                 <div className="carousel-item  ">
                 <div className="position-relative">
     <button
-        className={`btn position-absolute  start-0  ${styles.frame_3Button}`}
+        className={`btn position-absolute  start-0  ${styles.frame_3Button}`} onClick={()=>setVisible(true)}
     >
         انشاء حساب 
         </button>
+        <Modal isOpen={visible} onRequestClose={()=>setVisible(false)} style={customStyles}>
+              <button onClick={()=>setVisible(false)}><i className="fa-solid fa-xmark"
+                style={{
+                  backgroundColor: 'transparent', 
+                  border: 'none', 
+                  fontSize: '24px', 
+                  color: '#333', 
+                  cursor: 'pointer', 
+                  position: 'absolute',
+                  top: '10px', 
+                  right: '10px', 
+                }} ></i></button>
+              <Register/>
+
+            </Modal>
     <img
         src="/assets/frame 4.png"
         className="d-block w-100 h-100"

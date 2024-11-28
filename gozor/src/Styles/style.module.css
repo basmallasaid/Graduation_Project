@@ -96,7 +96,7 @@ body {
   background-color: #4BAF47;
   border-radius: 7px;
   color: #ffffff;
-  padding: 10px 0;
+  padding: 10px 20px;
 }
 .loginButton:hover{
   border-color: #4BAF47; /* تحديد اللون الأخضر */
@@ -107,7 +107,7 @@ body {
   font-size: 14px;
   font-weight: bold;
   border-radius: 7px;
-
+margin-left: 50px;
   width: 150px;
   border-color: #4BAF47; /* تحديد اللون الأخضر */
   background-color: #ffffff;
@@ -641,4 +641,170 @@ padding-top: 70px;
 .divinst{
   width: 70%;
 margin: 100px;
+}
+
+/* Register page*/
+.regcontainer {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  text-align: right;
+}
+
+.firsttitle {
+  font-size: 35px;
+  margin-bottom: 5px;
+  font-weight: 700;
+  padding: 0 25px;
+  color: black;
+}
+
+.subtitlee {
+  font-size: 25px;
+  font-weight: 500;
+  color: #EEC044;
+  margin-bottom: 2px;
+  text-align: center;
+}
+
+.regform {
+  display: flex;
+  flex-direction: column;
+}
+
+.reginput {
+  margin-bottom: 10px;
+}
+.reglabel{
+  font-size: 20px;
+  font-weight: 300;
+  color: #000;
+}
+
+.input {
+  width: 100%;
+  padding: 7px;
+  font-size: 14px;
+  border: 5px solid #F5F5F5;
+  border-radius: 5px;
+  background-color: #F5F5F5;
+
+}
+
+.regtextarea {
+  width: 100%;
+  padding: 7px;
+  font-size: 14px;
+  border: 5px solid #F5F5F5;
+  border-radius: 5px;
+  resize: none;
+  height: 50px;
+  background-color: #F5F5F5;
+
+}
+
+.regcategory {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.regcategoryButton {
+  flex: 1;
+  padding: 10px;
+  margin: 0 5px;
+  font-size: 14px;
+  border: 1px solid #28a745;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #fff; /* Default background color */
+  color: #000; /* Default text color */
+  box-shadow: 0 5px #e4dfdf;
+
+}
+
+.active {
+  background-color: #28a745;
+  color: #fff;
+}
+
+
+.regButton {
+  padding: 10px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #28a745;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.regButton:hover{
+  border: 1px solid #28a745;
+color: #000;
+background-color:#fff;
+}
+/* login page */
+.logcontainer {
+width: 100%; 
+background-color: #F8F7F0;
+ padding: 20px;
+  font-family: Arial, sans-serif;
+  text-align: right;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+.logform{
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  width: 600px;
+  height: 650px;
+  justify-content: center;
+  margin-left: 40px;
+  border: 2px solid #F5F5F5;
+  border-radius: 15px;
+  
+}
+.holder{
+  margin: 0 80px;
+}
+.loginput{
+  width: 100%;
+  padding: 10px;
+  font-size: 20px;
+  border: 5px solid #F5F5F5;
+  border-radius: 5px;
+  background-color: #F5F5F5;
+  margin-bottom: 5px;
+}
+.hr{
+  margin: 20px 80px;
+}
+.forget{
+  display: flex;
+  justify-content: space-around;
+  margin-top: 50px;
+}
+.logButton{
+  padding: 10px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #28a745;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  width: 430px;
+  margin-top: 10px;
+}
+.logButton:hover{
+  border: 1px solid #28a745;
+color: #000;
+background-color:#fff;
+}
+.linkforget{
+  color: #EEC044;
+  font-size: 15px;
 }

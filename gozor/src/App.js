@@ -11,6 +11,8 @@ import Home from './Components/Home';
 import Services from './Components/Services';
 import About from './Components/About';
 import Instructions from './Components/Instructions';
+import Register from './Authentication/Register';
+import Login from './Authentication/Login';
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
           <Route path="Instructions" element={<><Instructions/></>}/>
           <Route path="*" element={<Notfound />} />
           </Routes>
+          {/* <Register/> */}
+          {/* <Login/> */}
         </BrowserRouter>
       </StanderErrorBoundary>
   );

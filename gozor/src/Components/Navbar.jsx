@@ -1,10 +1,36 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from "../Styles/style.module.css";
+import Register from '../Authentication/Register';
 import "@fortawesome/fontawesome-free/css/all.min.css";
-
+import Modal from 'react-modal'
+import Login from '../Authentication/Login';
 const Navbar = () => {
   const [showSearch, setShowSearch] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [visiblelog, setVisiblelog] = useState(false);
+  const customStyles = {
+    content: {
+      maxWidth: '500px', // Set your desired width
+      margin: 'auto', // Centers the modal horizontally
+      padding: '10px', // Add padding for better spacing
+      borderRadius: '10px', // Optional: round corners
+    },
+    overlay: {
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: dim background
+    },
+  };
+  const loginStyles = {
+    content: {
+      Width: '100px', // Set your desired width
+      margin: 'auto', // Centers the modal horizontally
+      padding: '10px', // Add padding for better spacing
+      borderRadius: '10px', // Optional: round corners
+    },
+    overlay: {
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: dim background
+    },
+  };
 
   return (
     <div>
@@ -74,7 +100,7 @@ const Navbar = () => {
               <button
                 className="btn btn-outline-success me-2"
                 onClick={() => setShowSearch(!showSearch)}
-                style={{ background: "none", border: "none", padding: "0" }}
+                style={{ background: "none", border: "none", padding: "0",marginLeft:"50px" }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -96,8 +122,38 @@ const Navbar = () => {
               )}
             </div>
           <div className="d-flex ms-auto">
-            <button className={`btn me-2 ${styles.loginButton}`}>تسجيل الدخول</button>
-            <button className={`btn ${styles.registerButton}`}>انضم إلينا</button>
+            <button className={`btn me-2 ${styles.loginButton}`} onClick={()=>setVisiblelog(true)}>تسجيل الدخول</button>
+            <Modal isOpen={visiblelog} onRequestClose={()=>setVisiblelog(false)} style={customStyles}>
+              <button onClick={()=>setVisiblelog(false)}><i className="fa-solid fa-xmark"
+                style={{
+                  backgroundColor: 'transparent', 
+                  border: 'none', 
+                  fontSize: '24px', 
+                  color: '#333', 
+                  cursor: 'pointer', 
+                  position: 'absolute',
+                  top: '10px', 
+                  right: '10px', 
+                }} ></i></button>
+              <Register/>
+
+            </Modal>
+            <button className={`btn ${styles.registerButton}`}  onClick={()=>setVisible(true)}>انضم إلينا</button>
+            <Modal isOpen={visible} onRequestClose={()=>setVisible(false)} style={loginStyles}>
+              <button onClick={()=>setVisible(false)}><i className="fa-solid fa-xmark"
+                style={{
+                  backgroundColor: 'transparent', 
+                  border: 'none', 
+                  fontSize: '24px', 
+                  color: '#333', 
+                  cursor: 'pointer', 
+                  position: 'absolute',
+                  top: '10px', 
+                  right: '10px', 
+                }} ></i></button>
+              <Login/>
+
+            </Modal>
           </div>
           </div>
         </div>

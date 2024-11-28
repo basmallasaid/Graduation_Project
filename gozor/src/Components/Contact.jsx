@@ -44,7 +44,7 @@ import Navbar from "./Navbar";
         <h2 className={styles.ytext}>تواصل معنا</h2>
         <p className={styles.headtitle}>اكتب رسالتك</p>
         <form className={styles.contforms}>
-          <input type="email" placeholder="البريد الإلكتروني" className={styles.forminput} />
+          <input type="message" placeholder="الموضوع" className={styles.forminput} />
           <textarea placeholder="رسالتك" className={styles.forminputarea}></textarea>
           <button type="submit" className={styles.subbutton}>إرسال</button>
         </form>

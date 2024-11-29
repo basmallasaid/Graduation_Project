@@ -1,7 +1,24 @@
 import React, { useState } from 'react';
 import styles from '../Styles/style.module.css';
 import { Link } from 'react-router-dom';
+import Modal from 'react-modal';
+import Forget from '../Authentication/Forget';
+
 export default function Login() {
+
+  const [visibleforget, setVisibleforget] = useState(false);
+  const forgetStyles = {
+    content: {
+      maxWidth: '600px', // Set your desired width
+      margin: '0 auto', // Centers the modal horizontally
+      padding: '10px', // Add padding for better spacing
+      borderRadius: '10px', // Optional: round corners
+      height:'460px'
+    },
+    overlay: {
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: dim background
+    },
+  };
     
     return(
     <>
@@ -50,8 +67,25 @@ export default function Login() {
         </button>
         </div>
             <div className={styles.forget}>
-                <p>لديك حساب بالفعل؟ < Link href="/login" className={styles.linkforget}>تسجيل الدخول</Link></p>
-                < Link href="/"className={styles.linkforget}> هل نسيت كلمه المرور ؟</Link>
+                <p>ليس لديك حساب ؟< Link href="/Register" className={styles.linkforget}>انشاء حساب </Link></p>
+                < Link href="/"className={styles.linkforget} onClick={()=>setVisibleforget(true)} > هل نسيت كلمه المرور ؟</Link>
+                <Modal isOpen={visibleforget} onRequestClose={()=>setVisibleforget(false)} style={forgetStyles}>
+                <button onClick={()=>setVisibleforget(false)}><i className="fa-solid fa-xmark"
+                style={{
+                  backgroundColor: 'transparent', 
+                  border: 'none', 
+                  fontSize: '24px', 
+                  color: '#333', 
+                  cursor: 'pointer', 
+                  position: 'absolute',
+                  top: '10px', 
+                  right: '10px', 
+                }} ></i></button>
+              <Forget 
+              
+              />
+
+            </Modal>
 
             </div>
             </form>

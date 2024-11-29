@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styles from "../Styles/style.module.css";
 import Register from '../Authentication/Register';
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import Modal from 'react-modal'
+import Modal from 'react-modal';
 import Login from '../Authentication/Login';
 const Navbar = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -22,7 +22,7 @@ const Navbar = () => {
   };
   const loginStyles = {
     content: {
-      Width: '100px', // Set your desired width
+      Width: '100%', // Set your desired width
       margin: 'auto', // Centers the modal horizontally
       padding: '10px', // Add padding for better spacing
       borderRadius: '10px', // Optional: round corners

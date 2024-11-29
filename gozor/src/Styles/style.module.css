@@ -745,50 +745,62 @@ color: #000;
 background-color:#fff;
 }
 /* login page */
+/* General container styling */
 .logcontainer {
-width: 100%; 
-background-color: #F8F7F0;
- padding: 20px;
+  width: 100%; 
+  background-color: #F8F7F0;
+  padding: 20px;
   font-family: Arial, sans-serif;
   text-align: right;
   display: flex;
   justify-content: center;
   align-items: center;
-
+  flex-wrap: wrap; /* Enables wrapping for smaller screens */
 }
-.logform{
+
+/* Form styling */
+.logform {
   display: flex;
   flex-direction: column;
   background-color: #fff;
   width: 600px;
-  height: 650px;
+  max-width: 90%; /* Ensures form fits within smaller screens */
+  height: 690px;
   justify-content: center;
-  margin-left: 40px;
+  margin: 0 20px; /* Adjust spacing for smaller screens */
   border: 2px solid #F5F5F5;
   border-radius: 15px;
-  
+  padding: 20px;
+  box-sizing: border-box;
 }
-.holder{
-  margin: 0 80px;
+
+.holder {
+  margin: 0;
 }
-.loginput{
+
+.loginput {
   width: 100%;
   padding: 10px;
-  font-size: 20px;
-  border: 5px solid #F5F5F5;
+  font-size: 16px; /* Adjust font size for better scaling */
+  border: 1px solid #F5F5F5;
   border-radius: 5px;
   background-color: #F5F5F5;
-  margin-bottom: 5px;
+  margin-bottom: 10px; /* Adds consistent spacing */
 }
-.hr{
-  margin: 20px 80px;
+
+.hr {
+  margin: 20px 0;
 }
-.forget{
+
+.forget {
   display: flex;
-  justify-content: space-around;
-  margin-top: 50px;
+  justify-content: space-between;
+  flex-wrap: wrap; /* Adjust layout for smaller screens */
+  margin-top: 20px;
+  font-size: 14px;
 }
-.logButton{
+
+.logButton {
   padding: 10px;
   font-size: 16px;
   color: #fff;
@@ -796,15 +808,75 @@ background-color: #F8F7F0;
   border: none;
   border-radius: 20px;
   cursor: pointer;
-  width: 430px;
-  margin-top: 10px;
+  width: 100%;
+  margin-top: 20px;
 }
-.logButton:hover{
+
+.logButton:hover {
   border: 1px solid #28a745;
-color: #000;
-background-color:#fff;
+  color: #000;
+  background-color: #fff;
 }
-.linkforget{
+
+.linkforget {
   color: #EEC044;
-  font-size: 15px;
+  font-size: 14px;
+  text-decoration: none; /* Removes underline */
+}
+
+/* Responsive styling for tablets */
+@media (max-width: 1272px) {
+  .logcontainer {
+    flex-direction: column; /* Stack elements vertically */
+    padding: 10px;
+  }
+
+  .logform {
+    width: 80%;
+    margin: 0;
+  }
+
+  .forget {
+    justify-content: center; /* Center align links */
+    text-align: center;
+  }
+
+ 
+}
+
+/* Responsive styling for mobile */
+@media (max-width: 480px) {
+  .logform {
+    padding: 15px; /* Add more compact padding */
+  }
+
+  .loginput {
+    font-size: 14px; /* Adjust font size for better readability */
+    padding: 8px;
+  }
+
+  .logButton {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .linkforget {
+    font-size: 13px;
+  }
+
+  
+}
+.forgetform{
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  width: 600px;
+  max-width: 90%; /* Ensures form fits within smaller screens */
+  height: auto;
+  justify-content: center;
+  margin: 0 20px; /* Adjust spacing for smaller screens */
+  border: 2px solid #F5F5F5;
+  border-radius: 15px;
+  padding: 20px;
+  box-sizing: border-box;
 }

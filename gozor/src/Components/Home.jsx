@@ -1,173 +1,247 @@
-import styles from "../Styles/style.module.css"; 
+import styles from "../Styles/style.module.css";
 import Footer from "./Footer";
-import Register from '../Authentication/Register';
-import Modal from 'react-modal';
+import Register from "../Authentication/Register";
+import Modal from "react-modal";
 import { useState } from "react";
+
 export default function Home() {
-    const [visible, setVisible] = useState(false);
-    const customStyles = {
-      content: {
-        maxWidth: '500px', // Set your desired width
-        margin: 'auto', // Centers the modal horizontally
-        padding: '10px', // Add padding for better spacing
-        borderRadius: '10px', // Optional: round corners
-      },
-      overlay: {
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: dim background
-      },
-    };
+  const [visible, setVisible] = useState(false);
+
+  const customStyles = {
+    content: {
+      maxWidth: "500px", // Set desired width
+      margin: "auto", // Centers the modal horizontally
+      padding: "10px", // Add padding for better spacing
+      borderRadius: "10px", // Optional: round corners
+    },
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.5)", // Optional: dim background
+    },
+  };
+
   return (
     <>
-    <header className={styles.slide}>
-    <div classNameName="slider position-relative">
-        <div id="carouselExampleControls" className="carousel slide" data-bs-ride="carousel">
+      <header className={styles.slide}>
+        <div className="slider position-relative">
+          <div
+            id="carouselExampleControls"
+            className="carousel slide"
+            data-bs-ride="carousel"
+          >
             <div className="carousel-inner">
-                <div className="carousel-item active ">
+              {/* Slide 1 */}
+              <div className="carousel-item active">
                 <div className="position-relative">
-    <button
-        className={`btn position-absolute  start-0  ${styles.frameButton}`} onClick={()=>setVisible(true)}
-    >
-        انشاء حساب 
-        </button>
-        <Modal isOpen={visible} onRequestClose={()=>setVisible(false)} style={customStyles}>
-              <button onClick={()=>setVisible(false)}><i className="fa-solid fa-xmark"
-                style={{
-                  backgroundColor: 'transparent', 
-                  border: 'none', 
-                  fontSize: '24px', 
-                  color: '#333', 
-                  cursor: 'pointer', 
-                  position: 'absolute',
-                  top: '10px', 
-                  right: '10px', 
-                }} ></i></button>
-              <Register/>
-
-            </Modal>
-    <img
-        src="/assets/frame1.png"
-        className="d-block w-100 h-100"
-        alt="slideshow image"
-    />
-</div>
-
-
-
+                  <button
+                    className={`btn position-absolute start-0 ${styles.frameButton}`}
+                    onClick={() => setVisible(true)}
+                  >
+                    انشاء حساب
+                  </button>
+                  <Modal
+                    isOpen={visible}
+                    onRequestClose={() => setVisible(false)}
+                    style={customStyles}
+                  >
+                    <button
+                      onClick={() => setVisible(false)}
+                      style={{
+                        backgroundColor: "transparent",
+                        border: "none",
+                        fontSize: "24px",
+                        color: "#333",
+                        cursor: "pointer",
+                        position: "absolute",
+                        top: "10px",
+                        right: "10px",
+                      }}
+                    >
+                      <i className="fa-solid fa-xmark"></i>
+                    </button>
+                    <Register />
+                  </Modal>
+                  <img
+                    src="/assets/frame1.png"
+                    className="img-fluid d-block w-100"
+                    alt="slideshow image"
+                  />
                 </div>
-                <div className="carousel-item  ">
+              </div>
+
+              {/* Slide 2 */}
+              <div className="carousel-item">
                 <div className="position-relative">
-    <button
-        className={`btn position-absolute  start-0  ${styles.frame_1Button}`} onClick={()=>setVisible(true)}
-    >
-        انشاء حساب 
-        </button>
-        <Modal isOpen={visible} onRequestClose={()=>setVisible(false)} style={customStyles}>
-              <button onClick={()=>setVisible(false)}><i className="fa-solid fa-xmark"
-                style={{
-                  backgroundColor: 'transparent', 
-                  border: 'none', 
-                  fontSize: '24px', 
-                  color: '#333', 
-                  cursor: 'pointer', 
-                  position: 'absolute',
-                  top: '10px', 
-                  right: '10px', 
-                }} ></i></button>
-              <Register/>
-
-            </Modal>
-    <img
-        src="/assets/frame 2.png"
-        className="d-block w-100 h-100"
-        alt="slideshow image"
-    />
-</div>
+                  <button
+                    className={`btn position-absolute start-0 ${styles.frame_1Button}`}
+                    onClick={() => setVisible(true)}
+                  >
+                    انشاء حساب
+                  </button>
+                  <Modal
+                    isOpen={visible}
+                    onRequestClose={() => setVisible(false)}
+                    style={customStyles}
+                  >
+                    <button
+                      onClick={() => setVisible(false)}
+                      style={{
+                        backgroundColor: "transparent",
+                        border: "none",
+                        fontSize: "24px",
+                        color: "#333",
+                        cursor: "pointer",
+                        position: "absolute",
+                        top: "10px",
+                        right: "10px",
+                      }}
+                    >
+                      <i className="fa-solid fa-xmark"></i>
+                    </button>
+                    <Register />
+                  </Modal>
+                  <img
+                    src="/assets/frame 2.png"
+                    className="img-fluid d-block w-100"
+                    alt="slideshow image"
+                  />
                 </div>
-                <div className="carousel-item  ">
+              </div>
+
+              {/* Slide 3 */}
+              <div className="carousel-item">
                 <div className="position-relative">
-    <button
-        className={`btn position-absolute  start-0  ${styles.frame_2Button}`} onClick={()=>setVisible(true)}
-    >
-        انشاء حساب 
-    </button>
-    <Modal isOpen={visible} onRequestClose={()=>setVisible(false)} style={customStyles}>
-              <button onClick={()=>setVisible(false)}><i className="fa-solid fa-xmark"
-                style={{
-                  backgroundColor: 'transparent', 
-                  border: 'none', 
-                  fontSize: '24px', 
-                  color: '#333', 
-                  cursor: 'pointer', 
-                  position: 'absolute',
-                  top: '10px', 
-                  right: '10px', 
-                }} ></i></button>
-              <Register/>
-
-            </Modal>
-    <img
-        src="/assets/frame 3.png"
-        className="d-block w-100 h-100"
-        alt="slideshow image"
-    />
-</div>
+                  <button
+                    className={`btn position-absolute start-0 ${styles.frame_2Button}`}
+                    onClick={() => setVisible(true)}
+                  >
+                    انشاء حساب
+                  </button>
+                  <Modal
+                    isOpen={visible}
+                    onRequestClose={() => setVisible(false)}
+                    style={customStyles}
+                  >
+                    <button
+                      onClick={() => setVisible(false)}
+                      style={{
+                        backgroundColor: "transparent",
+                        border: "none",
+                        fontSize: "24px",
+                        color: "#333",
+                        cursor: "pointer",
+                        position: "absolute",
+                        top: "10px",
+                        right: "10px",
+                      }}
+                    >
+                      <i className="fa-solid fa-xmark"></i>
+                    </button>
+                    <Register />
+                  </Modal>
+                  <img
+                    src="/assets/frame 3.png"
+                    className="img-fluid d-block w-100"
+                    alt="slideshow image"
+                  />
                 </div>
-                <div className="carousel-item  ">
+              </div>
+              <div className="carousel-item">
                 <div className="position-relative">
-    <button
-        className={`btn position-absolute  start-0  ${styles.frame_3Button}`} onClick={()=>setVisible(true)}
-    >
-        انشاء حساب 
-        </button>
-        <Modal isOpen={visible} onRequestClose={()=>setVisible(false)} style={customStyles}>
-              <button onClick={()=>setVisible(false)}><i className="fa-solid fa-xmark"
-                style={{
-                  backgroundColor: 'transparent', 
-                  border: 'none', 
-                  fontSize: '24px', 
-                  color: '#333', 
-                  cursor: 'pointer', 
-                  position: 'absolute',
-                  top: '10px', 
-                  right: '10px', 
-                }} ></i></button>
-              <Register/>
-
-            </Modal>
-    <img
-        src="/assets/frame 4.png"
-        className="d-block w-100 h-100"
-        alt="slideshow image"
-    />
-</div>
+                  <button
+                    className={`btn position-absolute start-0 ${styles.frame_2Button}`}
+                    onClick={() => setVisible(true)}
+                  >
+                    انشاء حساب
+                  </button>
+                  <Modal
+                    isOpen={visible}
+                    onRequestClose={() => setVisible(false)}
+                    style={customStyles}
+                  >
+                    <button
+                      onClick={() => setVisible(false)}
+                      style={{
+                        backgroundColor: "transparent",
+                        border: "none",
+                        fontSize: "24px",
+                        color: "#333",
+                        cursor: "pointer",
+                        position: "absolute",
+                        top: "10px",
+                        right: "10px",
+                      }}
+                    >
+                      <i className="fa-solid fa-xmark"></i>
+                    </button>
+                    <Register />
+                  </Modal>
+                  <img
+                    src="/assets/frame 4.png"
+                    className="img-fluid d-block w-100"
+                    alt="slideshow image"
+                  />
                 </div>
+              </div>
             </div>
-            <button  className="carousel-control-prev d-md-inline-block d-none" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                <span className="carousel-control-prev-icon position-relative text-white d-flex justify-content-center align-items-center " aria-hidden="true"><i className="fas fa-chevron-right"></i></span>
-                <span className="visually-hidden">Previous</span>
-            </button>
-            <button  className="carousel-control-next d-md-inline-block d-none" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                <span className="carousel-control-next-icon position-relative text-white d-flex justify-content-center align-items-center" aria-hidden="true"><i className="fas fa-chevron-left"></i></span>
-                <span className="visually-hidden">Next</span>
-            </button>
-        </div>
-        <a href="#About" className={`${styles.scroll} text-decoration-none  d-sm-block d-none`} id="About">
-            <span></span>
-        </a>
-    </div>
-</header>
-<section>
-<div style={{ display: "flex", justifyContent: "center", alignItems: "center",marginBottom:"70px" }}>
-  <div>
-    <img src="/assets/circlestext.png" alt="Circles Text" style={{ maxWidth: "100%" }} />
-  </div>
-  <div>
-    <img src="/assets/circles.png" alt="Circles" style={{ maxWidth: "100%" }} />
-  </div>
-</div>
 
-</section>
-<section>
+            {/* Carousel Controls */}
+            <button
+              className="carousel-control-prev"
+              type="button"
+              data-bs-target="#carouselExampleControls"
+              data-bs-slide="prev"
+            >
+              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span className="visually-hidden">Previous</span>
+            </button>
+            <button
+              className="carousel-control-next"
+              type="button"
+              data-bs-target="#carouselExampleControls"
+              data-bs-slide="next"
+            >
+              <span className="carousel-control-next-icon" aria-hidden="true"></span>
+              <span className="visually-hidden">Next</span>
+            </button>
+          </div>
+
+          <a
+            href="#About"
+            className={`${styles.scroll} text-decoration-none d-sm-block d-none`}
+            id="About"
+          >
+            <span></span>
+          </a>
+        </div>
+      </header>
+
+      {/* Other Sections */}
+      <section>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: "70px",
+          }}
+        >
+          <div>
+            <img
+              src="/assets/circlestext.png"
+              alt="Circles Text"
+              style={{ maxWidth: "100%" }}
+            />
+          </div>
+          <div>
+            <img
+              src="/assets/circles.png"
+              alt="Circles"
+              style={{ maxWidth: "100%" }}
+            />
+          </div>
+        </div>
+      </section>
+      <section>
     <div className={styles.gridtext}>
         <h2 className={styles.textgrid}>نبذه عن ما نقدمه</h2>
     </div>
@@ -219,8 +293,8 @@ export default function Home() {
 </div>
 
 </section>
-<Footer/>
 
-</>
+      <Footer />
+    </>
   );
 }

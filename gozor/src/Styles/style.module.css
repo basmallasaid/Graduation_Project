@@ -409,12 +409,12 @@ h1 {
     color: #1F1E17;
 
   }
-  @media (max-width: 985px) { 
+   @media (max-width: 985px) { 
     .frameButton,.frame_1Button,.frame_2Button,.frame_3Button {
       display: none;
     }
   }
-  .slider .carousel-control-next,
+  /* .slider .carousel-control-next,
   .slider .carousel-control-prev {
   height: 50px;
   top: 48% !important;
@@ -497,7 +497,7 @@ h1 {
   .slider .text h1 {
     font-size: 1.7rem;
   }
-  }
+  } */ 
 
   .gridtext{
     background-color: #F8F7F0;

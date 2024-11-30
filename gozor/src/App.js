@@ -12,6 +12,7 @@ import Services from './Components/Services';
 import About from './Components/About';
 import Instructions from './Components/Instructions';
 import Register from './Authentication/Register';
+import Opinon from './Components/Opinon';
 
 function App() {
   return (
@@ -25,7 +26,8 @@ function App() {
           <Route path="About" element={<><About/></>}/>
           <Route path="Instructions" element={<><Instructions/></>}/>
           <Route path="*" element={<Notfound />} />
-          <Route path="/Register" element={< Register/>} />
+          <Route path="Register" element={< Register/>} />
+          <Route path='Opinon' element={<Opinon/>}/>
           
           </Routes>
       

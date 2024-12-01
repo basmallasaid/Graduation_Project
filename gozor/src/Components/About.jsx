@@ -9,8 +9,8 @@ const About = () => {
             <Navbar />
             <img className={styles.instimg} src='assets/about.png' />
             <div className={` text-center ${styles.grid}`}>
-                <div className="row" style={{ textAlign: "right" }}>
-                    <div className="col-sm-5">
+                <div className="row" >
+                    <div className="col">
                         <p><span className={styles.yetxt}>تعرف علينا</span></p>
                         <h3><b>منصة زراعية متكاملة لربط المزارعين بالمستثمرين والتجار</b></h3>
                         <p className={styles.green_text}>نقدم في منصة " <span className={styles.yetxt}>جذور</span>" تجربة زراعية فريدة من نوعها، حيث نوفر حلولًا ذكية ومتكاملة لربط المزارعين مع المستثمرين والتجار، بهدف تحقيق تنمية مستدامة ودعم القطاع الزراعي.</p>
@@ -23,10 +23,10 @@ const About = () => {
                             <button type="submit" className={styles.subbutton}>أكتشف المزيد</button>
                         </div>
                     </div>
-                    <div className="col-sm-3"><img src="assets/farmgirl.png" /></div>
+                    <div className="col"><img src="assets/farmgirl.png" /></div>
                 </div>
             </div>
-            <div className={styles.card}>
+            <div className={styles.card} style={{textAlign:"center"}}>
                 <div className={`card ${styles.boxshadowabout}`}>
                     <div className="card-body">
                         <h3 style={{ textAlign: "center", marginBottom: "20px" }}>
@@ -53,40 +53,22 @@ const About = () => {
             <div className={`container ${styles.card}`} style={{ marginBottom: "90px" }}>
                 <div className="row">
                     <div className="col">
-                        <div className="card" style={{ width: "18rem" }}>
-                            <img src="assets/fr.png" className="card-img-top" alt="..." />
-                            <div className="card-body" style={{ textAlign: "center", lineHeight: "5px" }}>
-                                <h3 ><b>خدماتنا للمزراعين</b></h3>
-                                <p className={`card-text ${styles.graytxt}`}>إدارة الدورة الزراعية </p>
-                                <p className={`card-text ${styles.graytxt}`}>مراقبة صحة المحاصيل</p>
-                                <p className={`card-text ${styles.graytxt}`}> جدولة المهام </p>
-                                <p className={`card-text ${styles.graytxt}`}>التحكم في الحسابات</p>
-                            </div>
-                        </div>
+                        
+                            <img src="assets/all.png" alt="..." style={{width:"100%"}} />
+                           
+                       
                     </div>
                     <div className="col">
-                        <div className="card" style={{ width: "18rem" }}>
-                            <img src="assets/frr.png" className="card-img-top" alt="..." />
-                            <div className="card-body" style={{ textAlign: "center", lineHeight: "5px" }}>
-                                <h3 ><b>خدماتنا للمستثمرين</b></h3>
-                                <p className={`card-text ${styles.graytxt}`}>استعراض فرص الاستثمار</p>
-                                <p className={`card-text ${styles.graytxt}`}>متابعة التحديثات</p>
-                                <p className={`card-text ${styles.graytxt}`}>  إدارة العوائد</p>
-
-                            </div>
-                        </div>
+                        
+                            <img src="assets/all2.png" alt="..."  style={{width:"100%"}}/>
+                            
+                      
                     </div>
                     <div className="col">
-                        <div className="card" style={{ width: "18rem" }}>
-                            <img src="assets/frrr.png" className="card-img-top" alt="..." />
-                            <div className="card-body" style={{ textAlign: "center", lineHeight: "5px" }}>
-                                <h3 ><b>خدماتنا للتجار</b></h3>
-                                <p className={`card-text ${styles.graytxt}`}>استعراض المحاصيل المتاحة  </p>
-                                <p className={`card-text ${styles.graytxt}`}>طلبات الشراء</p>
-                                <p className={`card-text ${styles.graytxt}`}> إدارة السجل المالي</p>
-
-                            </div>
-                        </div>
+                        
+                            <img src="assets/all3.png"  alt="..." style={{width:"100%"}} />
+                            
+                       
                     </div>
                 </div>
             </div>

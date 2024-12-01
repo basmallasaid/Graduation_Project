@@ -553,7 +553,7 @@ padding-top: 70px;
   display: flex;
   justify-Content: center;
   align-Items:center;
-  margin: 250px 300px 150px 100px ;
+  margin: 240px  ;
 
 }
 .graytxt{
@@ -645,10 +645,12 @@ padding-top: 70px;
 margin: 100px;
 }
 .farmer,.investor ,.merchant{
+ 
   width: 70%;
-  margin: 100px 200px;
+  margin: 90px ;
   font-size:40px;
   font-weight: bold;
+
 }
 .farmer img ,.investor img ,.merchant img{
   width: 100%;

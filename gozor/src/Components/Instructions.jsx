@@ -71,6 +71,7 @@ const Instructions = () => {
       </div>
       
       {/* Farmer Instructions Div */}
+     
       <div className={`${styles.farmer}`} ref={farmerRef}>
         <p>تعليمات المزارع</p>
         <img src='/assets/farmerr.png'/>

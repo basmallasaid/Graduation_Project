@@ -26,7 +26,7 @@ function App() {
           <Route path="About" element={<><About/></>}/>
           <Route path="Instructions" element={<><Instructions/></>}/>
           <Route path="*" element={<Notfound />} />
-          <Route path="Register" element={< Register/>} />
+          <Route path="/register" element={<Home />} />
           <Route path='Opinon' element={<Opinon/>}/>
           
           </Routes>

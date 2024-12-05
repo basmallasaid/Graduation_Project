@@ -996,7 +996,9 @@ background-color:#fff;
     text-align: center;
   }
 
- 
+ .logimg{
+  display: none;
+ }
 }
 
 /* Responsive styling for mobile */
@@ -1019,7 +1021,9 @@ background-color:#fff;
     font-size: 13px;
   }
 
-  
+  .logimg{
+    display: none;
+   }
 }
 .forgetform{
   display: flex;

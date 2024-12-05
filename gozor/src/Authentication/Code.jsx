@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import styles from '../Styles/style.module.css';
 import Modal from 'react-modal';
-import New from './Newpassword'
-export default function Code() {
+import New from './Newpassword';
+import axios from 'axios';  
+import toast, { Toaster } from "react-hot-toast";
+
+export default function Code({ email }) { 
   const [visiblenew, setVisiblenew] = useState(false);
+  const [code, setCode] = useState('');  
 
   const newStyles = {
     content: {
@@ -17,68 +21,89 @@ export default function Code() {
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
   };
-    return(
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();  
+  
+
+    try {
+      const response = await axios.post("http://localhost:8000/users", {
+        email: email, 
+        code: code  
+      });
+  
+
+      if (response.data.isValid) {
+        setVisiblenew(true);
+      } else {
+        toast.error('الكود غير صحيح');  
+      }
+    } catch (error) {
+      toast.error('حدث خطأ. يرجى المحاولة لاحقاً');  
+    }
+  };
+  
+
+  return (
     <>
-  <div>
+      <Toaster position="top-center" reverseOrder={false} />
 
+      <div>
         <div className={styles.logcontainer}>
-    
-          
-          <form className={styles.forgetform}>
-          <h1 className={styles.firsttitle}> برجاء ادخال كود التحقق</h1>
-          <br/>
-          <hr className={styles.hr}/>
-          <div className={styles.holder}>
-         
-            <div className={styles.reginput}>
-            <label for="code" className={styles.reglabel}>الكود</label>
-            <br/>
-
-              <input
-                type="code"
-                name="code"
-                placeholder="Ex:25648975"
-             
-                className={styles.loginput}
-              />
-            </div>
-        
-            <button type="submit" className={styles.logButton}   onClick={(event) => {
-                  event.preventDefault(); // Prevent default form submission
-                  setVisiblenew(true);  // Open the modal
-                }}>
-          ارسال
-        </button>
-        <Modal
-                isOpen={visiblenew}
-                onRequestClose={() => setVisiblenew(false)}
-                style={newStyles}
+          <form className={styles.forgetform} onSubmit={handleSubmit}>
+            <h1 className={styles.firsttitle}>برجاء ادخال كود التحقق</h1>
+            <br />
+            <hr className={styles.hr} />
+            <div className={styles.holder}>
+              <div className={styles.reginput}>
+                <label for="code" className={styles.reglabel}>الكود</label>
+                <br />
+                <input
+                  type="text"  
+                  name="code"
+                  placeholder="Ex:25648975"
+                  value={code}  
+                  onChange={(e) => setCode(e.target.value)}  
+                  className={styles.loginput}
+                />
+              </div>
+              <button type="submit" className={styles.logButton}
+                  onClick={(e) => {
+                    e.preventDefault(); 
+                    e.stopPropagation(); 
+                    handleSubmit(e); 
+                  }}
               >
-                <button
-                  onClick={() => setVisiblenew(false)}
-                >
-                  <i
-                    className="fa-solid fa-xmark"
-                    style={{
-                      backgroundColor: 'transparent',
-                      border: 'none',
-                      fontSize: '24px',
-                      color: '#333',
-                      cursor: 'pointer',
-                      position: 'absolute',
-                      top: '10px',
-                      right: '10px',
-                    }}
-                  ></i>
-                </button>
-                <New />
-              </Modal>
+                
+                ارسال
+              </button>
+            </div>
+          </form>
         </div>
-          
-            </form>
-     
-        </div>
-    </div>
-        </>);
-    
-  }
+
+        <Modal
+          isOpen={visiblenew}
+          onRequestClose={() => setVisiblenew(false)}
+          style={newStyles}
+        >
+          <button onClick={() => setVisiblenew(false)}>
+            <i
+              className="fa-solid fa-xmark"
+              style={{
+                backgroundColor: 'transparent',
+                border: 'none',
+                fontSize: '24px',
+                color: '#333',
+                cursor: 'pointer',
+                position: 'absolute',
+                top: '10px',
+                right: '10px',
+              }}
+            ></i>
+          </button>
+          <New />
+        </Modal>
+      </div>
+    </>
+  );
+}

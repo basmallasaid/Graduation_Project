@@ -28,6 +28,12 @@ const Opinion = () => {
     const handleSlideChange = (index) => {
         setActiveIndex(index);
     };
+    // const formattedDate = new Date(comment.date).toLocaleDateString('ar-EG', {
+    //     weekday: 'long', // لعرض يوم الأسبوع (مثل: الإثنين)
+    //     year: 'numeric', // لعرض السنة
+    //     month: 'long', // لعرض اسم الشهر (مثل: يناير)
+    //     day: 'numeric', // لعرض اليوم
+    // });
 
     const handleSubmit = async (event) => {
         event.preventDefault(); 
@@ -142,15 +148,19 @@ const Opinion = () => {
                   <div key={index} className="col-lg-4 col-sm-12 mb-4">
                     <div className={styles.card_container}>
                       <div className={styles.text_content}>
-                        <div className={styles.name_and_title}>
-                          <h2 className={styles.name}>{comment.username}</h2>
-                        </div>
-                        <p className={styles.date}>
-                          {new Date(comment.date).toLocaleDateString()}
-                        </p>
-                        <p className={styles.feedback}>{comment.feedback}</p>
-                        <div className={styles.stars}>
-                          {Array.from({ length: 5 }, (_, starIndex) => (
+                                <div className={styles.name_and_title}>
+                                    <h2 className={styles.name}>{comment.username}</h2>
+                                </div>
+                                <p className={styles.date}>
+                                    {new Date(comment.date).toLocaleDateString('ar-EG', {
+                                        year: 'numeric', // لعرض السنة
+                                        month: 'long', // لعرض اسم الشهر (مثل: يناير)
+                                        day: 'numeric', // لعرض اليوم
+                                    })}
+                                </p>
+                                <p className={styles.feedback}>{comment.feedback}</p>
+                                <div className={styles.stars}>
+                                    {Array.from({ length: 5 }, (_, starIndex) => (
                             <span
                               key={starIndex}
                               className={`${styles.star} ${starIndex < comment.rating ? styles.filled : ""}`}

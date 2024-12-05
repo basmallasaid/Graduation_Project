@@ -4,34 +4,38 @@ import styles from "../Styles/style.module.css";
 import Footer from './Footer';
 import axios from "axios";
 import Swal from "sweetalert2";
+
 const Opinion = () => {
     const [rating, setRating] = useState(0); 
+    const [username, setUsername] = useState(""); // لتخزين اسم المستخدم
     const [feedback, setFeedback] = useState(""); 
     const [activeIndex, setActiveIndex] = useState(0); 
-    const [comments, setComments] = useState([]); 
-
+    const [comments, setComments] = useState([]);
+   
     useEffect(() => {
+        // هنا يمكن أن نتحقق من وجود المستخدم المسجل ونستخرج الإيميل الخاص به
+        const currentUser = JSON.parse(localStorage.getItem('currentUser')); // أو من خلال Context إذا كنت تستخدمه
+        if (currentUser && currentUser.email) {
+            setUsername(currentUser.email); // تخزين البريد الإلكتروني كاسم المستخدم
+        }
         loadComments();
     }, []); 
 
-    
     const handleStarClick = (starIndex) => {
         setRating(starIndex);
     };
 
-    
     const handleSlideChange = (index) => {
         setActiveIndex(index);
     };
 
-   
     const handleSubmit = async (event) => {
         event.preventDefault(); 
         const data = { 
             rating, 
+            username,
             feedback, 
-            date:new Date().toISOString(), 
-            username:""
+            date: new Date().toISOString(),
         };
 
         try {
@@ -44,6 +48,7 @@ const Opinion = () => {
                 confirmButtonText: "حسنًا",
             });
             setRating(0); 
+            setUsername(""); // مسح اسم المستخدم
             setFeedback(""); 
             loadComments(); 
         } catch (error) {
@@ -106,7 +111,6 @@ const Opinion = () => {
                        fillRule="evenodd"
                    />
                </svg>
-               
                 ))}
             </div>
             <form className={styles.contforms} style={{ marginTop: "60px" }} onSubmit={handleSubmit}>
@@ -149,9 +153,7 @@ const Opinion = () => {
                           {Array.from({ length: 5 }, (_, starIndex) => (
                             <span
                               key={starIndex}
-                              className={`${styles.star} ${
-                                starIndex < comment.rating ? styles.filled : ""
-                              }`}
+                              className={`${styles.star} ${starIndex < comment.rating ? styles.filled : ""}`}
                             >
                               ★
                             </span>
@@ -207,8 +209,6 @@ const Opinion = () => {
       </div>
     </div>
             
-
-
             <Footer />
         </>
     );

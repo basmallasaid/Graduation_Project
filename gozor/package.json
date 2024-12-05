@@ -7,7 +7,11 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+<<<<<<< HEAD
     "axios": "^1.7.9",
+=======
+    "axios": "^1.7.8",
+>>>>>>> 8e0b54f0777db10bb6624f1f36e98ea2ecb8896d
     "bootstrap": "^5.3.3",
     "js-cookie": "^3.0.5",
     "json-server": "^1.0.0-beta.3",
@@ -25,7 +29,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "DB":"json-server --watch data/db.json --port 3100"
   },
   "eslintConfig": {
     "extends": [

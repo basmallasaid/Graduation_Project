@@ -10,7 +10,7 @@ const CreateAccountForm = ({ onRegistrationSuccess }) => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [repPassword, setRepPassword] = useState("");
-  const [category, setCategory] = useState("مزارع");
+  const [category, setCategory] = useState("farmer");
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
 
@@ -158,22 +158,22 @@ const CreateAccountForm = ({ onRegistrationSuccess }) => {
         <div className={styles.regcategory}>
           <button
             type="button"
-            className={`${styles.regcategoryButton} ${category === "مزارع" ? styles.active : ""}`}
-            onClick={() => handleCategoryChange("مزارع")}
+            className={`${styles.regcategoryButton} ${category === "farmer" ? styles.active : ""}`}
+            onClick={() => handleCategoryChange("farmer")}
           >
             مزارع
           </button>
           <button
             type="button"
-            className={`${styles.regcategoryButton} ${category === "تاجر" ? styles.active : ""}`}
-            onClick={() => handleCategoryChange("تاجر")}
+            className={`${styles.regcategoryButton} ${category === "merchant" ? styles.active : ""}`}
+            onClick={() => handleCategoryChange("merchant")}
           >
             تاجر
           </button>
           <button
             type="button"
-            className={`${styles.regcategoryButton} ${category === "مستثمر" ? styles.active : ""}`}
-            onClick={() => handleCategoryChange("مستثمر")}
+            className={`${styles.regcategoryButton} ${category === "investor" ? styles.active : ""}`}
+            onClick={() => handleCategoryChange("investor")}
           >
             مستثمر
           </button>

@@ -13,12 +13,15 @@ import About from './Components/About';
 import Instructions from './Components/Instructions';
 import Register from './Authentication/Register';
 import Opinon from './Components/Opinon';
-
+import NavbarF from './Components/FarmerDashboard/NavbarF';
+import FooterF from './Components/FarmerDashboard/FooterF';
+import ViewCrops from './Components/FarmerDashboard/ViewCrops';
+import Addcrop from './Components/FarmerDashboard/addcrop';
 function App() {
   return (
       <StanderErrorBoundary>
         <BrowserRouter>
-          <Routes>
+          {/* <Routes>
           <Route path="/" element={<> <Navbar/><Home/></>} />
           <Route path="/Home" element={<> <Navbar/><Home /></>} />
           <Route path="Services" element={<><Services/></>}/>
@@ -29,8 +32,11 @@ function App() {
           <Route path="/register" element={<Home />} />
           <Route path='Opinon' element={<Opinon/>}/>
           
-          </Routes>
-      
+          </Routes> */}
+          {/* <Navbar/>
+          <ViewCrops/>
+          <FooterF/> */}
+      <Addcrop/>
         </BrowserRouter>
       </StanderErrorBoundary>
   );

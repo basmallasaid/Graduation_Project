@@ -1038,3 +1038,143 @@ background-color:#fff;
   padding: 20px;
   box-sizing: border-box;
 }
+/* farmer side */
+/* footer */
+.footerF{
+  background-color: #1F4E3D;
+  padding-top: 20px;
+}
+/* crops page */
+.croptitle{
+  margin-right: 10px ;
+  font-size:2rem; 
+  color: #000;
+}
+.cropinput{
+  width: 500px;
+}
+.plus {
+  cursor: pointer;
+  background: none;
+  border: 2px solid #1F4E3D; 
+  border-radius: 50%; 
+  width: 40px; 
+  height: 40px; 
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease, background-color 0.3s ease; 
+  color: #fff;
+  background-color: #4CAF50;
+  margin-right: 20px;
+  padding: 30px;
+}
+
+.plus:hover {
+  transform: translateX(20px); 
+  background-color: #ccc; 
+}
+
+.hide {
+  display: none;
+  font-size: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.plus:hover + .hide {
+  display: block;
+  opacity: 1;
+  transform: translateX(10px);
+  color: #878680;
+}
+@media (max-width: 719px) {
+  .cropinput {
+    max-width: 200px; /* Set maximum width for smaller screens */
+    width: 100%; /* Ensure it adapts to smaller widths if needed */
+  }
+}
+
+@media (max-width: 476px){
+.croptitle{
+  font-size: 1rem;}
+ .plus {
+  margin-right: 10px;
+  padding: 10px;
+}
+.hide{
+  font-size: 0.9rem;
+}
+}
+.cropdesc{
+  color:#49A760;
+}
+.propspan{
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;;
+  padding: 2px;
+}
+.cropempty{
+  color: #fff;
+  background-color: #878680;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+    padding: 7px 25px;
+    border-radius: 15px;
+}
+.cropempty:hover{
+background-color: #ccc;
+color: #fff;
+}
+.croppending{
+  color: #fff;
+  background-color: #49A760;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+    padding: 7px 25px;
+    border-radius: 15px;
+}
+.croppending:hover{
+  background-color: #49a760b4;
+  color: #fff;
+  }
+  .cropava{
+    color: #fff;
+    background-color: #62aeae;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+      padding: 7px 35px;
+      border-radius: 15px;
+  }
+  .cropava:hover{
+    background-color: #62aeae89;
+    color:#fff;
+  }
+  .addphoto{
+    display: flex;
+    justify-content: space-between;
+  }
+  .cropname{
+    margin-top: 80px;
+    margin-left: 10px;
+
+  }
+  .cropperiod{
+    display: flex;
+  }
+  .cropallow{
+    display: flex;
+    margin-top: 10px;
+  }
+  .bordercrop{
+    border: 2px dashed #0884A2;
+    padding: 5px;
+  }
+  .bordercropbtn{
+    border: 2px solid #0884A2;
+    padding: 5px;
+    color: #000;
+    border-radius: 5px;
+  }
+  .bordercropbtn:hover{
+    border: 2px solid #0884A2;
+    background-color: #0884A2;
+    color: #fff;
+
+  }

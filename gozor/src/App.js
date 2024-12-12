@@ -17,6 +17,8 @@ import NavbarF from './Components/FarmerDashboard/NavbarF';
 import FooterF from './Components/FarmerDashboard/FooterF';
 import ViewCrops from './Components/FarmerDashboard/ViewCrops';
 import Addcrop from './Components/FarmerDashboard/addcrop';
+import Cropcard from './Components/FarmerDashboard/cropcard';
+
 function App() {
   return (
       <StanderErrorBoundary>
@@ -33,10 +35,11 @@ function App() {
           <Route path='Opinon' element={<Opinon/>}/>
           
           </Routes> */}
-          {/* <Navbar/>
+          <Navbar/>
           <ViewCrops/>
-          <FooterF/> */}
-      <Addcrop/>
+          <FooterF/>
+      {/* <Addcrop/> */}
+      {/* <Cropcard/> */}
         </BrowserRouter>
       </StanderErrorBoundary>
   );

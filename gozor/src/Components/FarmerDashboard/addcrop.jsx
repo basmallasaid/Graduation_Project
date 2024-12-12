@@ -1,9 +1,20 @@
 import styles from "../../Styles/style.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';  // Import the toast styles
 
 export default function Addcrop() {
   const [imageSrc, setImageSrc] = useState(null);
   const [isCropAllowVisible, setIsCropAllowVisible] = useState(false);
+  const [cropNames, setCropNames] = useState([]);
+  const [selectedCrop, setSelectedCrop] = useState("اختر المحصول");
+  const [productionDate, setProductionDate] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [price, setPrice] = useState("");
+  const [isCycleRelated, setIsCycleRelated] = useState(null);
+  const [allowUpdates, setAllowUpdates] = useState(null);
+  const [error, setError] = useState(null);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -20,57 +31,146 @@ export default function Addcrop() {
 
   const handleSelectChange = (e) => {
     const value = e.target.value;
-    setIsCropAllowVisible(value !== "no"); // Show the div if the value is not "لايوجد"
+    setIsCycleRelated(value !== "no" ? value : null);
+    setIsCropAllowVisible(value !== "no");
   };
 
+  const handleCropSelect = (cropName) => {
+    setSelectedCrop(cropName); // Update the selected crop name
+  };
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
+    // Check for missing fields
+    if (
+      !selectedCrop || 
+      selectedCrop === "اختر المحصول" ||
+      !productionDate || 
+      !quantity || 
+      !price ||
+      !isCycleRelated || 
+      allowUpdates === null || 
+      !imageSrc
+    ) {
+      toast.error("يرجى ملء جميع الحقول!");
+      return;
+    }
+
+    // Prepare data for the backend
+    const cropData = {
+      crop_name: selectedCrop,
+      production_date: productionDate,
+      quantity: parseInt(quantity),
+      price: parseFloat(price),
+      is_cycle_related: isCycleRelated,
+      allow_updates: allowUpdates === "yes",
+      image: imageSrc, // Send the image as base64
+    };
+
+    try {
+      const response = await axios.post("http://localhost:8000/cropview", cropData);
+      // Success - Show toast
+      toast.success("تم إضافة المحصول بنجاح!");
+    } catch (err) {
+      console.error("Error submitting data:", err);
+      setError("Failed to submit data. Please try again.");
+      toast.error("فشل في إرسال البيانات. يرجى المحاولة مرة أخرى.");
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:8001/cropname");
+        setCropNames(response.data);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load crops");
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <div className="container py-5" style={{ backgroundColor: "#F5F5F5" ,maxWidth:"70%" }}>
-      <div
-        className="row d-flex flex-column flex-md-row align-items-start align-items-md-center"
-      >
+    <div className="container" style={{ backgroundColor: "#F5F5F5" }}>
+      <div className="row d-flex flex-column flex-md-row align-items-start align-items-md-center">
         {/* Form Section */}
         <div className="col-lg-6 col-md-6 col-12 mb-4">
           <div className="border rounded p-4 shadow">
-            <form style={{ padding: "30px" }}>
-              <div className={styles.addphoto}>
-                <div className={styles.cropname}>
-                  <label className="form-label">اسم المحصول</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    style={{ width: "100%" }}
-                  />
+            <form style={{ padding: "30px" }} onSubmit={handleFormSubmit}>
+              {/* Upload Section */}
+              <div className="text-center" style={{ maxwidth: "40%" }}>
+                <div className={styles.bordercrop}>
+                  <p>اسحب الصور هنا لتحميلها</p>
+                  <button
+                    type="button"
+                    className={styles.bordercropbtn}
+                    onClick={() => document.getElementById("fileInput").click()}
+                  >
+                    استعراض الصور
+                  </button>
+                  <p className="text-muted mt-2">
+                    5MB الحجم الاقصى للصور | PNG, JPG
+                  </p>
                 </div>
-                {/* Upload Section */}
-                <div className="text-center" style={{ maxwidth: "40%" }}>
-                  <div className={styles.bordercrop}>
-                    <p>اسحب الصور هنا لتحميلها</p>
-                    <button
-                      type="button"
-                      className={styles.bordercropbtn}
-                      onClick={() => document.getElementById("fileInput").click()}
-                    >
-                      استعراض الصور
-                    </button>
-                    <p className="text-muted mt-2">
-                      5MB الحجم الاقصى للصور | PNG, JPG
-                    </p>
-                  </div>
+              </div>
+              <div className={styles.addphoto}>
+                <div className={`dropdown ${styles.cropname}`}>
+                  <button
+                    className="btn btn-secondary dropdown-toggle"
+                    type="button"
+                    id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    style={{
+                      backgroundColor: "#fff",
+                      color: "#49A760",
+                    }}
+                  >
+                    {selectedCrop} {/* Display the selected crop name */}
+                  </button>
+                  <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    {error && <li className="dropdown-item text-danger">{error}</li>}
+                    {cropNames.length > 0 ? (
+                      cropNames.map((crop, index) => (
+                        <li key={index}>
+                          <a
+                            className="dropdown-item"
+                            href="#"
+                            onClick={() => handleCropSelect(crop.name)} // Set the selected crop name on click
+                          >
+                            {crop.name}
+                          </a>
+                        </li>
+                      ))
+                    ) : (
+                      !error && <li className="dropdown-item">Loading...</li>
+                    )}
+                  </ul>
                 </div>
               </div>
 
               <div className="row mb-3">
                 <div className="col-md-6">
                   <label className="form-label">تاريخ الانتاج</label>
-                  <input type="date" className="form-control" />
+                  <input
+                    type="date"
+                    className="form-control"
+                    value={productionDate}
+                    onChange={(e) => setProductionDate(e.target.value)}
+                  />
                 </div>
                 <div className="col-md-6">
                   <label className="form-label">الكمية</label>
                   <input
                     type="number"
                     className="form-control"
-                    style={{ maxWidth: "30%" }}
+                    style={{ maxWidth: "50%" }}
                     min="0"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
                   />
                 </div>
               </div>
@@ -82,6 +182,8 @@ export default function Addcrop() {
                   className="form-control"
                   style={{ maxWidth: "50%" }}
                   min="0"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
                 />
               </div>
 
@@ -95,17 +197,16 @@ export default function Addcrop() {
                 <select
                   className="form-select"
                   style={{
-                    maxWidth: "30%",
+                    maxWidth: "40%",
                     backgroundColor: "#fff",
                     color: "#49A760",
                   }}
                   onChange={handleSelectChange}
                 >
-                  <option>اختر الدورة</option>
+                  <option value="no">لايوجد</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>
-                  <option value="no">لايوجد</option>
                 </select>
               </div>
               {isCropAllowVisible && (
@@ -123,6 +224,7 @@ export default function Addcrop() {
                       name="allow-updates"
                       className="form-check-input"
                       value="yes"
+                      onChange={(e) => setAllowUpdates(e.target.value)}
                     />
                     <label htmlFor="allow-yes" className="form-check-label">
                       نعم
@@ -135,6 +237,7 @@ export default function Addcrop() {
                       name="allow-updates"
                       className="form-check-input"
                       value="no"
+                      onChange={(e) => setAllowUpdates(e.target.value)}
                     />
                     <label
                       htmlFor="allow-no"
@@ -146,6 +249,11 @@ export default function Addcrop() {
                   </div>
                 </div>
               )}
+              <div className={styles.cropaddbtn}>
+                <button type="submit" className={styles.cropadd}>
+                  اضافه
+                </button>
+              </div>
             </form>
           </div>
         </div>
@@ -155,7 +263,7 @@ export default function Addcrop() {
           <img
             className="crop-image"
             src={imageSrc || ""}
-            alt="add product image"
+            alt="اضف صوره المحصول"
             style={{
               maxWidth: "100%",
               borderRadius: "8px",
@@ -171,6 +279,9 @@ export default function Addcrop() {
           />
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 }

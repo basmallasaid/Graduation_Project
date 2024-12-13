@@ -1120,6 +1120,8 @@ background-color:#fff;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
     padding: 7px 25px;
     border-radius: 15px;
+    border: 0;
+
 }
 .cropempty:hover{
 background-color: #ccc;
@@ -1129,8 +1131,10 @@ color: #fff;
   color: #fff;
   background-color: #49A760;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
-    padding: 7px 25px;
+    padding: 5px 18px;
     border-radius: 15px;
+    border: 0;
+    font-size: 15px;
 }
 .croppending:hover{
   background-color: #49a760b4;
@@ -1142,18 +1146,16 @@ color: #fff;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
       padding: 7px 35px;
       border-radius: 15px;
+      border: 0;
+
   }
   .cropava:hover{
     background-color: #62aeae89;
     color:#fff;
   }
-  .addphoto{
-    display: flex;
-    justify-content: space-between;
-  }
+
   .cropname{
-    margin-top: 80px;
-    margin-left: 10px;
+    margin-top: 10px;
 
   }
   .cropperiod{
@@ -1379,5 +1381,4 @@ color: #fff;
     .weather span{
       font-size: 10px;
     }
-  
   }

@@ -17,7 +17,12 @@ import NavbarF from './Components/FarmerDashboard/NavbarF';
 import FooterF from './Components/FarmerDashboard/FooterF';
 import ViewCrops from './Components/FarmerDashboard/ViewCrops';
 import Addcrop from './Components/FarmerDashboard/addcrop';
+// <<<<<<< HEAD
 import WeatherF from './Components/FarmerDashboard/WeatherF';
+// =======
+import Cropcard from './Components/FarmerDashboard/cropcard';
+
+// >>>>>>> 854142225220f439e2c00c42ebb6c9345aae2d54
 function App() {
   return (
       <StanderErrorBoundary>
@@ -33,13 +38,22 @@ function App() {
           <Route path="/register" element={<Home />} />
           <Route path='Opinon' element={<Opinon/>}/>
           <Route path='WeatherF' element={<WeatherF/>}/>
-          
-          </Routes> 
+{/*           
+<<<<<<< HEAD */}
+           </Routes> 
           {/* <Navbar/>
           <ViewCrops/>
           <FooterF/> */}
       {/* <Addcrop/> */}
-         {/* <WeatherF/> */}
+        
+// =======
+       {/* </Routes>  */}
+      //     <Navbar/>
+      //     <ViewCrops/>
+      //     <FooterF/>
+      // {/* <Addcrop/> */}
+      // {/* <Cropcard/> */}
+{/* >>>>>>> 854142225220f439e2c00c42ebb6c9345aae2d54 */}
         </BrowserRouter>
       </StanderErrorBoundary>
   );

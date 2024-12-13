@@ -1,0 +1,37 @@
+{
+  "cropview": [
+    {
+      "id": "1",
+      "name": "اناناس",
+      "price": "15جنيه /الكيلو",
+      "productionDate": "24/5/2003",
+      "quantity": 30,
+      "status": "تحت الطلب"
+    },
+    {
+      "id": "3",
+      "name": "تفاح",
+      "price": "20جنيه /الكيلو",
+      "productionDate": "15/6/2020",
+      "quantity": 50,
+      "status": "متوفر"
+    },
+    {
+      "id": "4",
+      "name": "ثوم",
+      "price": "20جنيه /الكيلو",
+      "productionDate": "15/6/2020",
+      "quantity": 50,
+      "status": "متوفر"
+    },
+    {
+      "id": "5",
+      "name": "خيار",
+      "price": "20جنيه /الكيلو",
+      "productionDate": "15/6/2020",
+      "quantity": 50,
+      "status": "متوفر"
+    }
+    
+  ]
+}

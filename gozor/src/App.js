@@ -40,6 +40,7 @@ function App() {
           <FooterF/>
       {/* <Addcrop/> */}
       {/* <Cropcard/> */}
+  
         </BrowserRouter>
       </StanderErrorBoundary>
   );

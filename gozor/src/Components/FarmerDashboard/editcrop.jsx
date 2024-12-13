@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the toast styles
-import { useNavigate } from "react-router-dom";
+
 export default function Addcrop() {
   const [imageSrc, setImageSrc] = useState(null);
   const [isCropAllowVisible, setIsCropAllowVisible] = useState(false);
@@ -15,9 +15,7 @@ export default function Addcrop() {
   const [isCycleRelated, setIsCycleRelated] = useState(null);
   const [allowUpdates, setAllowUpdates] = useState(null);
   const [error, setError] = useState(null);
-  const [visiblecrop, setVisiblecrop] = useState(false);
 
-  const navigate = useNavigate();
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -67,21 +65,15 @@ export default function Addcrop() {
       yield: parseInt(quantity, 10), // Convert to integer
       price: parseFloat(price), // Convert to float
       productionDate, // Ensure it's in ISO format (YYYY-MM-DD)
-      status: quantity > 0 
-      ? (parseInt(isCycleRelated, 10) > 0 ? "تحت الطلب" : "متاح") 
-      : "نفذت الكمية", // Map quantity and cycle relation to status
-    isCycleRelated: parseInt(isCycleRelated, 10), // Ensure it's an integer
-    allowUpdates: allowUpdates === "true", // Convert to boolean
-    
+      status: quantity > 0 ? "Available" : "Out of Stock", // Map quantity to status
+      isCycleRelated: parseInt(isCycleRelated, 10), // Ensure it's an integer
+      allowUpdates: allowUpdates === "true", // Convert to boolean
     };
   
     try {
       const response = await axios.post("http://localhost:8000/cropview", cropData);
       // Handle success
       toast.success("تم إضافة المحصول بنجاح!");
-      setVisiblecrop(false);
-      
-      navigate('/viewcrops'); // Adjust the path as per your routing setup
     } catch (err) {
       console.error("Error submitting data:", err);
       setError("Failed to submit data. Please try again.");

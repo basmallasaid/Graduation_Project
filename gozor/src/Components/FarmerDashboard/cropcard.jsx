@@ -85,7 +85,7 @@ export default function Cropcard({ crop }) {
                       padding: "5px",
                     }}
                   >
-                    {crop.quantity}
+                    {crop.yield}
                   </span>
                 </div>
                 <div className="col-md-12">

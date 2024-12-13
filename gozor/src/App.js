@@ -17,11 +17,12 @@ import NavbarF from './Components/FarmerDashboard/NavbarF';
 import FooterF from './Components/FarmerDashboard/FooterF';
 import ViewCrops from './Components/FarmerDashboard/ViewCrops';
 import Addcrop from './Components/FarmerDashboard/addcrop';
+import WeatherF from './Components/FarmerDashboard/WeatherF';
 function App() {
   return (
       <StanderErrorBoundary>
         <BrowserRouter>
-          {/* <Routes>
+          <Routes>
           <Route path="/" element={<> <Navbar/><Home/></>} />
           <Route path="/Home" element={<> <Navbar/><Home /></>} />
           <Route path="Services" element={<><Services/></>}/>
@@ -31,12 +32,14 @@ function App() {
           <Route path="*" element={<Notfound />} />
           <Route path="/register" element={<Home />} />
           <Route path='Opinon' element={<Opinon/>}/>
+          <Route path='WeatherF' element={<WeatherF/>}/>
           
-          </Routes> */}
+          </Routes> 
           {/* <Navbar/>
           <ViewCrops/>
           <FooterF/> */}
-      <Addcrop/>
+      {/* <Addcrop/> */}
+         {/* <WeatherF/> */}
         </BrowserRouter>
       </StanderErrorBoundary>
   );

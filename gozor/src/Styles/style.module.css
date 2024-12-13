@@ -1043,6 +1043,7 @@ background-color:#fff;
 .footerF{
   background-color: #1F4E3D;
   padding-top: 20px;
+  margin-top:70px ;
 }
 /* crops page */
 .croptitle{
@@ -1177,4 +1178,206 @@ color: #fff;
     background-color: #0884A2;
     color: #fff;
 
+  }
+  /*weather farmer page*/
+  .headerf{
+    padding:60px 40px;
+
+  }
+.cweather{
+  display: flex;
+}
+
+.cloud{
+  width: 150px;
+  height: 60px;
+  background-color: #79CC88;
+  margin-right:50px ;
+  border-radius: 20px ;
+  box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  display: flex;
+}
+.rain{
+  width: 150px;
+  height: 60px;
+  background-color: #79A8CC;
+  margin-right:50px ;
+  border-radius: 20px ;
+  box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  display: flex;
+
+}
+.sunny{
+  width: 150px;
+  height: 60px;
+  background-color: #B7CC79;
+  margin-right:50px ;
+  border-radius: 20px ;
+  box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  display: flex;
+}
+.currentweather span{
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  
+}
+.currentweather:hover{
+  transform:translate(-10px);
+  cursor: pointer;
+
+}
+.currentweather img{
+  width: 30%;
+  
+}
+  .headerf h2{
+    color: #1F4E3D;
+    font-weight:bold;
+    font-size: 50px;
+  }
+  .headerf h4{
+    color: gray;
+    font-weight: bold;
+  }
+  .containerf{
+    background: linear-gradient(to bottom, rgb(183, 220, 183), white);
+    height: 100hv;
+    padding:10px 40px 40px;
+     
+  }
+  .weather img{
+    width: 10%;
+    
+    
+  }
+  .weather span{
+    font-weight: bold;
+    font-size: 20px;
+  }
+  .weather{
+    margin:50px 20px;
+    margin-bottom: 150px;
+    
+  }
+  .Temperature{
+    width: 50%; 
+    height: 180px;
+    background: linear-gradient(to bottom, rgb(163,216,190), rgb(86,114,100));
+    border-radius: 50px;
+    text-align: center;
+    color: white;
+    box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
+    transform: translateX(0);
+  animation: Move 1.5s linear;
+  }
+  .Humidity{
+    width: 50%; 
+    height: 180px;
+    background: linear-gradient(to bottom, rgb(90,167,130), rgb(35,65,51));
+    border-radius: 50px;
+    text-align: center;
+    color: white;
+    box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
+    transform: translateX(0);
+  animation: Move 1.5s linear;
+   
+  }
+  .Air{
+    width: 50%; 
+    height: 180px;
+    background: linear-gradient(to bottom, rgba(25, 153, 212, 0.872), rgb(30,54,79));
+    border-radius: 50px;
+    text-align: center;
+    color: white;
+    box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
+    transform: translateX(0);
+  animation: Move 1.5s linear;
+  }
+  .infoweather{
+    width: 70%;
+    background: rgba(255, 255, 255, 0.776);
+    color: #000;
+    border-radius: 20px ;
+    margin: 50px 0px 1px;
+    box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    transform: translateX(0);
+  animation: Move 1.5s linear;
+
+  }
+  .infoweather p{
+    color: #CF2917;
+    font-weight: 550;
+    padding: 5px 40px;
+  }
+  .infoweather img{
+    width: 3%;
+
+  }
+  .infoweather h4{
+    font-weight: bold;
+    padding: 5px 40px;
+  }
+  .leftside{
+    width:20% ;
+    height: 500px;
+    background: linear-gradient(to bottom, rgb(112, 135, 99), rgb(27,33,24));
+    position: relative;
+    top: 100px;
+    border-radius: 30px;
+    box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
+  }
+  .Temperature p  , .Air p{
+   padding: 25px;
+   position: relative;
+   top:8%;
+   font-weight: 700;
+   font-size:30px;
+   text-align: center;
+  }
+  .Humidity p{
+    position: relative;
+   top:20%;
+    font-weight: 700;
+    font-size:30px;
+    text-align: center;
+    padding: 25px;
+   
+  }
+  .infoweather:hover{
+    transform: translateY(-10px);
+  }
+  @media (max-width: 719px) {
+    .Humidity p, .Temperature p  , .Air p{
+      font-weight: bold;
+    font-size:10px;
+    text-align: center;
+    padding: 5px;
+    position: relative;
+    top:20%;
+
+    }
+    .weather span{
+      font-size: 10px;
+    }
+  }
+  
+  @media (max-width: 476px){
+  
+    .Humidity p, .Temperature p  , .Air p{
+      font-weight: bold;
+    font-size:10px;
+    text-align: center;
+    padding: 5px;
+    position: relative;
+    top:30%;
+    }
+    .weather span{
+      font-size: 10px;
+    }
+  
   }

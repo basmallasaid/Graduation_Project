@@ -258,7 +258,7 @@ export default function Addcrop() {
                   </div>
                 </div>
               )}
-              <div className={styles.cropaddbtn}>
+              <div className={styles.cropadd_btn}>
                 <button type="submit" className={styles.cropadd}>
                   اضافه
                 </button>

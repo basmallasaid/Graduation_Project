@@ -50,9 +50,10 @@ export default function Cropcard({ crop }) {
                                   <Addcrop/>
                   
                               </Modal>
-                  <button className={styles.buttfadel}>
+                  <button className={styles.buttfadel} >
                     <i className="fa-solid fa-trash"></i>
                   </button>
+
                 </div>
                 <div className="col-md-12">
                   <label className="form-label" style={{ fontSize: "35px" }}>

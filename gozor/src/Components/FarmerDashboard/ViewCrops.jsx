@@ -151,7 +151,7 @@ export default function ViewCrops() {
         <div className="container my-5">
           <div className="row justify-content-center">
             {filteredCrops.map((crop) => (
-              <div className="col-lg-2 col-md-4 col-6 mb-4" key={crop.id}>
+              <div className="col-lg-2 col-md-4 col-6 mb-4" key={crop.harvestId}>
                 <div className="card text-center" style={{ width: "100%", padding: "15px" }}>
                   <div className="card-body">
                     <h5 className="card-title">{crop.name}</h5>
@@ -160,7 +160,7 @@ export default function ViewCrops() {
                       الكمية: <span className={styles.propspan}>{crop.yield}</span>
                     </p>
                     <button
-                      className={`btn ${crop.status === 'تحت الطلب' ? styles.croppending : crop.status === 'نفذت الكمية' ? styles.cropempty : styles.cropava}`}
+                      className={`btn ${crop.status === 'تحت الطلب' ? styles.croppending : crop.status === 'نفذت الكميه' ? styles.cropempty : styles.cropava}`}
                       onClick={() => {
                         setSelectedCrop(crop); // Set the selected crop data
                         setSeecrop(true); // Open the modal

@@ -83,6 +83,13 @@
       "username": "",
       "feedback": "غعفغغغق",
       "date": "2024-12-05T13:44:04.028Z"
+    },
+    {
+      "id": "f569",
+      "rating": 2,
+      "username": "",
+      "feedback": "dcd",
+      "date": "2024-12-15T02:37:50.015Z"
     }
   ],
   "contacts": [
@@ -122,14 +129,14 @@
       "message": "ااتلت"
     }
   ],
-  "weatherDetails":[
+  "weatherDetails": [
     {
-    "temperature": "18.54 درجة مئوية",
-    "humidity": "73%",
-    "windSpeed": "4.69 كم/ساعة",
-    "description": "مشمس"
-  }
-],
+      "temperature": "18.54 درجة مئوية",
+      "humidity": "73%",
+      "windSpeed": "4.69 كم/ساعة",
+      "description": "مشمس"
+    }
+  ],
   "agriculturalRecommendations": [
     {
       "activity": "العمل في الأرض (درجه الحراره) ",
@@ -148,9 +155,28 @@
       "details": "الطقس مستقر، يمكنك متابعة الأنشطة الزراعية."
     }
   ],
-  "plantHealthStatus":[ {
-    "healthIndex": "100%",
-    "details": "النباتات في حالة جيدة مع معدلات نمو عالية."
-  }
+  "plantHealthStatus": [
+    {
+      "healthIndex": "100%",
+      "details": "النباتات في حالة جيدة مع معدلات نمو عالية."
+    }
+  ],
+  "plantDiseaseData": [
+    {
+      "name": "البیاض المبكر على الطماطم",
+      "diagnosis": "بقع كبیرة بنیة داكنة على الأوراق مع حلقات متحدة المركز",
+      "recommendation": "مبیدات فطریة، تناوب المحاصیل، أصناف مقاومة",
+      "isIll": true
+    }
+  ],
+  "plantName": [
+    {
+      "name": "طماطم"
+    }
+  ],
+  "plantimg": [
+    {
+      "imageUrl": ""
+    }
   ]
 }

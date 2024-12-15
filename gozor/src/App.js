@@ -21,15 +21,15 @@ import Addcrop from './Components/FarmerDashboard/addcrop';
 import WeatherF from './Components/FarmerDashboard/WeatherF';
 // =======
 import Cropcard from './Components/FarmerDashboard/cropcard';
-import Croprequests from './Components/FarmerDashboard/croprequests';
+import Croprequests from './Components/FarmerDashboard/Croprequests';
 
 // >>>>>>> 854142225220f439e2c00c42ebb6c9345aae2d54
 function App() {
   return (
       <StanderErrorBoundary>
         <BrowserRouter>
-          {/* <Routes>
-          <Route path="/" element={<> <Navbar/><Home/></>} />
+          { <Routes>
+          {/* <Route path="/" element={<> <Navbar/><Home/></>} />
           <Route path="/Home" element={<> <Navbar/><Home /></>} />
           <Route path="Services" element={<><Services/></>}/>
           <Route path="Contact" element={<><Contact/></>}/>
@@ -38,24 +38,14 @@ function App() {
           <Route path="*" element={<Notfound />} />
           <Route path="/register" element={<Home />} />
           <Route path='Opinon' element={<Opinon/>}/>
-          <Route path='WeatherF' element={<WeatherF/>}/>
-{/*           
-}
-           </Routes>  */}
-          {/* <Navbar/>
-          <ViewCrops/>
-          <FooterF/> */}
-      {/* <Addcrop/> */}
-      {/* <Cropcard/> */}
+          <Route path='WeatherF' element={<WeatherF/>}/> */}
+          <Route path="/viewcrops" element={<ViewCrops/>} />
+           </Routes>}
+ 
 
-       {/* </Routes>  */}
-          <Navbar/>
-           <ViewCrops/>
-           <FooterF/>
-       {/* <Addcrop/> */}
-       {/* <Cropcard/> */}
-{/* >>>>>>> 854142225220f439e2c00c42ebb6c9345aae2d54 */}
-{/* <Croprequests/> */}
+
+      
+
         </BrowserRouter>
       </StanderErrorBoundary>
   );

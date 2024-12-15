@@ -4,6 +4,8 @@ import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import Addcrop from "./addcrop";
 import Cropcard from "./cropcard";
+import Navbar from "../Navbar";
+import FooterF from "./FooterF";
 
 export default function ViewCrops() {
   const [visiblecrop, setVisiblecrop] = useState(false);
@@ -12,61 +14,87 @@ export default function ViewCrops() {
   const [selectedCrop, setSelectedCrop] = useState(null); // Selected crop data
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Track search input
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCrops = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/cropview"); // Replace with your API URL
-        const data = await response.json();
-        setCrops(data); // Set crops data
-      } catch (error) {
-        console.error("Error fetching crops:", error);
-      }
-    };
+   const fetchCrops = async () => {
+  try {
+    const response = await fetch("http://localhost:8000/cropview");
+    const data = await response.json();
+    console.log(data); // Log to verify structure
+    setCrops(data.cropview || data); // Adjust based on the response structure
+  } catch (error) {
+    console.error("Error fetching crops:", error);
+  }
+};
+
 
     fetchCrops();
   }, []);
-
-  // Filter crops based on search term
-  const filteredCrops = crops.filter((crop) => {
-    const lowercasedSearchTerm = searchTerm.trim().toLowerCase();
-    
-    return (
-      crop.name.toLowerCase().startsWith(lowercasedSearchTerm) ||
-      crop.price.toString().startsWith(lowercasedSearchTerm) ||
-      crop.yield.toString().startsWith(lowercasedSearchTerm) ||
-      crop.status.toLowerCase().startsWith(lowercasedSearchTerm)
+ 
+  const handleCropUpdated = (updatedCrop) => {
+    // Update the crop in the list
+    setCrops((prevCrops) =>
+      prevCrops.map((crop) => (crop.id === updatedCrop.id ? updatedCrop : crop))
     );
-  });
+  };
+  // Function to handle crop deletion
+  const handleCropDeleted = (deletedId) => {
+    // Remove the crop from the crops array
+    setCrops(crops.filter(crop => crop.id !== deletedId));
+
+  
+    
+    
+    // Close the modal if it's open
+    setSeecrop(false);
+    setSelectedCrop(null);
+  };
+ 
+ // Filter crops based on search term
+const filteredCrops = crops.filter((crop) => {
+  const lowercasedSearchTerm = searchTerm.trim().toLowerCase();
+
+  return (
+    (crop.name && crop.name.toLowerCase().startsWith(lowercasedSearchTerm)) ||
+    (crop.price && crop.price.toString().startsWith(lowercasedSearchTerm)) ||
+    (crop.yield && crop.yield.toString().startsWith(lowercasedSearchTerm)) ||
+    (crop.status && crop.status.toLowerCase().startsWith(lowercasedSearchTerm))
+  );
+});
 
   const cropStyles = {
     content: {
-      maxWidth: '70%', // Set your desired width
-      margin: 'auto', // Centers the modal horizontally
-      padding: '10px', // Add padding for better spacing
-      borderRadius: '10px', // Optional: round corners
-      maxHeight: '85%', // Set a fixed height
+      maxWidth: '70%',
+      margin: 'auto',
+      padding: '10px',
+      borderRadius: '10px',
+      maxHeight: '86%',
     },
     overlay: {
-      backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: dim background
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
   };
 
   const cropbuttonStyles = {
     content: {
-      maxWidth: '65%', // Set your desired width
-      margin: 'auto', // Centers the modal horizontally
-      padding: '10px', // Add padding for better spacing
-      borderRadius: '10px', // Optional: round corners
-      maxHeight: '450px', // Set a fixed height
+      maxWidth: '65%',
+      margin: 'auto',
+      padding: '10px',
+      borderRadius: '10px',
+      maxHeight: '520px',
     },
     overlay: {
-      backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: dim background
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
   };
-
+  const handleaddSuccess = () => {
+    setVisiblecrop(false); // Close the modal
+    navigate("/viewcrops"); // Navigate to the home page
+  };
   return (
     <>
+    <Navbar />
       <div className="crops" style={{ backgroundColor: "#fff", padding: "50px" }}>
         {/* Flex container for Plus Icon, Title, and Search */}
         <div
@@ -94,10 +122,10 @@ export default function ViewCrops() {
             style={cropStyles}
           >
             <button onClick={() => setVisiblecrop(false)}><i className="fa-solid fa-xmark" style={{ fontSize: "20px", cursor: "pointer" }}></i></button>
-            <Addcrop />
-          </Modal>
+            <Addcrop onCropAdded={(newCrop) => setCrops((prevCrops) => [...prevCrops, newCrop])}  onaddSuccess={handleaddSuccess} />
+            </Modal>
 
-          {/* Search Bar */}
+          {/* Search Bar and Title */}
           <div
             className="d-flex align-items-center justify-content-center flex-grow-1"
             style={{
@@ -118,7 +146,7 @@ export default function ViewCrops() {
                     border: "2px solid #000",
                   }}
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)} // Update search term
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </form>
             )}
@@ -151,7 +179,7 @@ export default function ViewCrops() {
         <div className="container my-5">
           <div className="row justify-content-center">
             {filteredCrops.map((crop) => (
-              <div className="col-lg-2 col-md-4 col-6 mb-4" key={crop.harvestId}>
+              <div className="col-lg-2 col-md-4 col-6 mb-4" key={crop.id}>
                 <div className="card text-center" style={{ width: "100%", padding: "15px" }}>
                   <div className="card-body">
                     <h5 className="card-title">{crop.name}</h5>
@@ -162,8 +190,8 @@ export default function ViewCrops() {
                     <button
                       className={`btn ${crop.status === 'تحت الطلب' ? styles.croppending : crop.status === 'نفذت الكميه' ? styles.cropempty : styles.cropava}`}
                       onClick={() => {
-                        setSelectedCrop(crop); // Set the selected crop data
-                        setSeecrop(true); // Open the modal
+                        setSelectedCrop(crop);
+                        setSeecrop(true);
                       }}
                     >
                       {crop.status}
@@ -172,36 +200,42 @@ export default function ViewCrops() {
                 </div>
               </div>
             ))}
-          </div>
 
-          {/* Modal for Crop Details */}
-          {selectedCrop && (
-            <Modal
-              isOpen={seecrop}
-              onRequestClose={() => setSeecrop(false)}
-              ariaHideApp={false}
-              style={cropbuttonStyles}
-            >
-              <button
-                onClick={() => setSeecrop(false)}
-                style={{
-                  backgroundColor: "transparent",
-                  border: "none",
-                  fontSize: "20px",
-                  color: "#333",
-                  cursor: "pointer",
-                  position: "absolute",
-                  top: "10px",
-                  right: "10px",
-                }}
+            {/* Modal for Crop Details */}
+            {selectedCrop && (
+              <Modal
+                isOpen={seecrop}
+                onRequestClose={() => setSeecrop(false)}
+                ariaHideApp={false}
+                style={cropbuttonStyles}
               >
-                <i className="fa-solid fa-xmark"></i>
-              </button>
-              <Cropcard crop={selectedCrop} /> {/* Pass crop data to Cropcard */}
-            </Modal>
-          )}
+                <button
+                  onClick={() => setSeecrop(false)}
+                  style={{
+                    backgroundColor: "transparent",
+                    border: "none",
+                    fontSize: "20px",
+                    color: "#333",
+                    cursor: "pointer",
+                    position: "absolute",
+                    top: "10px",
+                    right: "10px",
+                  }}
+                >
+                  <i className="fa-solid fa-xmark"></i>
+                </button>
+                <Cropcard 
+                  crop={selectedCrop} 
+                  onCropDeleted={handleCropDeleted}  // Pass the deletion handler
+                  onCropUpdated={handleCropUpdated} 
+
+                /> 
+              </Modal>
+            )}
+          </div>
         </div>
       </div>
+      <FooterF/>
     </>
   );
 }

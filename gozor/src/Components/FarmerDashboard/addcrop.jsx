@@ -4,7 +4,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the toast styles
 import { useNavigate } from "react-router-dom";
-export default function Addcrop() {
+export default function Addcrop({onCropAdded,onaddSuccess}) {
   const [imageSrc, setImageSrc] = useState(null);
   const [isCropAllowVisible, setIsCropAllowVisible] = useState(false);
   const [cropNames, setCropNames] = useState([]);
@@ -43,8 +43,8 @@ export default function Addcrop() {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-  
-    // Check for missing fields
+
+    // Validation logic...
     if (
       !selectedCrop ||
       selectedCrop === "اختر المحصول" ||
@@ -58,30 +58,38 @@ export default function Addcrop() {
       toast.error("يرجى ملء جميع الحقول!");
       return;
     }
-  
-    // Prepare the data in the format expected by the backend
+
     const cropData = {
-      harvestId: null, // Assuming harvestId is not provided in the form
-      imageUrl: imageSrc, // Send the image as base64
-      name: selectedCrop, // Selected crop name
-      yield: parseInt(quantity, 10), // Convert to integer
-      price: parseFloat(price), // Convert to float
-      productionDate, // Ensure it's in ISO format (YYYY-MM-DD)
-      status: quantity > 0 
-      ? (parseInt(isCycleRelated, 10) > 0 ? "تحت الطلب" : "متاح") 
-      : "نفذت الكمية", // Map quantity and cycle relation to status
-    isCycleRelated: parseInt(isCycleRelated, 10), // Ensure it's an integer
-    allowUpdates: allowUpdates === "true", // Convert to boolean
-    
+      harvestId: null,
+      imageUrl: imageSrc,
+      name: selectedCrop,
+      yield: parseInt(quantity, 10),
+      price: parseFloat(price),
+      productionDate,
+      status:
+        quantity > 0
+          ? parseInt(isCycleRelated, 10) > 0
+            ? "تحت الطلب"
+            : "متاح"
+          : "نفذت الكمية",
+      isCycleRelated: parseInt(isCycleRelated, 10),
+      allowUpdates: allowUpdates === "true",
     };
-  
+
     try {
       const response = await axios.post("http://localhost:8000/cropview", cropData);
-      // Handle success
+
+      // Notify success
       toast.success("تم إضافة المحصول بنجاح!");
-      setVisiblecrop(false);
-      
-      navigate('/viewcrops'); // Adjust the path as per your routing setup
+      setTimeout(() => {
+        onaddSuccess();
+      }, 2000);
+
+      // Update the crops in ViewCrops dynamically
+      if (onCropAdded) {
+        onCropAdded({ id: response.data.id, ...cropData }); // Include the crop's ID from the server response
+      }
+  
     } catch (err) {
       console.error("Error submitting data:", err);
       setError("Failed to submit data. Please try again.");

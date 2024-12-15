@@ -1112,13 +1112,31 @@ background-color:#fff;
 }
 .propspan{
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;;
-  padding: 2px;
+  padding: 4px 10px;
 }
+.cropadd_btn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+}
+.cropadd{
+  color: #fff;
+  background-color: #49A760;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+    padding: 7px 35px;
+    border-radius: 15px;
+    border: 0;
+}
+.cropadd:hover{
+  background-color: #49a760b4;
+  color: #fff;
+  }
 .cropempty{
   color: #fff;
   background-color: #878680;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
-    padding: 7px 25px;
+    padding: 5px 18px;
     border-radius: 15px;
     border: 0;
 
@@ -1151,6 +1169,19 @@ color: #fff;
   .cropava:hover{
     background-color: #62aeae89;
     color:#fff;
+  }
+  .talabat{
+    color: #fff;
+    background-color: #28a745;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+      padding: 7px 35px;
+      border-radius: 15px;
+      border: 0;
+      margin-top: 5px;
+  }
+.talabat:hover{ 
+  background-color: #28a745b4;
+  color: #fff;
   }
 
   .cropname{

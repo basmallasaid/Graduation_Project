@@ -3,10 +3,10 @@
     {
       "harvestId": 11,
       "imageUrl": "uploads/landparcels/ed0c7619-3f81-467d-9eae-92c318b83cbc_one-apple-with-leaves.jpg",
-      "name": "تفاح",
+      "name": "Apple",
       "yield": 2300,
       "price": 200,
-      "productionDate": "2024-12-12",
+      "productionDate": "2024-12-12T06:40:33.4629442",
       "status": "تحت الطلب",
       "reuestsCount": 2,
       "purchases": [
@@ -19,13 +19,20 @@
         },
         {
           "purchaseRequestId": 3,
-          "merchantName": "Ahmad gamal alaraby",
+          "merchantName": "basmala saied mostafa",
+          "requestedPrice": 20,
+          "requestedAmount": 50,
+          "harvestId": 11
+        },
+        {
+          "purchaseRequestId": 3,
+          "merchantName": "jana ahmed elsayed",
           "requestedPrice": 40,
-          "requestedAmount": 30,
+          "requestedAmount": 300,
           "harvestId": 11
         }
       ],
-      "id": "827f"
+      "id": "5b1a"
     },
     {
       "harvestId": 12,
@@ -33,11 +40,11 @@
       "name": "Apple",
       "yield": 2300,
       "price": 200,
-      "productionDate": "2024-12-12",
-      "status": "Avaible",
+      "productionDate": "2024-12-12T06:42:08.5738087",
+      "status": "متاح",
       "reuestsCount": 0,
       "purchases": [],
-      "id": "4851"
+      "id": "34e4"
     },
     {
       "harvestId": 14,
@@ -45,11 +52,11 @@
       "name": "Apple",
       "yield": 211,
       "price": 10,
-      "productionDate": "2202-02-10",
+      "productionDate": "2202-02-10T00:00:00",
       "status": "متاح",
       "reuestsCount": 0,
       "purchases": [],
-      "id": "1897"
+      "id": "a880"
     },
     {
       "harvestId": 15,
@@ -57,12 +64,11 @@
       "name": "banana",
       "yield": 0,
       "price": 20,
-      "productionDate": "2022-02-22",
+      "productionDate": "2022-02-22T00:00:00",
       "status": "نفذت الكميه",
       "reuestsCount": 0,
       "purchases": [],
-      "id": "92d5"
+      "id": "3fe8"
     }
   ]
 }
-   

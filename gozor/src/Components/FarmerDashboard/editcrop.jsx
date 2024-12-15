@@ -2,47 +2,57 @@ import styles from "../../Styles/style.module.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Import the toast styles
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
-export default function Addcrop() {
+export default function Editcrop({ crop, onCropUpdated ,oneditSuccess}) {
   const [imageSrc, setImageSrc] = useState(null);
-  const [isCropAllowVisible, setIsCropAllowVisible] = useState(false);
-  const [cropNames, setCropNames] = useState([]);
   const [selectedCrop, setSelectedCrop] = useState("اختر المحصول");
   const [productionDate, setProductionDate] = useState("");
   const [quantity, setQuantity] = useState("");
   const [price, setPrice] = useState("");
   const [isCycleRelated, setIsCycleRelated] = useState(null);
   const [allowUpdates, setAllowUpdates] = useState(null);
+  const [cropNames, setCropNames] = useState([]);
   const [error, setError] = useState(null);
+
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
 
     reader.onload = () => {
-      setImageSrc(reader.result); // Store the image data
+      setImageSrc(reader.result);
     };
 
     if (file) {
-      reader.readAsDataURL(file); // Read the file
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleSelectChange = (e) => {
-    const value = e.target.value;
-    setIsCycleRelated(value !== "no" ? value : null);
-    setIsCropAllowVisible(value !== "no");
+  const handleCropSelect = (name) => {
+    setSelectedCrop(name);
   };
 
-  const handleCropSelect = (cropName) => {
-    setSelectedCrop(cropName); // Update the selected crop name
+  const handleSelectChange = (e) => {
+    setIsCycleRelated(e.target.value);
   };
+
+  useEffect(() => {
+    if (crop) {
+      setImageSrc(crop.imageUrl);
+      setSelectedCrop(crop.name);
+      setProductionDate(crop.productionDate);
+      setQuantity(crop.yield.toString());
+      setPrice(crop.price.toString());
+      setIsCycleRelated(crop.isCycleRelated ? crop.isCycleRelated.toString() : "0");
+      setAllowUpdates(crop.allowUpdates ? "yes" : "no");
+    }
+  }, [crop]);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-  
-    // Check for missing fields
+
     if (
       !selectedCrop ||
       selectedCrop === "اختر المحصول" ||
@@ -56,30 +66,40 @@ export default function Addcrop() {
       toast.error("يرجى ملء جميع الحقول!");
       return;
     }
-  
-    // Prepare the data in the format expected by the backend
-    const cropData = {
-      harvestId: null, // Assuming harvestId is not provided in the form
-      imageUrl: imageSrc, // Send the image as base64
-      name: selectedCrop, // Selected crop name
-      yield: parseInt(quantity, 10), // Convert to integer
-      price: parseFloat(price), // Convert to float
-      productionDate, // Ensure it's in ISO format (YYYY-MM-DD)
-      status: quantity > 0 ? "Available" : "Out of Stock", // Map quantity to status
-      isCycleRelated: parseInt(isCycleRelated, 10), // Ensure it's an integer
-      allowUpdates: allowUpdates === "true", // Convert to boolean
+
+    const updatedCropData = {
+      id: crop.id,
+      imageUrl: imageSrc,
+      name: selectedCrop,
+      yield: parseInt(quantity, 10),
+      price: parseFloat(price),
+      productionDate,
+      status:
+        quantity > 0
+          ? parseInt(isCycleRelated, 10) > 0
+            ? "تحت الطلب"
+            : "متاح"
+          : "نفذت الكمية",
+      isCycleRelated: parseInt(isCycleRelated, 10),
+      allowUpdates: allowUpdates === "yes",
     };
-  
+
     try {
-      const response = await axios.post("http://localhost:8000/cropview", cropData);
-      // Handle success
-      toast.success("تم إضافة المحصول بنجاح!");
+      const response = await axios.put(
+        `http://localhost:8000/cropview/${crop.id}`,
+        updatedCropData
+      );
+     
+      if (onCropUpdated) {
+        onCropUpdated(updatedCropData);
+      }
+    
     } catch (err) {
-      console.error("Error submitting data:", err);
-      setError("Failed to submit data. Please try again.");
-      toast.error("فشل في إرسال البيانات. يرجى المحاولة مرة أخرى.");
+      console.error("Error updating data:", err);
+      toast.error("فشل في تعديل البيانات. يرجى المحاولة مرة أخرى.");
     }
   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -93,6 +113,8 @@ export default function Addcrop() {
 
     fetchData();
   }, []);
+
+  const isCropAllowVisible = isCycleRelated !== null && parseInt(isCycleRelated, 10) > 0;
 
   return (
     <div className="container" style={{ backgroundColor: "#F5F5F5" }}>
@@ -203,6 +225,8 @@ export default function Addcrop() {
                     color: "#49A760",
                   }}
                   onChange={handleSelectChange}
+                  value={isCycleRelated} // Bind to state
+                  
                 >
                   <option value="no">لايوجد</option>
                   <option value="1">1</option>
@@ -225,8 +249,10 @@ export default function Addcrop() {
                       name="allow-updates"
                       className="form-check-input"
                       value="yes"
+                      checked={allowUpdates === "yes"} // This will set the checked state based on the value of allowUpdates
+
                       onChange={(e) => setAllowUpdates(e.target.value)}
-                    />
+                      />
                     <label htmlFor="allow-yes" className="form-check-label">
                       نعم
                     </label>
@@ -238,8 +264,10 @@ export default function Addcrop() {
                       name="allow-updates"
                       className="form-check-input"
                       value="no"
+                      checked={allowUpdates === "no"} // This will set the checked state based on the value of allowUpdates
+
                       onChange={(e) => setAllowUpdates(e.target.value)}
-                    />
+                      />
                     <label
                       htmlFor="allow-no"
                       className="form-check-label"
@@ -250,9 +278,9 @@ export default function Addcrop() {
                   </div>
                 </div>
               )}
-              <div className={styles.cropaddbtn}>
+              <div className={styles.cropadd_btn}>
                 <button type="submit" className={styles.cropadd}>
-                  اضافه
+                  تعديل
                 </button>
               </div>
             </form>

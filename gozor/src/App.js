@@ -22,6 +22,7 @@ import WeatherF from './Components/FarmerDashboard/WeatherF';
 // =======
 import Cropcard from './Components/FarmerDashboard/cropcard';
 import Croprequests from './Components/FarmerDashboard/Croprequests';
+import AImodel from './Components/FarmerDashboard/AImodel';
 
 // >>>>>>> 854142225220f439e2c00c42ebb6c9345aae2d54
 function App() {
@@ -30,6 +31,10 @@ function App() {
         <BrowserRouter>
           { <Routes>
           {/* <Route path="/" element={<> <Navbar/><Home/></>} />
+=======
+           <Routes>
+          <Route path="/" element={<> <Navbar/><Home/></>} />
+>>>>>>> 766779033927f4e114e22a134732c64f25fc8a99
           <Route path="/Home" element={<> <Navbar/><Home /></>} />
           <Route path="Services" element={<><Services/></>}/>
           <Route path="Contact" element={<><Contact/></>}/>
@@ -45,7 +50,26 @@ function App() {
 
 
       
+{/* 
+          <Route path='WeatherF' element={<WeatherF/>}/>
+          <Route path="AI"  element={<AImodel/>}/>
 
+           </Routes>   */}
+          {/* <Navbar/>
+          <ViewCrops/>
+          <FooterF/> */}
+      {/* <Addcrop/> */}
+      {/* <Cropcard/> */}
+
+       {/* </Routes>  */}
+          {/* <Navbar/>
+           <ViewCrops/>
+           <FooterF/> */}
+       {/* <Addcrop/> */}
+       {/* <Cropcard/> */}
+{/* >>>>>>> 854142225220f439e2c00c42ebb6c9345aae2d54 */}
+{/* <Croprequests/> */}
+     
         </BrowserRouter>
       </StanderErrorBoundary>
   );

@@ -5,35 +5,24 @@ import FooterF from './FooterF';
 import Navbar from '../Navbar';
 
 const WeatherF = () => {
-    const [weatherDetails, setWeatherDetails] = useState(null);
-    const [agriculturalRecommendations, setAgriculturalRecommendations] = useState([]);
+    const [weatherData, setWeatherData] = useState({ /*note*/
+        weatherDetails: [],
+        agriculturalRecommendations: [],
+        plantHealthStatus: []
+    });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get('http://localhost:3100/weatherDetails')
+        axios.get('http://localhost:3100/weather')
             .then((response) => {
-
-                setWeatherDetails(response.data);
+                setWeatherData(response.data);
                 setLoading(false);
-                console.log(response.data)
             })
             .catch((err) => {
                 setError('حدث خطأ أثناء تحميل بيانات الطقس.');
                 setLoading(false);
-                console.log(err)
-            });
-
-        axios.get('http://localhost:3100/agriculturalRecommendations')
-            .then((response) => {
-                setAgriculturalRecommendations(response.data);
-                setLoading(false);
-                console.log(response.data)
-            })
-            .catch((err) => {
-                setError('حدث خطأ أثناء تحميل التوصيات الزراعية.');
-                setLoading(false);
-                console.log(err)
+                console.error(err);
             });
     }, []);
 
@@ -44,40 +33,35 @@ const WeatherF = () => {
         <>
             <Navbar />
             <div className={styles.containerf}>
-
-
                 <div className={styles.headerf}>
                     <div className={styles.cweather}>
                         <h2>حالة الطقس اليوم</h2>
                         <div className={styles.currentweather}>
-    {weatherDetails.length > 0 ? (
-        weatherDetails.map((recommendation, index) => (
-            <div key={index}>
-                {recommendation.description === "ممطر" ? (
-                    <div className={styles.rain}>
-                         <img src='/assets/rain.png' alt='cloud' />
-                        <span>{recommendation.description}</span>
-                    </div>
-                ) : recommendation.description === "غيوم متفرقه" ? (
-                    <div className={styles.cloud}>
-                        <img src='/assets/cloud.png' alt='cloud' />
-                        <span>{recommendation.description}</span>
-                    </div>
-                ) : (
-                    <div className={styles.sunny}>
-                        <img src='/assets/sunny.png' alt='cloud' />
-                        <span>{recommendation.description}</span>
-                    </div>
-                )}
-            </div>
-        ))
-    ) : (
-        <p>لا توجد بيانات لعرضها</p>
-    )}
-</div>
-
-
-
+                            {weatherData.weatherDetails.length > 0 ? (
+                                weatherData.weatherDetails.map((detail, index) => (
+                                    <div key={index}>
+                                        {detail.description === "ممطر" ? (
+                                            <div className={styles.rain}>
+                                                <img src='/assets/rain.png' alt='cloud' />
+                                                <span>{detail.description}</span>
+                                            </div>
+                                        ) : detail.description === "غيوم متفرقه" ? (
+                                            <div className={styles.cloud}>
+                                                <img src='/assets/cloud.png' alt='cloud' />
+                                                <span>{detail.description}</span>
+                                            </div>
+                                        ) : (
+                                            <div className={styles.sunny}>
+                                                <img src='/assets/sunny.png' alt='cloud' />
+                                                <span>{detail.description}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))
+                            ) : (
+                                <p>لا توجد بيانات لعرضها</p>
+                            )}
+                        </div>
                     </div>
 
                     <h4>{new Date().toLocaleDateString('ar-EG', {
@@ -87,8 +71,8 @@ const WeatherF = () => {
                     })}</h4>
                 </div>
 
-                {weatherDetails.length > 0 ? (
-                    weatherDetails.map((recommendation, index) => (
+                {weatherData.weatherDetails.length > 0 ? (
+                    weatherData.weatherDetails.map((detail, index) => (
                         <div key={index} className={`row ${styles.weather}`}>
                             <div className={`col-4`}>
                                 <span>
@@ -96,19 +80,25 @@ const WeatherF = () => {
                                     درجة الحرارة
                                 </span>
                                 <div className={`${styles.Temperature}`}>
-                                    <p>{recommendation.temperature}</p>
+                                    <p>{detail.temperature}</p>
                                 </div>
                             </div>
                             <div className={`col-4`}>
-                                <span> <img src='/assets/Humidity.png' alt='Humidity' /> الرطوبة </span>
+                                <span>
+                                    <img src='/assets/Humidity.png' alt='Humidity' />
+                                    الرطوبة
+                                </span>
                                 <div className={`${styles.Humidity}`}>
-                                    <p>{recommendation.humidity}</p>
+                                    <p>{detail.humidity}</p>
                                 </div>
                             </div>
                             <div className={`col-4`}>
-                                <span>   <img src='/assets/Air.png' alt='Wind Speed' />   سرعة الرياح   </span>
+                                <span>
+                                    <img src='/assets/Air.png' alt='Wind Speed' />
+                                    سرعة الرياح
+                                </span>
                                 <div className={`${styles.Air}`}>
-                                    <p>{recommendation.windSpeed}</p> {/* Use `recommendation.windSpeed` */}
+                                    <p>{detail.windSpeed}</p>
                                 </div>
                             </div>
                         </div>
@@ -117,26 +107,20 @@ const WeatherF = () => {
                     <p>لا توجد بيانات لعرضها</p>
                 )}
 
-
                 {/* توصيات زراعية */}
-                {agriculturalRecommendations.length > 0 ? (
-                    agriculturalRecommendations.map((recommendation, index) => (
-                        <div key={index} className={`${styles.infoweather } row`}>
+                {weatherData.agriculturalRecommendations.length > 0 ? (
+                    weatherData.agriculturalRecommendations.map((recommendation, index) => (
+                        <div key={index} className={`${styles.infoweather} row`}>
                             <div className='col'>
-                            <h4>{recommendation.activity}</h4>
-                            <h4 className={styles.graytxt}>{recommendation.details}</h4>
+                                <h4>{recommendation.activity}</h4>
+                                <h4 className={styles.graytxt}>{recommendation.details}</h4>
                             </div>
-
                         </div>
                     ))
                 ) : (
                     <p>لا توجد توصيات زراعية في الوقت الحالي.</p>
                 )}
             </div>
-
-
-
-
             <FooterF />
         </>
     );

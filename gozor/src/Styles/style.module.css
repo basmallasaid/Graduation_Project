@@ -1609,3 +1609,84 @@ cursor: pointer;
   font-size: 14px;
   color: gray;
 }
+/*Shopping*/
+.shopping_title{
+  text-align: center;
+  margin:50px 0px ;
+}
+.shopping_title img{
+  width: 100%;
+}
+.prodect{
+  text-align: center;
+  margin:100px 0px ;
+  font-size:50px;
+}
+.shoppingcard{
+  text-align: center;
+}
+.titlecardshooping{
+ margin:10px 0px;
+}
+.price_cardshopping{
+  color:#49A760;
+  font-weight: bolder;
+  margin:10px 0px;
+}
+.exprice_cardshopping{
+  color:black;
+  font-weight: bold;
+  margin:15px 0px;
+}
+/* .shoppingcard img{
+  width: 50%;
+  height: 50%; 
+  margin: 10% 25%;
+} */
+.imgcard_shopping{
+  width: 50%;
+  height: 50%; 
+  margin: 10% 25%;
+}
+.descshopping h5{
+  color: #A78E49; 
+  
+}
+.descshopping , .riskcard{
+  border:#000 1px solid;
+  border-radius:10px;
+  margin:15px 0px;
+  padding:15px 5px ;
+  
+}
+/*Nav farmer*/
+.NavF{
+  background-color:#1F4E3D; 
+  color: #ffffff; /* لون النص */
+  margin: 0;
+  padding: 0;
+
+}
+.outButton {
+  font-size: 14px;
+  font-weight: bold;
+  width: 150px;
+  margin: 0 35px; /* تقليل المسافة بين الأزرار */
+  background-color:white;
+  border-radius: 7px;
+  color: #4BAF47;
+  padding: 10px 20px;
+}
+.outButton:hover{
+  border-color: #4BAF47; 
+  background-color: #4BAF47;
+  color: white;
+}
+.userF{
+  font-size:30px ;
+}
+.soppingpage{
+  background-color:#E9F1EE;
+  height: 100hv;
+  padding:10px 40px 40px;
+}

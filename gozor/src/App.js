@@ -15,14 +15,15 @@ import Register from './Authentication/Register';
 import Opinon from './Components/Opinon';
 import NavbarF from './Components/FarmerDashboard/NavbarF';
 import FooterF from './Components/FarmerDashboard/FooterF';
-import ViewCrops from './Components/FarmerDashboard/ViewCrops';
+// import ViewCrops from './Components/FarmerDashboard/ViewCrops';
 import Addcrop from './Components/FarmerDashboard/addcrop';
 // <<<<<<< HEAD
 import WeatherF from './Components/FarmerDashboard/WeatherF';
 // =======
 import Cropcard from './Components/FarmerDashboard/cropcard';
-import Croprequests from './Components/FarmerDashboard/Croprequests';
+// import Croprequests from './Components/FarmerDashboard/Croprequests';
 import AImodel from './Components/FarmerDashboard/AImodel';
+import Shopping from './Components/FarmerDashboard/Shopping';
 
 // >>>>>>> 854142225220f439e2c00c42ebb6c9345aae2d54
 function App() {
@@ -35,6 +36,9 @@ function App() {
            <Routes>
           <Route path="/" element={<> <Navbar/><Home/></>} />
 >>>>>>> 766779033927f4e114e22a134732c64f25fc8a99
+          {/* <Route path="/viewcrops" element={<ViewCrops/>} /> */}
+
+          <Route path="/" element={<> <Navbar/><Home/></>} />
           <Route path="/Home" element={<> <Navbar/><Home /></>} />
           <Route path="Services" element={<><Services/></>}/>
           <Route path="Contact" element={<><Contact/></>}/>
@@ -43,16 +47,17 @@ function App() {
           <Route path="*" element={<Notfound />} />
           <Route path="/register" element={<Home />} />
           <Route path='Opinon' element={<Opinon/>}/>
-          <Route path='WeatherF' element={<WeatherF/>}/> */}
-          <Route path="/viewcrops" element={<ViewCrops/>} />
+          <Route path='WeatherF' element={<WeatherF/>}/> 
+          <Route path="AI"  element={<AImodel/>}/>
+          <Route path="Shopping" element={<Shopping/>}/>
            </Routes>}
  
 
 
       
 {/* 
-          <Route path='WeatherF' element={<WeatherF/>}/>
-          <Route path="AI"  element={<AImodel/>}/>
+          
+          
 
            </Routes>   */}
           {/* <Navbar/>

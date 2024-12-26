@@ -90,6 +90,27 @@
       "username": "",
       "feedback": "dcd",
       "date": "2024-12-15T02:37:50.015Z"
+    },
+    {
+      "id": "7073",
+      "rating": 5,
+      "username": "",
+      "feedback": "kk",
+      "date": "2024-12-25T20:34:12.018Z"
+    },
+    {
+      "id": "c9ba",
+      "rating": 3,
+      "username": "",
+      "feedback": "hgdfd",
+      "date": "2024-12-25T20:48:36.658Z"
+    },
+    {
+      "id": "614b",
+      "rating": 2,
+      "username": "",
+      "feedback": "لالا",
+      "date": "2024-12-25T21:13:38.101Z"
     }
   ],
   "contacts": [
@@ -129,12 +150,13 @@
       "message": "ااتلت"
     }
   ],
+  "weather" :{ 
   "weatherDetails": [
     {
       "temperature": "18.54 درجة مئوية",
       "humidity": "73%",
       "windSpeed": "4.69 كم/ساعة",
-      "description": "مشمس"
+      "description": "ممطر"
     }
   ],
   "agriculturalRecommendations": [
@@ -160,7 +182,7 @@
       "healthIndex": "100%",
       "details": "النباتات في حالة جيدة مع معدلات نمو عالية."
     }
-  ],
+  ]},
   "plantDiseaseData": [
     {
       "name": "البیاض المبكر على الطماطم",
@@ -176,7 +198,625 @@
   ],
   "plantimg": [
     {
-      "imageUrl": ""
+      "imageUrl": " "
+    },
+    {
+      "id": "1735169857030",
+      "imageUrl": "/assets/uploads/apple.png"
+    },
+    {
+      "id": "1735170012536",
+      "imageUrl": "/assets/uploads/apple.png"
+    }
+  ],
+  "plant": [
+    {
+      "cropId": 1,
+      "name": "موز",
+      "currentPrice": 14,
+      "riskDescription": "ارتفاع طفيف بسبب زيادة الطلب في فصل الشتاء.",
+      "imageUrl": "/assets/banana.png",
+      "riskLevel": "منخفض",
+      "expectedPriceChange": 17.5,
+      "cropType": "فاكهه"
+    },
+    {
+      "cropId": 2,
+      "name": "خيار",
+      "currentPrice": 14,
+      "riskDescription": "ارتفاع طفيف بسبب زيادة الطلب في فصل الشتاء.",
+      "imageUrl": "/assets/cucumber.png",
+      "riskLevel": "متوسط",
+      "expectedPriceChange": 15.5,
+      "cropType": "خضروات"
+    },
+    {
+      "cropId": 3,
+      "name": "طماطم",
+      "currentPrice": 10,
+      "riskDescription": "زيادة ملحوظة بسبب قلة الإنتاج.",
+      "imageUrl": "/assets/tomato.png",
+      "riskLevel": "مرتفع",
+      "expectedPriceChange": 12.5,
+      "cropType": "خضروات"
+    },
+    {
+      "cropId": 4,
+      "name": "تفاح",
+      "currentPrice": 20,
+      "riskDescription": "ثبات في السعر مع توافر كبير في الأسواق.",
+      "imageUrl": "/assets/apple.png",
+      "riskLevel": "منخفض",
+      "expectedPriceChange": 20,
+      "cropType": "فاكهة"
+    },
+    {
+      "cropId": 5,
+      "name": "موز",
+      "currentPrice": 8,
+      "riskDescription": "انخفاض طفيف بسبب كثرة الإنتاج.",
+      "imageUrl": "/assets/banana.png",
+      "riskLevel": "منخفض",
+      "expectedPriceChange": 7.5,
+      "cropType": "فاكهة"
+    },
+    {
+      "cropId": 6,
+      "name": "خيار",
+      "currentPrice": 12,
+      "riskDescription": "ثبات في السعر مع اقتراب موسم الحصاد.",
+      "imageUrl": "/assets/cucumber.png",
+      "riskLevel": "منخفض",
+      "expectedPriceChange": 12,
+      "cropType": "خضروات"
+    },
+    {
+      "cropId": 7,
+      "name": "فراولة",
+      "currentPrice": 22,
+      "riskDescription": "زيادة ملحوظة بسبب الطلب المرتفع في الشتاء.",
+      "imageUrl": "/assets/strawberry.png",
+      "riskLevel": "متوسط",
+      "expectedPriceChange": 24,
+      "cropType": "فاكهة"
+    },
+    {
+      "cropId": 8,
+      "name": "تفاح",
+      "currentPrice": 16,
+      "riskDescription": "زيادة ملحوظة بسبب قلة الكميات المتاحة.",
+      "imageUrl": "/assets/apple.png",
+      "riskLevel": "مرتفع",
+      "expectedPriceChange": 18.5,
+      "cropType": "فاكهة"
+    },
+    {
+      "cropId": 9,
+      "name": "طماطم",
+      "currentPrice": 25,
+      "riskDescription": "ثبات في السعر بسبب استقرار التوريد.",
+      "imageUrl": "/assets/tomato.png",
+      "riskLevel": "منخفض",
+      "expectedPriceChange": 25,
+      "cropType": "خضروات"
+    },
+    {
+      "cropId": 10,
+      "name": "تفاح",
+      "currentPrice": 30,
+      "riskDescription": "ارتفاع بسبب قلة الإنتاج الموسمي.",
+      "imageUrl": "/assets/apple.png",
+      "riskLevel": "مرتفع",
+      "expectedPriceChange": 32.5,
+      "cropType": "فاكهة"
+    },
+    {
+      "cropId": 11,
+      "name": "فراولة",
+      "currentPrice": 22,
+      "riskDescription": "زيادة ملحوظة بسبب الطلب المرتفع في الشتاء.",
+      "imageUrl": "/assets/strawberry.png",
+      "riskLevel": "متوسط",
+      "expectedPriceChange": 24,
+      "cropType": "فاكهة"
+    },
+    {
+      "cropId": 12,
+      "name": "خيار",
+      "currentPrice": 15,
+      "riskDescription": "ثبات في السعر مع توافر كبير.",
+      "imageUrl": "/assets/cucumber.png",
+      "riskLevel": "منخفض",
+      "expectedPriceChange": 15,
+      "cropType": "خضروات"
+    }
+  ],
+  "cropname": [
+    {
+      "id": 1,
+      "name": "برتقال"
+    },
+    {
+      "id": 2,
+      "name": "عنب"
+    },
+    {
+      "id": 3,
+      "name": "مانجا"
+    },
+    {
+      "id": 5,
+      "name": "بنجر"
+    },
+    {
+      "id": 6,
+      "name": "تين"
+    },
+    {
+      "id": 7,
+      "name": "خوخ"
+    },
+    {
+      "id": 7,
+      "name": "خيار"
+    },
+    {
+      "id": 9,
+      "name": "طماطم"
+    },
+    {
+      "id": 10,
+      "name": "برقوق"
+    }
+  ],
+  "cropview": [
+    {
+      "harvestId": 11,
+      "imageUrl": "uploads/landparcels/ed0c7619-3f81-467d-9eae-92c318b83cbc_one-apple-with-leaves.jpg",
+      "name": "Apple",
+      "yield": 2300,
+      "price": 200,
+      "productionDate": "2024-12-12T06:40:33.4629442",
+      "status": "تحت الطلب",
+      "reuestsCount": 2,
+      "purchases": [
+        {
+          "purchaseRequestId": 2,
+          "merchantName": "Ahmad gamal alaraby",
+          "requestedPrice": 10,
+          "requestedAmount": 20,
+          "harvestId": 11
+        },
+        {
+          "purchaseRequestId": 3,
+          "merchantName": "basmala saied mostafa",
+          "requestedPrice": 20,
+          "requestedAmount": 50,
+          "harvestId": 11
+        },
+        {
+          "purchaseRequestId": 3,
+          "merchantName": "jana ahmed elsayed",
+          "requestedPrice": 40,
+          "requestedAmount": 300,
+          "harvestId": 11
+        }
+      ],
+      "id": "5b1a"
+    },
+    {
+      "harvestId": 12,
+      "imageUrl": "uploads/landparcels/f68102ca-cc19-4e55-bb72-89849a3380ee_one-apple-with-leaves.jpg",
+      "name": "Apple",
+      "yield": 2300,
+      "price": 200,
+      "productionDate": "2024-12-12T06:42:08.5738087",
+      "status": "متاح",
+      "reuestsCount": 0,
+      "purchases": [],
+      "id": "34e4"
+    },
+    {
+      "harvestId": 14,
+      "imageUrl": "uploads/landparcels/fdc060c4-fdae-464e-bad3-53ad2ded30a1_one-apple-with-leaves.jpg",
+      "name": "Apple",
+      "yield": 211,
+      "price": 10,
+      "productionDate": "2202-02-10T00:00:00",
+      "status": "متاح",
+      "reuestsCount": 0,
+      "purchases": [],
+      "id": "a880"
+    },
+    {
+      "harvestId": 15,
+      "imageUrl": "uploads/landparcels/da6b5fe1-4e4e-4752-8281-2a9e359d0c48_one-apple-with-leaves.jpg",
+      "name": "banana",
+      "yield": 0,
+      "price": 20,
+      "productionDate": "2022-02-22T00:00:00",
+      "status": "نفذت الكميه",
+      "reuestsCount": 0,
+      "purchases": [],
+      "id": "3fe8"
+    }
+  ],
+  "users": [
+    {
+      "id": "0868",
+      "name": "جنا احمد السيد",
+      "email": "jana14@gmail.com",
+      "phone": "01061107459",
+      "password": "12345678",
+      "category": "تاجر",
+      "username": "جوجو الدلوعه",
+      "bio": "بحببكو كلكو"
+    },
+    {
+      "id": "5745",
+      "name": "جنا احمد",
+      "email": "jj44@gmail.com",
+      "phone": "01061107459",
+      "password": "12345678",
+      "category": "تاجر",
+      "username": "jjj",
+      "bio": "kkkkkkkkk"
+    },
+    {
+      "id": "c28a",
+      "name": "اسراء حسن",
+      "email": "esraa14@gmail.com",
+      "phone": "01061107459",
+      "password": "12345678",
+      "category": "تاجر",
+      "username": "سوسو الدلوعه",
+      "bio": "هاي انا سوسو من المغرب"
+    },
+    {
+      "id": "e644",
+      "email": "esraa14@gmail.com",
+      "password": "12345678"
+    },
+    {
+      "id": "2333",
+      "name": "جنا احمد السيد",
+      "email": "janajanjona14@gmail.com",
+      "phone": "01061107459",
+      "password": "12345678",
+      "category": "تاجر",
+      "username": "جنجونا الدلوعه",
+      "bio": "اوعي الفحت"
+    },
+    {
+      "id": "5054",
+      "email": "janajanjona14@gmail.com",
+      "password": "12345678"
+    },
+    {
+      "id": "fc0b",
+      "email": "janajanjona14@gmail.com",
+      "password": "12345678"
+    },
+    {
+      "id": "2b42",
+      "email": "janajanjona14@gmail.com",
+      "password": "12345678"
+    },
+    {
+      "id": "fba3",
+      "name": "بسمله سعيد",
+      "email": "basmalasaied@gmail.com",
+      "phone": "01061107459",
+      "password": "12345678",
+      "category": "تاجر",
+      "username": "بسموله",
+      "bio": "احلي مسا عليكو"
+    },
+    {
+      "id": "5797",
+      "email": "basmalasaied@gmail.com",
+      "password": "12345678"
+    },
+    {
+      "id": "e6fa",
+      "email": "basmalasaied@gmail.com"
+    },
+    {
+      "id": "dba7",
+      "email": "basmalasaied@gmail.com"
+    },
+    {
+      "id": "1d18",
+      "email": "basmalasaied@gmail.com"
+    },
+    {
+      "id": "b8ff",
+      "email": "basmalasaied@gmail.com"
+    },
+    {
+      "id": "2450",
+      "email": "basmalasaied@gmail.com"
+    },
+    {
+      "id": "ce37",
+      "email": "basmalasaied@gmail.com"
+    },
+    {
+      "id": "0be8",
+      "email": "janaahmedelsayed15@gmail.com"
+    },
+    {
+      "id": "4259",
+      "email": "",
+      "code": "1235644"
+    },
+    {
+      "id": "ba13",
+      "email": "",
+      "code": "1235644"
+    },
+    {
+      "id": "55f6",
+      "email": "janaahmedelsayed15@gmail.com"
+    },
+    {
+      "id": "5ea7",
+      "email": "",
+      "code": ""
+    },
+    {
+      "id": "987b",
+      "email": ""
+    },
+    {
+      "id": "22f0",
+      "email": "",
+      "code": ""
+    },
+    {
+      "id": "1b57",
+      "email": "",
+      "code": ""
+    },
+    {
+      "id": "d139",
+      "email": ""
+    },
+    {
+      "id": "0e50",
+      "email": "janaahmed1141@gmail.com"
+    },
+    {
+      "id": "5808",
+      "email": "janaahmedelsayed15@gmail.com"
+    },
+    {
+      "id": "8bae",
+      "email": "",
+      "code": ""
+    },
+    {
+      "id": "1984",
+      "email": "",
+      "code": "1234566"
+    },
+    {
+      "id": "a26f",
+      "email": "janaahmedelsayed15@gmail.com"
+    },
+    {
+      "id": "97d3",
+      "email": "",
+      "code": ""
+    },
+    {
+      "id": "5b1b",
+      "email": "janaahmedelsayed15@gmail.com"
+    },
+    {
+      "id": "23e3",
+      "email": ""
+    },
+    {
+      "id": "3486",
+      "email": "janaahmedelsayed15@gmail.com"
+    },
+    {
+      "id": "8bbf",
+      "email": "",
+      "code": "1235644"
+    },
+    {
+      "id": "7e83",
+      "email": "",
+      "code": "1235644"
+    },
+    {
+      "id": "38aa",
+      "password": "12345678"
+    },
+    {
+      "id": "986f",
+      "password": "12345678"
+    },
+    {
+      "id": "38f6",
+      "password": "12345678"
+    },
+    {
+      "id": "a9bc",
+      "password": "12345678"
+    },
+    {
+      "id": "28be",
+      "password": "jojojojo"
+    },
+    {
+      "id": "c8a4",
+      "password": "jojojojo"
+    },
+    {
+      "id": "c65e",
+      "password": "jojojojo"
+    },
+    {
+      "id": "bd88",
+      "password": "jojojojo"
+    },
+    {
+      "id": "4ea5",
+      "password": "jojojojo"
+    },
+    {
+      "id": "2a26",
+      "password": "lovelove"
+    },
+    {
+      "id": "b2c2",
+      "password": "hihilove"
+    },
+    {
+      "id": "4fb6",
+      "name": "حنان حسني",
+      "email": "hananhosny@gmail.com",
+      "phone": "01061107459",
+      "password": "12345678",
+      "category": "تاجر",
+      "username": "حنونه",
+      "bio": "صباح الفل"
+    },
+    {
+      "id": "7fcc",
+      "email": "koko20@gmail.com",
+      "password": "12345678"
+    },
+    {
+      "id": "1ee6",
+      "email": "hananhosny@gmail.com",
+      "password": "12345678"
+    },
+    {
+      "id": "ceff",
+      "email": "hananhosny@gmail.com"
+    },
+    {
+      "id": "e590",
+      "email": "",
+      "code": "1235644"
+    },
+    {
+      "id": "5b26",
+      "email": "hananhosny@gmail.com"
+    },
+    {
+      "id": "c353",
+      "code": "1235644"
+    },
+    {
+      "id": "32a3",
+      "email": "hananhosny@gmail.com"
+    },
+    {
+      "code": "77889914",
+      "id": "42be"
+    },
+    {
+      "id": "f27a",
+      "email": "janaahmedelsayed15@gmail.com"
+    },
+    {
+      "id": "9053",
+      "code": "70708015"
+    },
+    {
+      "id": "ed74",
+      "email": "janaahmedelsayed15@gmail.com"
+    },
+    {
+      "id": "8b1b",
+      "code": "1235644"
+    },
+    {
+      "id": "c0ae",
+      "email": "janaahmedelsayed15@gmail.com"
+    },
+    {
+      "id": "f27a",
+      "code": "1235644"
+    },
+    {
+      "id": "dd0f",
+      "code": "1235644"
+    },
+    {
+      "id": "c7af",
+      "email": "janaahmedelsayed15@gmail.com"
+    },
+    {
+      "id": "eba5",
+      "code": "1235644"
+    },
+    {
+      "id": "968f",
+      "name": "جنا احمد",
+      "email": "janaahmed@gmail.com",
+      "phone": "01061107459",
+      "password": "12345678",
+      "category": "تاجر",
+      "username": "جنا احمد",
+      "bio": "ننننننن"
+    },
+    {
+      "id": "1c2e",
+      "email": "janaahmed@gmail.com",
+      "password": "12345678"
+    },
+    {
+      "id": "e7a0",
+      "email": "janaahmed@gmail.com"
+    },
+    {
+      "id": "c8d4",
+      "code": "1235644"
+    },
+    {
+      "id": "d5c3",
+      "code": "1235644"
+    },
+    {
+      "id": "1169",
+      "email": "janaahmed@gmail.com",
+      "password": "12345678"
+    },
+    {
+      "id": "6878",
+      "email": "janaahmed@gmail.com",
+      "password": "12345678"
+    },
+    {
+      "id": "0eca",
+      "name": "جنا احمد السيد",
+      "email": "janaahmed@gmail.com",
+      "phone": "01061107459",
+      "password": "12345678",
+      "category": "مزارع",
+      "username": "جوجو",
+      "bio": "صباح الفل"
+    },
+    {
+      "id": "1502",
+      "email": "janaahmed@gmail.com",
+      "password": "12345678"
+    },
+    {
+      "id": "76ea",
+      "name": "جوجو احمد",
+      "email": "janaa@gmail.com",
+      "phone": "01061107459",
+      "password": "12345678",
+      "category": "merchant",
+      "username": "[[[",
+      "bio": "kkkkkkkkkkk"
     }
   ]
 }

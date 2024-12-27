@@ -111,6 +111,13 @@
       "username": "",
       "feedback": "لالا",
       "date": "2024-12-25T21:13:38.101Z"
+    },
+    {
+      "id": "b306",
+      "rating": 3,
+      "username": "",
+      "feedback": "ghfgd",
+      "date": "2024-12-26T21:02:26.800Z"
     }
   ],
   "contacts": [
@@ -150,55 +157,59 @@
       "message": "ااتلت"
     }
   ],
-  "weather" :{ 
-  "weatherDetails": [
-    {
-      "temperature": "18.54 درجة مئوية",
-      "humidity": "73%",
-      "windSpeed": "4.69 كم/ساعة",
-      "description": "ممطر"
-    }
-  ],
-  "agriculturalRecommendations": [
-    {
-      "activity": "العمل في الأرض (درجه الحراره) ",
-      "details": "الطقس مثالي للعمل في الأرض، يمكنك متابعة الأنشطة الزراعية بشكل طبيعي."
-    },
-    {
-      "activity": "العمل في الأرض (الرطوبه) ",
-      "details": "الرطوبة مناسبة للنمو، يمكنك متابعة الأنشطة الزراعية بدون مشاكل."
-    },
-    {
-      "activity": "العمل في الأرض (الرياح) ",
-      "details": "الرياح خفيفة، الطقس جيد للعمل في الأرض."
-    },
-    {
-      "activity": "العمل في الأرض (الثلوج \\ الامطار) ",
-      "details": "الطقس مستقر، يمكنك متابعة الأنشطة الزراعية."
-    }
-  ],
-  "plantHealthStatus": [
-    {
-      "healthIndex": "100%",
-      "details": "النباتات في حالة جيدة مع معدلات نمو عالية."
-    }
-  ]},
+  "weather": {
+    "weatherDetails": [
+      {
+        "temperature": "18.54 درجة مئوية",
+        "humidity": "73%",
+        "windSpeed": "4.69 كم/ساعة",
+        "description": "ممطر"
+      }
+    ],
+    "agriculturalRecommendations": [
+      {
+        "activity": "العمل في الأرض (درجه الحراره) ",
+        "details": "الطقس مثالي للعمل في الأرض، يمكنك متابعة الأنشطة الزراعية بشكل طبيعي."
+      },
+      {
+        "activity": "العمل في الأرض (الرطوبه) ",
+        "details": "الرطوبة مناسبة للنمو، يمكنك متابعة الأنشطة الزراعية بدون مشاكل."
+      },
+      {
+        "activity": "العمل في الأرض (الرياح) ",
+        "details": "الرياح خفيفة، الطقس جيد للعمل في الأرض."
+      },
+      {
+        "activity": "العمل في الأرض (الثلوج \\ الامطار) ",
+        "details": "الطقس مستقر، يمكنك متابعة الأنشطة الزراعية."
+      }
+    ],
+    "plantHealthStatus": [
+      {
+        "healthIndex": "100%",
+        "details": "النباتات في حالة جيدة مع معدلات نمو عالية."
+      }
+    ]
+  },
   "plantDiseaseData": [
     {
       "name": "البیاض المبكر على الطماطم",
       "diagnosis": "بقع كبیرة بنیة داكنة على الأوراق مع حلقات متحدة المركز",
       "recommendation": "مبیدات فطریة، تناوب المحاصیل، أصناف مقاومة",
-      "isIll": true
+      "isIll": true,
+      "id": "aca5"
     }
   ],
   "plantName": [
     {
-      "name": "طماطم"
+      "name": "طماطم",
+      "id": "b1df"
     }
   ],
   "plantimg": [
     {
-      "imageUrl": " "
+      "imageUrl": " ",
+      "id": "e955"
     },
     {
       "id": "1735169857030",
@@ -207,6 +218,10 @@
     {
       "id": "1735170012536",
       "imageUrl": "/assets/uploads/apple.png"
+    },
+    {
+      "id": "1735246907651",
+      "imageUrl": "/assets/uploads/cucumber.png"
     }
   ],
   "plant": [
@@ -218,7 +233,8 @@
       "imageUrl": "/assets/banana.png",
       "riskLevel": "منخفض",
       "expectedPriceChange": 17.5,
-      "cropType": "فاكهه"
+      "cropType": "فاكهه",
+      "id": "556c"
     },
     {
       "cropId": 2,
@@ -228,7 +244,8 @@
       "imageUrl": "/assets/cucumber.png",
       "riskLevel": "متوسط",
       "expectedPriceChange": 15.5,
-      "cropType": "خضروات"
+      "cropType": "خضروات",
+      "id": "8d14"
     },
     {
       "cropId": 3,
@@ -238,7 +255,8 @@
       "imageUrl": "/assets/tomato.png",
       "riskLevel": "مرتفع",
       "expectedPriceChange": 12.5,
-      "cropType": "خضروات"
+      "cropType": "خضروات",
+      "id": "0081"
     },
     {
       "cropId": 4,
@@ -248,7 +266,8 @@
       "imageUrl": "/assets/apple.png",
       "riskLevel": "منخفض",
       "expectedPriceChange": 20,
-      "cropType": "فاكهة"
+      "cropType": "فاكهة",
+      "id": "9b36"
     },
     {
       "cropId": 5,
@@ -258,7 +277,8 @@
       "imageUrl": "/assets/banana.png",
       "riskLevel": "منخفض",
       "expectedPriceChange": 7.5,
-      "cropType": "فاكهة"
+      "cropType": "فاكهة",
+      "id": "8efc"
     },
     {
       "cropId": 6,
@@ -268,7 +288,8 @@
       "imageUrl": "/assets/cucumber.png",
       "riskLevel": "منخفض",
       "expectedPriceChange": 12,
-      "cropType": "خضروات"
+      "cropType": "خضروات",
+      "id": "5833"
     },
     {
       "cropId": 7,
@@ -278,7 +299,8 @@
       "imageUrl": "/assets/strawberry.png",
       "riskLevel": "متوسط",
       "expectedPriceChange": 24,
-      "cropType": "فاكهة"
+      "cropType": "فاكهة",
+      "id": "4578"
     },
     {
       "cropId": 8,
@@ -288,7 +310,8 @@
       "imageUrl": "/assets/apple.png",
       "riskLevel": "مرتفع",
       "expectedPriceChange": 18.5,
-      "cropType": "فاكهة"
+      "cropType": "فاكهة",
+      "id": "134d"
     },
     {
       "cropId": 9,
@@ -298,7 +321,8 @@
       "imageUrl": "/assets/tomato.png",
       "riskLevel": "منخفض",
       "expectedPriceChange": 25,
-      "cropType": "خضروات"
+      "cropType": "خضروات",
+      "id": "b9f9"
     },
     {
       "cropId": 10,
@@ -308,7 +332,8 @@
       "imageUrl": "/assets/apple.png",
       "riskLevel": "مرتفع",
       "expectedPriceChange": 32.5,
-      "cropType": "فاكهة"
+      "cropType": "فاكهة",
+      "id": "11ea"
     },
     {
       "cropId": 11,
@@ -318,7 +343,8 @@
       "imageUrl": "/assets/strawberry.png",
       "riskLevel": "متوسط",
       "expectedPriceChange": 24,
-      "cropType": "فاكهة"
+      "cropType": "فاكهة",
+      "id": "a4d3"
     },
     {
       "cropId": 12,
@@ -328,44 +354,45 @@
       "imageUrl": "/assets/cucumber.png",
       "riskLevel": "منخفض",
       "expectedPriceChange": 15,
-      "cropType": "خضروات"
+      "cropType": "خضروات",
+      "id": "58bb"
     }
   ],
   "cropname": [
     {
-      "id": 1,
+      "id": "1",
       "name": "برتقال"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "عنب"
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "مانجا"
     },
     {
-      "id": 5,
+      "id": "5",
       "name": "بنجر"
     },
     {
-      "id": 6,
+      "id": "6",
       "name": "تين"
     },
     {
-      "id": 7,
+      "id": "7",
       "name": "خوخ"
     },
     {
-      "id": 7,
+      "id": "7",
       "name": "خيار"
     },
     {
-      "id": 9,
+      "id": "9",
       "name": "طماطم"
     },
     {
-      "id": 10,
+      "id": "10",
       "name": "برقوق"
     }
   ],

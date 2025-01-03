@@ -1043,7 +1043,7 @@ background-color:#fff;
 .footerF{
   background-color: #1F4E3D;
   padding-top: 20px;
-  margin-top:70px ;
+  /* margin-top:70px ; */
 }
 /* crops page */
 .croptitle{
@@ -1675,4 +1675,195 @@ font-size: 20px;
 }
 .updatecyclebutt:hover{
   background-color: #1f4e3d9c;
+}
+/*Shopping*/
+.shopping_title{
+  text-align: center;
+  margin:50px 0px ;
+}
+.shopping_title img{
+  width: 100%;
+}
+.prodect{
+  text-align: center;
+  margin:100px 0px ;
+  font-size:50px;
+}
+.shoppingcard{
+  text-align: center;
+}
+.titlecardshooping{
+ margin:10px 0px;
+}
+.price_cardshopping{
+  color:#49A760;
+  font-weight: bolder;
+  margin:10px 0px;
+}
+.exprice_cardshopping{
+  color:black;
+  font-weight: bold;
+  margin:15px 0px;
+}
+/* .shoppingcard img{
+  width: 50%;
+  height: 50%; 
+  margin: 10% 25%;
+} */
+.imgcard_shopping{
+  width: 50%;
+  height: 50%; 
+  margin: 10% 25%;
+}
+.descshopping h5{
+  color: #A78E49; 
+  
+}
+.descshopping , .riskcard{
+  border:#000 1px solid;
+  border-radius:10px;
+  margin:15px 0px;
+  padding:15px 5px ;
+  
+}
+/*Nav farmer*/
+.NavF{
+  background-color:#1F4E3D; 
+  color: #ffffff; /* لون النص */
+  margin: 0;
+  padding: 0;
+
+}
+.outButton {
+  font-size: 14px;
+  font-weight: bold;
+  width: 150px;
+  margin: 0 35px; /* تقليل المسافة بين الأزرار */
+  background-color:white;
+  border-radius: 7px;
+  color: #4BAF47;
+  padding: 10px 20px;
+}
+.outButton:hover{
+  border-color: #4BAF47; 
+  background-color: #4BAF47;
+  color: white;
+}
+.userF{
+  font-size:30px ;
+}
+.soppingpage{
+  background-color:#E9F1EE;
+  height: 100hv;
+  padding:10px 40px 40px;
+}
+/*Farmer Home*/
+.item1 { grid-area: header; }
+.item2 { grid-area: main; }
+.item3 { grid-area: right; }
+.item4 { grid-area: footer; }
+
+.grid_container {
+  display: grid;
+  grid-template-areas:
+    'header header header header header header'
+    'right main main main main main  '
+    'footer footer footer footer footer footer';
+    background: linear-gradient(to bottom, rgb(183, 220, 183), white);
+}
+.item3{
+  background-color: #A4D0A4;
+  height: 100vh;
+  border-radius:10px  0px 0px 10px ;
+  width: 200px;
+  display: flex;
+  flex-direction: column; 
+  justify-content: space-around; 
+  cursor: pointer; 
+  transition: width 0.3s ease;
+  align-items: center;
+}
+.item3.collapsed {
+  width: 70px; 
+  overflow: hidden; 
+  align-items: center; 
+}
+.item2{
+  width: 100%;
+}
+.divflex{
+  display: flex;
+  position: relative;
+  top:10%;
+}
+.Crop_Services ,.farm_management,.agr_courses,.fina_repo{
+  width: 30%;
+  /* background-color: #1F4E3D; */
+  height:200px;
+  margin: 50px ;
+  border-radius: 10px;
+  text-align: center;
+  padding: 25px;
+  color:white;
+  cursor: pointer;
+  box-Shadow:5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+.Crop_Services img ,.farm_management img,.agr_courses img,.fina_repo img{
+  width: 35%;
+
+}
+.farm_management{
+  background: linear-gradient(to bottom, #22976D, #0B3124);
+}
+.Crop_Services{
+  background: linear-gradient(to bottom, #3B934F, #122D18);
+}
+.fina_repo{
+  background: linear-gradient(to bottom, #A4D0A4, #546A54);
+}
+.agr_courses{
+  background: linear-gradient(to bottom, #183027, #4C967B);
+}
+.infoCrop{
+  width: 100%;
+  background-color: #A4D0A4;
+  font-size:25px;
+  border-radius: 10px;
+  position: relative;
+  right:80%;
+  bottom:80%;
+  box-Shadow:5px 5px 15px rgba(0, 0, 0, 0.3);
+  padding: 10px;
+}
+.tooltip_text {
+  position: absolute;
+  bottom: -60px; 
+  left: 50%;
+  transform: translateX(-50%);
+  color: #878680;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 17px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  z-index: 1000;
+}
+
+/* Add hover effects for all divs */
+.Crop_Services:hover .tooltip_text,
+.farm_management:hover .tooltip_text,
+.fina_repo:hover .tooltip_text,
+.agr_courses:hover .tooltip_text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Add position relative to container divs */
+.Crop_Services,
+.farm_management,
+.fina_repo,
+.agr_courses {
+  position: relative;  /* Added this to ensure tooltip positioning works */
 }

@@ -9,9 +9,8 @@ const AImodel = () => {
     const [plantDiseaseData, setPlantDiseaseData] = useState(null);
     const fileInputRef = useRef(null);
     const [plantName, setPlantName] = useState(null);
-    const [imageUrl, setImageUrl] = useState(null); // State to store the uploaded image URL
+    const [imageUrl, setImageUrl] = useState(null);
 
-    // Fetch plant name on component mount
     useEffect(() => {
         axios.get('http://localhost:3100/plantName')
             .then(response => {
@@ -22,18 +21,16 @@ const AImodel = () => {
             });
     }, []);
 
-    // Fetch plant disease data on component mount
     useEffect(() => {
         axios.get('http://localhost:3100/plantDiseaseData')
             .then((response) => {
-                setPlantDiseaseData(response.data[0]); // Assuming data is an array
+                setPlantDiseaseData(response.data[0]);
             })
             .catch((error) => {
                 console.error("Error fetching plant disease data:", error);
             });
     }, []);
 
-    // Handle file selection
     const handleFileChange = (event) => {
         const selectedFiles = Array.from(event.target.files);
         const fileItems = selectedFiles.map(file => ({
@@ -44,57 +41,50 @@ const AImodel = () => {
         }));
         setFiles(fileItems);
 
+        // Simulate successful upload immediately
         selectedFiles.forEach((file, index) => {
             simulateUpload(file, index);
         });
     };
 
-    // Simulate file upload with Axios
     const simulateUpload = (file, index) => {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        axios.post('http://localhost:3100/upload', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-            onUploadProgress: (progressEvent) => {
-                const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                setFiles((prevFiles) => {
-                    const newFiles = [...prevFiles];
-                    newFiles[index].progress = progress;
-                    return newFiles;
-                });
-            },
-        })
-            .then((response) => {
-                const uploadedImageUrl = response.data.imageUrl;  // Assuming response contains the image URL
-                setImageUrl(uploadedImageUrl);  // Store the image URL
-
-                // After successful image upload, send the URL to plantimg API
-                axios.post('http://localhost:3100/plantimg', {
-                    imageUrl: uploadedImageUrl,
-                })
-                    .then(() => {
-                        console.log('Image URL saved to db');
-                    })
-                    .catch((error) => {
-                        console.error('Error saving image URL:', error);
-                    });
-
-                setFiles((prevFiles) => {
-                    const newFiles = [...prevFiles];
-                    newFiles[index].status = 'success';
-                    return newFiles;
-                });
-            })
-            .catch(() => {
-                setFiles((prevFiles) => {
-                    const newFiles = [...prevFiles];
-                    newFiles[index].status = 'error';
-                    return newFiles;
-                });
+        // Create a fake progress animation
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 10;
+            setFiles((prevFiles) => {
+                const newFiles = [...prevFiles];
+                newFiles[index].progress = progress;
+                return newFiles;
             });
+
+            if (progress >= 100) {
+                clearInterval(interval);
+                const fakeImageUrl = `/assets/uploads/${file.name}`;/*note */
+                setImageUrl(fakeImageUrl);
+
+                // Update the plantimg data in json-server
+                axios.post('http://localhost:3100/plantimg', {
+                    id: Date.now().toString(),
+                    imageUrl: fakeImageUrl
+                })
+                .then(() => {
+                    setFiles((prevFiles) => {
+                        const newFiles = [...prevFiles];
+                        newFiles[index].status = 'success';
+                        return newFiles;
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error saving image URL:', error);
+                    setFiles((prevFiles) => {
+                        const newFiles = [...prevFiles];
+                        newFiles[index].status = 'error';
+                        return newFiles;
+                    });
+                });
+            }
+        }, 200);
     };
 
     return (
@@ -193,7 +183,6 @@ const AImodel = () => {
                         </div>
                     )}
                 </div>
-
             </div>
             <FooterF />
         </>

@@ -15,13 +15,13 @@ import Register from './Authentication/Register';
 import Opinon from './Components/Opinon';
 import NavbarF from './Components/FarmerDashboard/NavbarF';
 import FooterF from './Components/FarmerDashboard/FooterF';
-import ViewCrops from './Components/FarmerDashboard/ViewCrops';
+// import ViewCrops from './Components/FarmerDashboard/ViewCrops';
 import Addcrop from './Components/FarmerDashboard/addcrop';
 // <<<<<<< HEAD
 import WeatherF from './Components/FarmerDashboard/WeatherF';
 // =======
 import Cropcard from './Components/FarmerDashboard/cropcard';
-import Croprequests from './Components/FarmerDashboard/Croprequests';
+// import Croprequests from './Components/FarmerDashboard/Croprequests';
 import AImodel from './Components/FarmerDashboard/AImodel';
 import Cropmenuview from './Components/FarmerDashboard/Cropsmeniview'
 import Updatenewcycle from './Components/FarmerDashboard/Updateoncycle';
@@ -33,6 +33,9 @@ import Updateopencycle from './Components/FarmerDashboard/Updateopencycle'
 import Updateclosecycle from './Components/FarmerDashboard/Updateclosecycle'
 import Viewnew from './Components/FarmerDashboard/Viewnew';
 import Editupdatenewcycle from './Components/FarmerDashboard/Editupdateoncycle';
+import Shopping from './Components/FarmerDashboard/Shopping';
+import FarmerHome from './Components/FarmerDashboard/FarmerHome';
+import ViewCrops from './Components/FarmerDashboard/ViewCrops';
 
 // >>>>>>> 854142225220f439e2c00c42ebb6c9345aae2d54
 function App() {
@@ -45,6 +48,9 @@ function App() {
            <Routes>
           <Route path="/" element={<> <Navbar/><Home/></>} />
 >>>>>>> 766779033927f4e114e22a134732c64f25fc8a99
+          {/* <Route path="/viewcrops" element={<ViewCrops/>} /> */}
+
+          <Route path="/" element={<> <Navbar/><Home/></>} />
           <Route path="/Home" element={<> <Navbar/><Home /></>} />
           <Route path="Services" element={<><Services/></>}/>
           <Route path="Contact" element={<><Contact/></>}/>
@@ -53,7 +59,7 @@ function App() {
           <Route path="*" element={<Notfound />} />
           <Route path="/register" element={<Home />} />
           <Route path='Opinon' element={<Opinon/>}/>
-          <Route path='WeatherF' element={<WeatherF/>}/> */}
+          <Route path='WeatherF' element={<WeatherF/>}/> 
           <Route path="/viewcrops" element={<ViewCrops/>} />
           <Route path="/Cropmenuview" element={<Cropmenuview/>} />
           <Route path="/Updateoncycle" element={<Updatenewcycle/>} />
@@ -66,14 +72,19 @@ function App() {
           <Route path="/Viewnew" element={<Viewnew/>} />
           <Route path="/Editupdatenewcycle" element={<Editupdatenewcycle/>} />
 
+          <Route path='WeatherF' element={<WeatherF/>}/> 
+          <Route path="AI"  element={<AImodel/>}/>
+          <Route path="Shopping" element={<Shopping/>}/>\
+          <Route path='FarmerHome'  element={<FarmerHome/>}/>
+          <Route path='ViewCrops' element={<ViewCrops/>}/>
            </Routes>}
  
 
 
       
 {/* 
-          <Route path='WeatherF' element={<WeatherF/>}/>
-          <Route path="AI"  element={<AImodel/>}/>
+          
+          
 
            </Routes>   */}
           {/* <Navbar/>

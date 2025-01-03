@@ -1,0 +1,113 @@
+import styles from "../../Styles/style.module.css";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
+export default function Croprequests() {
+  const [cyclesData, setCyclesData] = useState([]);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+
+  useEffect(() => {
+    const fetchCyclesData = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/viewyield");
+        setCyclesData(Array.isArray(response.data) ? response.data : [response.data]);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchCyclesData();
+  }, []);
+
+  const handleRequestSelect = (cycle, request) => {
+    setSelectedRequest({ ...request, cycleName: cycle.cycleName });
+  };
+
+  if (!cyclesData || cyclesData.length === 0) {
+    return <div>لا توجد طلبات حالياً</div>;
+  }
+
+  return (
+    <>
+      <div style={{ backgroundColor: "#fff" }}>
+        <div className={styles.request} >
+          <h1 style={{ color: "black" }}>عرض الطلبات</h1>
+          <div>
+            <div className="btn-group" style={{ marginTop: "7px", marginRight: "" }}>
+              <button
+                type="button"
+                className="btn dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                style={{ backgroundColor: "#28a745", color: "black",fontSize:"18px",margin:"auto" }}
+              >
+                عرض الطلبات (
+                {cyclesData.reduce(
+                  (total, cycle) =>
+                    total + (cycle.requestsForInvestments?.length || 0),
+                  0
+                )}
+                )
+              </button>
+              <ul
+                className="dropdown-menu"
+                style={{ cursor: "pointer", color: "black" }}
+              >
+                {cyclesData.map((cycle) =>
+                  cycle.requestsForInvestments &&
+                  cycle.requestsForInvestments.map((request, index) => (
+                    <li key={`${cycle.cycleId}-${index}`}>
+                      <a
+                        className="dropdown-item"
+                        onClick={() => handleRequestSelect(cycle, request)}
+                        style={{ color: "black" }}
+                      >
+                        {request.fullName}
+                      </a>
+                    </li>
+                  ))
+                )}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {selectedRequest && (
+        <div
+          style={{
+            backgroundColor: "#fff",
+            marginTop: "5px",
+            width: "100%",
+          }}
+        >
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px",flexWrap:"wrap" }}>
+            <div style={{ display: "flex" }}>
+              <label className={styles.labelreq}>اسم المستثمر:</label>
+              <p className={styles.preq}>{selectedRequest.fullName}</p>
+            </div>
+            <div style={{ display: "flex" }}>
+              <label className={styles.labelreq}>مبلغ الاستثمار:</label>
+              <p className={styles.preq}>{selectedRequest.investmentAmount}</p>
+            </div>
+            <div style={{ display: "flex" }}>
+              <label className={styles.labelreq}>نوع الأرباح:</label>
+              <p className={styles.preq}>{selectedRequest.typeOfProfit}</p>
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "20px",
+            }}
+          >
+            <button className={styles.reqbtn}>تأكيد</button>
+            <button className={styles.reqbtn}>رفض</button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}

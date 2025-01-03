@@ -96,7 +96,9 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
       margin: "auto",
       padding: "10px",
       borderRadius: "10px",
-      maxHeight: "690px",
+      maxHeight: "600px",
+      backgroundColor:"#F5F5F5"
+
     },
     overlay: {
       backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -107,7 +109,7 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
       maxWidth: "40%",
       margin: "auto",
       padding: "10px",
-      borderRadius: "10px",
+      borderRadius: "30px",
       maxHeight: "320px",
     },
     overlay: {
@@ -176,20 +178,7 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
                     {currentCrop.name}
                   </label>
                 </div>
-                <div className="col-md-12">
-                  <label className="form-label" style={{ fontSize: "23px" }}>
-                    Harvest ID:
-                  </label>
-                  <span
-                    style={{
-                      marginRight: "10px",
-                      color: "#49A760",
-                      fontSize: "17px",
-                    }}
-                  >
-                    {currentCrop.harvestId}
-                  </span>
-                </div>
+ 
                 <div className="col-md-12">
                   <label className="form-label" style={{ fontSize: "23px" }}>
                     السعر:
@@ -213,7 +202,8 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
                       marginRight: "10px",
                       boxShadow:
                         "rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset",
-                      padding: "5px",
+                      padding: "7px",
+                      borderRadius: "7px",
                     }}
                   >
                     {currentCrop.yield}
@@ -235,7 +225,7 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
                     حالة المحصول:
                   </label>
                   <button
-                      className={`btn ${crop.status === 'تحت الطلب' ? styles.croppending : crop.status === 'نفذت الكميه' ? styles.cropempty : styles.cropava}`}
+                      className={`btn ${crop.status === 'تحت الطلب' ? styles.croppending : crop.status === 'نفذت الكمية' ? styles.cropempty : styles.cropava}`}
                    
                     >
                       {crop.status}

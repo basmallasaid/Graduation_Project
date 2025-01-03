@@ -23,6 +23,16 @@ import WeatherF from './Components/FarmerDashboard/WeatherF';
 import Cropcard from './Components/FarmerDashboard/cropcard';
 import Croprequests from './Components/FarmerDashboard/Croprequests';
 import AImodel from './Components/FarmerDashboard/AImodel';
+import Cropmenuview from './Components/FarmerDashboard/Cropsmeniview'
+import Updatenewcycle from './Components/FarmerDashboard/Updateoncycle';
+import Addcycletasks from './Components/FarmerDashboard/Addcycletasks';
+import Addopencycle from './Components/FarmerDashboard/Addopencycle';
+import Addclosecycle from './Components/FarmerDashboard/Addclosecycle';
+import Tabletasks from './Components/FarmerDashboard/Tabletasks';
+import Updateopencycle from './Components/FarmerDashboard/Updateopencycle'
+import Updateclosecycle from './Components/FarmerDashboard/Updateclosecycle'
+import Viewnew from './Components/FarmerDashboard/Viewnew';
+import Editupdatenewcycle from './Components/FarmerDashboard/Editupdateoncycle';
 
 // >>>>>>> 854142225220f439e2c00c42ebb6c9345aae2d54
 function App() {
@@ -45,6 +55,17 @@ function App() {
           <Route path='Opinon' element={<Opinon/>}/>
           <Route path='WeatherF' element={<WeatherF/>}/> */}
           <Route path="/viewcrops" element={<ViewCrops/>} />
+          <Route path="/Cropmenuview" element={<Cropmenuview/>} />
+          <Route path="/Updateoncycle" element={<Updatenewcycle/>} />
+          <Route path="/Addcycletasks" element={<Addcycletasks/>} />
+          <Route path="/Addopencycle" element={<Addopencycle/>} />
+          <Route path="/Addclosecycle" element={<Addclosecycle/>} />
+          <Route path="/Tabletasks" element={<Tabletasks/>} />
+          <Route path="/Updateopencycle" element={<Updateopencycle/>} />
+          <Route path="/Updateclosecycle" element={<Updateclosecycle/>} />
+          <Route path="/Viewnew" element={<Viewnew/>} />
+          <Route path="/Editupdatenewcycle" element={<Editupdatenewcycle/>} />
+
            </Routes>}
  
 

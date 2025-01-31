@@ -69,8 +69,9 @@ const filteredCrops = crops.filter((crop) => {
       maxWidth: '70%',
       margin: 'auto',
       padding: '10px',
-      borderRadius: '10px',
-      maxHeight: '86%',
+      borderRadius: '30px',
+      maxHeight: '85%',
+      backgroundColor:"#F5F5F5"
     },
     overlay: {
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -82,8 +83,10 @@ const filteredCrops = crops.filter((crop) => {
       maxWidth: '65%',
       margin: 'auto',
       padding: '10px',
-      borderRadius: '10px',
-      maxHeight: '520px',
+      borderRadius: '30px',
+      maxHeight: '475px',
+      backgroundColor:"#F5F5F5"
+
     },
     overlay: {
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -122,7 +125,16 @@ const filteredCrops = crops.filter((crop) => {
             ariaHideApp={false}
             style={cropStyles}
           >
-            <button onClick={() => setVisiblecrop(false)}><i className="fa-solid fa-xmark" style={{ fontSize: "20px", cursor: "pointer" }}></i></button>
+            <button onClick={() => setVisiblecrop(false)}><i className="fa-solid fa-xmark"
+             style={{    backgroundColor: "transparent",
+              border: "none",
+              fontSize: "20px",
+              color: "#333",
+              cursor: "pointer",
+              position: "absolute",
+              top: "35px",
+              right: "30px", }}>
+              </i></button>
             <Addcrop onCropAdded={(newCrop) => setCrops((prevCrops) => [...prevCrops, newCrop])}  onaddSuccess={handleaddSuccess} />
             </Modal>
 
@@ -189,7 +201,7 @@ const filteredCrops = crops.filter((crop) => {
                       الكمية: <span className={styles.propspan}>{crop.yield}</span>
                     </p>
                     <button
-                      className={`btn ${crop.status === 'تحت الطلب' ? styles.croppending : crop.status === 'نفذت الكميه' ? styles.cropempty : styles.cropava}`}
+                      className={`btn ${crop.status === 'تحت الطلب' ? styles.croppending : crop.status === 'نفذت الكمية' ? styles.cropempty : styles.cropava}`}
                       onClick={() => {
                         setSelectedCrop(crop);
                         setSeecrop(true);
@@ -220,7 +232,7 @@ const filteredCrops = crops.filter((crop) => {
                     cursor: "pointer",
                     position: "absolute",
                     top: "10px",
-                    right: "10px",
+                    right: "30px",
                   }}
                 >
                   <i className="fa-solid fa-xmark"></i>

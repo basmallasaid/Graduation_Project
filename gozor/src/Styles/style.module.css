@@ -1113,6 +1113,7 @@ background-color:#fff;
 .propspan{
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;;
   padding: 4px 10px;
+  border-radius: 5px;
 }
 .cropadd_btn{
   display: flex;
@@ -1219,23 +1220,23 @@ color: #fff;
   .buttfaedit{
 border: 0;
 font-size: 20px;
-color: #0884A2;
+color: #000;
 cursor: pointer;
   }
   .buttfaedit:hover{
     font-size: 22px;
-    color: #0883a2a0;
+    color: #000000a6;
 
   }
   .buttfadel{
     border: 0;
     font-size: 20px;
-    color: rgba(255, 0, 0, 0.771);
+    color:#000;
     cursor: pointer;
   }
   .buttfadel:hover{
     font-size: 22px;
-    color: rgba(255, 0, 0, 0.507);
+    color: #1F1E17;
   }
 
   /* request page */
@@ -1244,6 +1245,7 @@ cursor: pointer;
     gap: 20px;
     margin-top: 10px;
     margin-bottom: 30px;
+    flex-wrap: wrap;
   }
   .reqnum{
     font-size: 20px;
@@ -1608,6 +1610,71 @@ cursor: pointer;
   margin-top: 10px;
   font-size: 14px;
   color: gray;
+}
+
+/* crop menu view page  */
+
+.Menutitle{
+  color: #000;
+  margin-top: 50px;
+  margin-right: 60px;
+  margin-bottom: 40px;
+  font-size: 3rem;
+}
+.serachviewbutt{
+  padding: 10px 15px;
+  border-radius: 50%;
+  background-color: #878680;
+  color: white;
+  border:#878680;
+font-size: 20px;
+
+}
+.menuviewbutt{
+  padding: 7px 20px;
+  border:#878680;
+  background-color: #878680;
+  border-radius: 10px;
+  color: white;
+  font-size: 18px;
+}
+.menusearchInput{
+  padding: 5px 20px;
+  border-radius: 20px;
+  width: 300px;
+}
+.cardmenuview{
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  margin-top: 30px;
+  padding: 10px 0;
+  background: rgb(194,255,214);
+  background: linear-gradient(0deg, rgba(194,255,214,1) 0%, rgba(110,183,140,1) 91%);
+  border-radius: 20px;
+}
+.cardbuttview{
+  padding: 7px 25px;
+  border: none;
+  border-radius: 10px;
+  background-color: #1F4E3D;
+  color: white;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  font-size: 18px;
+  margin-right: 10px;
+}
+.cardbuttview:hover{
+  background-color: #1f4e3dac;
+}
+/* update cycle */
+.updatecyclebutt{
+  padding: 10px 30px;
+  background-color: #1F4E3D;
+  color: white;
+  border:#1F4E3D ;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.updatecyclebutt:hover{
+  background-color: #1f4e3d9c;
 }
 /*Shopping*/
 .shopping_title{

@@ -59,8 +59,6 @@ export default function Editcrop({ crop, onCropUpdated ,oneditSuccess}) {
       !productionDate ||
       !quantity ||
       !price ||
-      !isCycleRelated ||
-      allowUpdates === null ||
       !imageSrc
     ) {
       toast.error("يرجى ملء جميع الحقول!");
@@ -74,14 +72,13 @@ export default function Editcrop({ crop, onCropUpdated ,oneditSuccess}) {
       yield: parseInt(quantity, 10),
       price: parseFloat(price),
       productionDate,
-      status:
-        quantity > 0
-          ? parseInt(isCycleRelated, 10) > 0
-            ? "تحت الطلب"
-            : "متاح"
-          : "نفذت الكمية",
+      status: quantity > 0 
+      ? parseInt(isCycleRelated, 10) > 0 
+        ? "تحت الطلب" 
+        : "متاح" 
+      : "نفذت الكمية",
       isCycleRelated: parseInt(isCycleRelated, 10),
-      allowUpdates: allowUpdates === "yes",
+      allowUpdates: allowUpdates === "true",
     };
 
     try {

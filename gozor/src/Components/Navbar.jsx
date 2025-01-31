@@ -71,89 +71,91 @@ const Navbar = () => {
 
           <div className="collapse navbar-collapse" id="navbarNav">
             {/* Conditional Rendering for Navigation Links */}
-            
-              <ul className={`navbar-nav me-auto mb-2 mb-lg-0 ${styles.navList}`}>
-                <li className="nav-item">
-                  <Link className="nav-link text-white" to="/">
-                    الرئيسيه
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link text-white" to="/About">
-                    عنا
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link text-white" to="/Instructions">
-                    التعليمات
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link text-white" to="/Services">
-                    الخدمات
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link text-white" to="/Opinon">
-                    رايك
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link text-white" to="/Contact">
-                    التواصل
-                  </Link>
-                </li>
-              </ul>
-            
 
-          
-          <div className="d-flex ms-auto">
-          <button className={`btn me-2 ${styles.loginButton}`} onClick={() => setVisiblelog(true)}>
-        تسجيل الدخول
-      </button>
+            <ul className={`navbar-nav me-auto mb-2 mb-lg-0 ${styles.navList}`}>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/">
+                  الرئيسيه
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/About">
+                  عنا
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/Instructions">
+                  التعليمات
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/Services">
+                  الخدمات
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/Opinon">
+                  رايك
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/Contact">
+                  التواصل
+                </Link>
+              </li>
+            </ul>
 
-      {/* Modal Component */}
-      <Modal style={customStyles}
-        isOpen={visiblelog}
-        onRequestClose={() => setVisiblelog(false)} // Close on modal background click
-        ariaHideApp={false}
 
-      >
-        {/* Button to manually close the modal */}
-        <button onClick={() => setVisiblelog(false)} style={{ position: 'absolute', top: 10, right: 10 }}>
-          <i className="fa-solid fa-xmark" style={{        backgroundColor: 'transparent', 
-                  border: 'none', 
-                  fontSize: '24px', 
-                  color: '#333', 
-                  cursor: 'pointer', 
-                  position: 'absolute',
-                  top: '10px', 
-                  right: '10px',  }}></i>
-        </button>
 
-        {/* Pass callback to child */}
-        <Register onRegistrationSuccess={handleRegistrationSuccess} />
-      </Modal>
-            <button className={`btn ${styles.registerButton}`}  onClick={()=>setVisible(true)}>انضم إلينا</button>
-            <Modal isOpen={visible} onRequestClose={()=>setVisible(false)}
-              ariaHideApp={false}
+            <div className="d-flex ms-auto">
+              <button className={`btn me-2 ${styles.loginButton}`} onClick={() => setVisiblelog(true)}>
+                تسجيل الدخول
+              </button>
 
-             style={loginStyles}>
-              <button onClick={()=>setVisible(false)}><i className="fa-solid fa-xmark"
-                style={{
-                  backgroundColor: 'transparent', 
-                  border: 'none', 
-                  fontSize: '24px', 
-                  color: '#333', 
-                  cursor: 'pointer', 
-                  position: 'absolute',
-                  top: '10px', 
-                  right: '10px', 
-                }} ></i></button>
-              <Login onLoginSuccess={handleLoginSuccess} />
+              {/* Modal Component */}
+              <Modal style={customStyles}
+                isOpen={visiblelog}
+                onRequestClose={() => setVisiblelog(false)} // Close on modal background click
+                ariaHideApp={false}
 
-            </Modal>
-          </div>
+              >
+                {/* Button to manually close the modal */}
+                <button onClick={() => setVisiblelog(false)} style={{ position: 'absolute', top: 10, right: 10 }}>
+                  <i className="fa-solid fa-xmark" style={{
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    fontSize: '24px',
+                    color: '#333',
+                    cursor: 'pointer',
+                    position: 'absolute',
+                    top: '10px',
+                    right: '10px',
+                  }}></i>
+                </button>
+
+                {/* Pass callback to child */}
+                <Register onRegistrationSuccess={handleRegistrationSuccess} />
+              </Modal>
+              <button className={`btn ${styles.registerButton}`} onClick={() => setVisible(true)}>انضم إلينا</button>
+              <Modal isOpen={visible} onRequestClose={() => setVisible(false)}
+                ariaHideApp={false}
+
+                style={loginStyles}>
+                <button onClick={() => setVisible(false)}><i className="fa-solid fa-xmark"
+                  style={{
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    fontSize: '24px',
+                    color: '#333',
+                    cursor: 'pointer',
+                    position: 'absolute',
+                    top: '10px',
+                    right: '10px',
+                  }} ></i></button>
+                <Login onLoginSuccess={handleLoginSuccess} />
+
+              </Modal>
+            </div>
           </div>
         </div>
       </nav>

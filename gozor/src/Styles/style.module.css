@@ -1691,24 +1691,27 @@ cursor: pointer;
   padding:10px 40px 40px;
 }
 /*Farmer Home*/
-.item1 { grid-area: header; }
+/* .item1 { grid-area: header; }
 .item2 { grid-area: main; }
-.item3 { grid-area: right; }
-.item4 { grid-area: footer; }
+.item3 { grid-area: navside; }
+.item4 { grid-area: footer; } */
 
-.grid_container {
+/* .grid_container {
   display: grid;
   grid-template-areas:
     'header header header header header header'
-    'right main main main main main  '
+    'navside main main main main main  '
     'footer footer footer footer footer footer';
-    background: linear-gradient(to bottom, rgb(183, 220, 183), white);
+    /* background: linear-gradient(to bottom, rgb(183, 220, 183), white); 
+} */
+.greenline_bg{
+  background: linear-gradient(to bottom, rgb(183, 220, 183), white);
 }
 .item3{
   background-color: #A4D0A4;
-  height: 100vh;
+  /* height: 100vh; */
   border-radius:10px  0px 0px 10px ;
-  width: 200px;
+  width: 250px;
   display: flex;
   flex-direction: column; 
   justify-content: space-around; 
@@ -1718,16 +1721,18 @@ cursor: pointer;
 }
 .item3.collapsed {
   width: 70px; 
-  overflow: hidden; 
+  /* overflow:auto;  */
   align-items: center; 
 }
-.item2{
+/* .item2{
   width: 100%;
-}
+  margin-bottom: 90px;
+} */
 .divflex{
   display: flex;
   position: relative;
-  top:10%;
+  top:5%;
+  margin-bottom: 80px;
 }
 .Crop_Services ,.farm_management,.agr_courses,.fina_repo{
   width: 30%;
@@ -1792,11 +1797,318 @@ cursor: pointer;
   visibility: visible;
   opacity: 1;
 }
-
 /* Add position relative to container divs */
 .Crop_Services,
 .farm_management,
 .fina_repo,
 .agr_courses {
   position: relative;  /* Added this to ensure tooltip positioning works */
+}
+/* cycle frame */
+.grayCycle {
+  /* display: grid; 
+  grid-template-columns: 1fr;
+   min-height: 100vh; */
+  background-color: #f5f5f5; 
+}
+
+/* Icons */
+.calendar_icon {
+  font-size: 16px;
+}
+
+.arrow_icon {
+  font-size: 12px;
+}
+
+/*model*/
+.modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal_content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 900px;
+  position: relative;
+  direction: rtl;
+}
+
+.modal_close {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  border: none;
+  background: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+.modal_grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.modal_item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.modal_label {
+  font-weight: bold;
+  color: #666;
+}
+
+.modal_value {
+  color: #333;
+  background: #f5f5f5;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.clickable_row {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.clickable_row:hover {
+  background-color: #f5f5f5;
+}
+
+.ChartPage {
+  padding: 20px;
+  margin: 90px 0px 0px;
+}
+
+.SelectYearly {
+  padding: 8px 16px;
+  font-size: 16px;
+  background-color: #ffc107;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.Chart {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.Bar {
+  flex: 1;
+  width:90%;
+  min-width: 300px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .Chart {
+      flex-direction: column; /* Stack charts vertically on smaller screens */
+      align-items: center; /* Center align the charts */
+  }
+
+  .Bar {
+      width: 100%; /* Make bars full width */
+      max-width: 600px; /* Set a max width for better appearance */
+  }
+}
+
+@media (max-width: 480px) {
+  .SelectYearly {
+      font-size: 14px; /* Smaller font size for mobile */
+      padding: 6px 12px; /* Adjust padding for mobile */
+  }
+}
+.table_section {
+  position: relative;
+  padding: 20px;
+  margin: 40px auto; /* Center the table section */
+  background: white;
+  border-radius: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 90%; /* Adjust width for responsiveness */
+}
+
+.table_container {
+  padding: 0;
+  border-radius: 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-height: calc(48px + (40px * 7));
+  overflow-y: auto;
+}
+
+.transactions_table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 15px;
+}
+
+.transactions_table th {
+  background-color: #f2f2f2;
+  padding: 12px 15px;
+  font-weight: normal;
+  color: #333;
+  text-align: right;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  /* white-space: nowrap; */
+}
+
+.transactions_table td {
+  padding: 10px 15px;
+  color: #333;
+  text-align: right;
+  background: white;
+  border-bottom: 1px solid #f0f0f0;
+  white-space: nowrap;
+}
+
+.transactions_table tr:hover td {
+  background-color: #fafafa;
+}
+
+.filter_section {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping for filters */
+  gap: 15px; /* Space between filters */
+  margin: 20px 0; /* Margin for spacing */
+}
+
+.filter_dropdown {
+  position: relative;
+  flex: 1; /* Allow filters to grow */
+  min-width: 150px; /* Minimum width for dropdowns */
+}
+
+.filter_button {
+  width: 100%;
+  padding: 10px 14px;
+  background-color: #e8f4f8;
+  border: 1px solid #cce7f3;
+  border-radius: 12px;
+  color: #333;
+  font-size: 14px;
+  text-align: right;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.dropdown_menu {
+  position: absolute;
+  top: calc(100% + 5px); /* 5px gap below button */
+  right: 0;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
+  z-index: 10;
+}
+
+.dropdown_item {
+  padding: 8px 15px;
+  font-size: 13px;
+  color: #333;
+  text-align: right;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown_item:hover {
+  background-color: #f5f5f5;
+}
+
+/* Totals Section */
+.totals_section {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  gap: 20px; /* Adjusted gap for better spacing */
+  padding: 0 20px;
+}
+
+.total_item {
+  flex: 1;
+  background-color: #f2f2f2;
+  padding: 15px 25px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.total_item span {
+  font-weight: bold;
+  font-size: 18px;
+  color: #000;
+}
+
+/* Responsive Design */
+@media (max-width: 1000px) {
+  .filter_section {
+    flex-direction: column; /* Stack filters vertically on smaller screens */
+  }
+
+  .filter_dropdown {
+    width: 100%; /* Make dropdowns full width */
+  }
+
+  .transactions_table th, .transactions_table td {
+    font-size: 12px; /* Smaller font size for mobile */
+    font-weight: bold;
+    padding: 8px; /* Adjust padding for mobile */
+  }
+
+}
+
+
+
+/* Custom Scrollbar */
+.table_container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.table_container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.table_container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.table_container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* RTL Support */
+[dir="rtl"] .table_container {
+  direction: rtl;
 }

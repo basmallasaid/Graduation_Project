@@ -845,5 +845,201 @@
       "username": "[[[",
       "bio": "kkkkkkkkkkk"
     }
+
+  ],
+
+ "transactions":{
+  "paymentDetails": [
+    {
+      "paymentId": 9,
+      "paymentDate": "2024-12-26T10:15:45.1234567",
+      "amount": 7200,
+      "type": "استثمار",
+      "payerName": "مريم احمد",
+      "payeeName": "فاطمة محمد",
+      "payerEmail": "maryamahmed@example.com",
+      "payeeEmail": "fatimamahmed@example.com",
+      "paymentMethod": "Visa",
+      "status": "مقبول",
+      "associatedCycle": {
+        "cycleId": 15,
+        "cycleName": "دورة تعلم البرمجة"
+      },
+      "associatedHarvest": null
+    },
+    {
+      "paymentId": 10,
+      "paymentDate": "2024-12-26T14:20:00.2345678",
+      "amount": 3500,
+      "type": "شراء",
+      "payerName": "عادل علي",
+      "payeeName": "سارة خالد",
+      "payerEmail": "adelali@example.com",
+      "payeeEmail": "sarahkhaled@example.com",
+      "paymentMethod": "MasterCard",
+      "status": "مقبول",
+      "associatedCycle": null,
+      "associatedHarvest": {
+        "harvestId": 2,
+        "harvestName": "خيار"
+      }
+    },
+    {
+      "paymentId": 11,
+      "paymentDate": "2024-12-27T08:30:20.3456789",
+      "amount": 1200,
+      "type": "استثمار",
+      "payerName": "عبدالله سعيد",
+      "payeeName": "منى إبراهيم",
+      "payerEmail": "abdullahsaeed@example.com",
+      "payeeEmail": "monaibrahim@example.com",
+      "paymentMethod": "Cash",
+      "status": "مقبول",
+      "associatedCycle": {
+        "cycleId": 16,
+        "cycleName": "دورة المحاسبة"
+      },
+      "associatedHarvest": null
+    },
+    {
+      "paymentId": 12,
+      "paymentDate": "2024-12-27T16:40:10.4567890",
+      "amount": 4800,
+      "type": "شراء",
+      "payerName": "علي حسين",
+      "payeeName": "سامي فؤاد",
+      "payerEmail": "alihussein@example.com",
+      "payeeEmail": "samefoad@example.com",
+      "paymentMethod": "Paypal",
+      "status": "مقبول",
+      "associatedCycle": null,
+      "associatedHarvest": {
+        "harvestId": 3,
+        "harvestName": "جزر"
+      }
+    },
+    {
+      "paymentId": 13,
+      "paymentDate": "2024-12-28T12:55:05.5678901",
+      "amount": 8900,
+      "type": "استثمار",
+      "payerName": "سالم مصطفى",
+      "payeeName": "خالد سعيد",
+      "payerEmail": "salemmostafa@example.com",
+      "payeeEmail": "khalidsaid@example.com",
+      "paymentMethod": "Paypal",
+      "status": "مقبول",
+      "associatedCycle": {
+        "cycleId": 17,
+        "cycleName": "دورة التسويق الإلكتروني"
+      },
+      "associatedHarvest": null
+    },
+    {
+      "paymentId": 14,
+      "paymentDate": "2024-12-28T19:10:25.6789012",
+      "amount": 4300,
+      "type": "شراء",
+      "payerName": "غادة يوسف",
+      "payeeName": "سليم طارق",
+      "payerEmail": "ghadayoosef@example.com",
+      "payeeEmail": "salimtarik@example.com",
+      "paymentMethod": "Visa",
+      "status": "مقبول",
+      "associatedCycle": null,
+      "associatedHarvest": {
+        "harvestId": 4,
+        "harvestName": "فلفل"
+      }
+    },
+    {
+      "paymentId": 15,
+      "paymentDate": "2024-12-29T07:45:30.7890123",
+      "amount": 5500,
+      "type": "استثمار",
+      "payerName": "فاطمة زكريا",
+      "payeeName": "أحمد سعيد",
+      "payerEmail": "fatimazakeria@example.com",
+      "payeeEmail": "ahmedsaid@example.com",
+      "paymentMethod": "MasterCard",
+      "status": "مقبول",
+      "associatedCycle": {
+        "cycleId": 18,
+        "cycleName": "دورة اللغة الإنجليزية"
+      },
+      "associatedHarvest": null
+    },
+    {
+      "paymentId": 16,
+      "paymentDate": "2024-12-29T13:20:40.8901234",
+      "amount": 6800,
+      "type": "شراء",
+      "payerName": "رندا عبد الله",
+      "payeeName": "سامي محمد",
+      "payerEmail": "randaa@example.com",
+      "payeeEmail": "samee@example.com",
+      "paymentMethod": "Cash",
+      "status": "مقبول",
+      "associatedCycle": null,
+      "associatedHarvest": {
+        "harvestId": 5,
+        "harvestName": "بصل"
+      }
+    },
+    {
+      "paymentId": 17,
+      "paymentDate": "2024-12-30T10:05:50.9012345",
+      "amount": 3000,
+      "type": "استثمار",
+      "payerName": "إيمان عبد الرحمن",
+      "payeeName": "محمد علي",
+      "payerEmail": "emanalrahman@example.com",
+      "payeeEmail": "mohammedali@example.com",
+      "paymentMethod": "Visa",
+      "status": "مقبول",
+      "associatedCycle": {
+        "cycleId": 19,
+        "cycleName": "دورة إدارة الأعمال"
+      },
+      "associatedHarvest": null
+    },
+    {
+      "paymentId": 18,
+      "paymentDate": "2024-12-30T18:00:00.0123456",
+      "amount": 8000,
+      "type": "شراء",
+      "payerName": "يوسف عز الدين",
+      "payeeName": "عائشة حسان",
+      "payerEmail": "youssefazdin@example.com",
+      "payeeEmail": "aishahassan@example.com",
+      "paymentMethod": "Paypal",
+      "status": "مقبول",
+      "associatedCycle": null,
+      "associatedHarvest": {
+        "harvestId": 6,
+        "harvestName": "باذنجان"
+      }
+    }
+  ],
+  "paymentsSummary": [
+    {
+      "year": 2023,
+        "purchasesPerMonth": [2540000, 150000, 250000, 600000, 120000, 220000, 220000, 580000, 950000, 320000, 400000, 520000],
+        "investmentsPerMonth": [250000, 150000, 250000, 600000, 120000, 220000, 220000, 580000, 950000, 320000, 400000, 520000]
+    },
+    {
+      "year": 2024,
+        "purchasesPerMonth": [200000, 140000, 230000, 550000, 110000, 200000, 210000, 500000, 900000, 300000, 390000, 500000],
+        "investmentsPerMonth": [210000, 130000, 240000, 580000, 100000, 210000, 200000, 520000, 880000, 310000, 380000, 510000]
+    },
+    {
+      "year": 2025,
+        "purchasesPerMonth": [260000, 160000, 270000, 620000, 130000, 240000, 230000, 600000, 970000, 340000, 420000, 540000],
+        "investmentsPerMonth": [270000, 170000, 260000, 640000, 140000, 250000, 240000, 610000, 980000, 350000, 430000, 550000]
+    }
   ]
 }
+  
+    
+ }
+  

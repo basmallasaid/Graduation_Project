@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 // import Navbar from "../Navbar";
 import styles from "../../Styles/style.module.css";
-import FooterF from "./FooterF";
-import NavbarF from "./NavbarF";
+import NavbarF from "./Main/NavbarF";
+import FooterF from "./Main/FooterF";
+
 const Shopping = () => {
     const [plants, setPlants] = useState([]);
     const [error, setError] = useState(null);
@@ -22,7 +23,7 @@ const Shopping = () => {
 
     return (
         <>
-            <NavbarF />
+            <NavbarF/>
             <div className={styles.soppingpage}>
                 <div className="container">
                     <div className={styles.shopping_title}>
@@ -76,7 +77,7 @@ const Shopping = () => {
                     </div>
                 </div>
             </div>
-            <FooterF />
+            <FooterF/>
         </>
     );
 };

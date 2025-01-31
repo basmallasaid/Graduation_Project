@@ -13,8 +13,6 @@ import About from './Components/About';
 import Instructions from './Components/Instructions';
 import Register from './Authentication/Register';
 import Opinon from './Components/Opinon';
-import NavbarF from './Components/FarmerDashboard/NavbarF';
-import FooterF from './Components/FarmerDashboard/FooterF';
 // import ViewCrops from './Components/FarmerDashboard/ViewCrops';
 import Addcrop from './Components/FarmerDashboard/addcrop';
 // <<<<<<< HEAD
@@ -24,8 +22,11 @@ import Cropcard from './Components/FarmerDashboard/cropcard';
 // import Croprequests from './Components/FarmerDashboard/Croprequests';
 import AImodel from './Components/FarmerDashboard/AImodel';
 import Shopping from './Components/FarmerDashboard/Shopping';
-import FarmerHome from './Components/FarmerDashboard/FarmerHome';
 import ViewCrops from './Components/FarmerDashboard/ViewCrops';
+import PaymentF from './Components/FarmerDashboard/financial reporting/PaymentF';
+import HomeFarmer from './Components/FarmerDashboard/Main/HomeFarmer';
+
+
 
 // >>>>>>> 854142225220f439e2c00c42ebb6c9345aae2d54
 function App() {
@@ -51,9 +52,11 @@ function App() {
           <Route path='Opinon' element={<Opinon/>}/>
           <Route path='WeatherF' element={<WeatherF/>}/> 
           <Route path="AI"  element={<AImodel/>}/>
-          <Route path="Shopping" element={<Shopping/>}/>\
-          <Route path='FarmerHome'  element={<FarmerHome/>}/>
+          <Route path="Shopping" element={<Shopping/>}/>
           <Route path='ViewCrops' element={<ViewCrops/>}/>
+         <Route path='HomeFarmer' element={<HomeFarmer/>}/>
+          <Route path='PaymentF' element={<PaymentF/>}/>
+         
            </Routes>}
  
 

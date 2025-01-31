@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styles from "../../Styles/style.module.css";
-import FooterF from './FooterF';
+
 import Navbar from '../Navbar';
+import FooterF from './Main/FooterF';
 
 const WeatherF = () => {
     const [weatherData, setWeatherData] = useState({ /*note*/
@@ -121,7 +122,7 @@ const WeatherF = () => {
                     <p>لا توجد توصيات زراعية في الوقت الحالي.</p>
                 )}
             </div>
-            <FooterF />
+            <FooterF/>
         </>
     );
 };

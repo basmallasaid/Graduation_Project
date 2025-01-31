@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import Addcrop from "./addcrop";
 import Cropcard from "./cropcard";
 import Navbar from "../Navbar";
-import FooterF from "./FooterF";
+import FooterF from "./Main/FooterF";
+
 
 export default function ViewCrops() {
   const [visiblecrop, setVisiblecrop] = useState(false);
@@ -235,7 +236,7 @@ const filteredCrops = crops.filter((crop) => {
           </div>
         </div>
       </div>
-      <FooterF/>
+     <FooterF/>
     </>
   );
 }

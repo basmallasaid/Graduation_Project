@@ -4,9 +4,9 @@ import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import Addcrop from "./addcrop";
 import Cropcard from "./cropcard";
-import Navbar from "../Navbar";
+import NavbarF from "./Main/NavbarF";
 import FooterF from "./Main/FooterF";
-
+import NavSideF from "./Main/NavSideF";
 
 export default function ViewCrops() {
   const [visiblecrop, setVisiblecrop] = useState(false);
@@ -98,7 +98,10 @@ const filteredCrops = crops.filter((crop) => {
   };
   return (
     <>
-    <Navbar />
+    <NavbarF />
+      <div className="d-flex flex-grow-1">
+                <NavSideF/>
+                <main className="flex-grow-1">
       <div className="crops" style={{ backgroundColor: "#fff", padding: "50px" }}>
         {/* Flex container for Plus Icon, Title, and Search */}
         <div
@@ -247,6 +250,8 @@ const filteredCrops = crops.filter((crop) => {
             )}
           </div>
         </div>
+      </div>
+      </main>
       </div>
      <FooterF/>
     </>

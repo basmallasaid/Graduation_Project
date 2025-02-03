@@ -1,5 +1,5 @@
-import Navbar from "../Navbar";
-import FooterF from "./FooterF";
+import NavbarF from "./Main/NavbarF";
+import FooterF from "./Main/FooterF";
 import styles from "../../Styles/style.module.css";
 import { useState, useEffect } from "react";
 import Modal from "@mui/material/Modal";
@@ -17,6 +17,7 @@ import Updateopencycle from './Updateopencycle';
 import Updateclosecycle from './Updateclosecycle';
 import Viewnew from "./Viewnew";
 import Cardrequests from './Cardrequets'
+import NavSideF from './Main/NavSideF'
 export default function Cropmenuview() {
   const [showInput, setShowInput] = useState(false);
   const [open, setOpen] = useState(false); // State to manage modal visibility
@@ -295,8 +296,11 @@ export default function Cropmenuview() {
   };
   return (
     <>
-      <Navbar />
-      <div >
+      <NavbarF />
+      <div className="d-flex flex-column min-vh-100" >
+          <div className="d-flex flex-grow-1">
+                    <NavSideF/>
+                    <main className="flex-grow-1">
         <div style={{ display: "flex" }} >
           <h1 className={styles.Menutitle}>قائمه الدورات الزراعيه</h1>
         </div>
@@ -919,6 +923,8 @@ export default function Cropmenuview() {
                     )}
                 </div>
             </div>
+        </div>
+        </main>
         </div>
         </div>
       <FooterF />

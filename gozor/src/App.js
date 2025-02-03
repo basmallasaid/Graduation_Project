@@ -35,8 +35,8 @@ import Shopping from './Components/FarmerDashboard/Shopping';
 import ViewCrops from './Components/FarmerDashboard/ViewCrops';
 import PaymentF from './Components/FarmerDashboard/financial reporting/PaymentF';
 import HomeFarmer from './Components/FarmerDashboard/Main/HomeFarmer';
-
-
+import SeeDetails from './Components/InvestorDashboard/Investorpages/SeeDetails/SeeDetails';
+import Invnewupdates from './Components/InvestorDashboard/Investorpages/SeeDetails/Invnewupdates'
 
 // >>>>>>> 854142225220f439e2c00c42ebb6c9345aae2d54
 function App() {
@@ -79,6 +79,9 @@ function App() {
           <Route path='ViewCrops' element={<ViewCrops/>}/>
          <Route path='HomeFarmer' element={<HomeFarmer/>}/>
           <Route path='PaymentF' element={<PaymentF/>}/>
+          <Route path='SeeDetails' element={<SeeDetails/>}/>
+          <Route path='Invnewupdates' element={<Invnewupdates/>}/>
+
          
            </Routes>}
  

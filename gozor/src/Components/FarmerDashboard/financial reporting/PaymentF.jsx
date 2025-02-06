@@ -14,7 +14,7 @@ const PaymentF = () => {
     const [transactions, setTransactions] = useState({
         paymentDetails: [],
         paymentsSummary: [
-
+            
         ],
 
     });
@@ -143,7 +143,7 @@ const PaymentF = () => {
                 <main className={` flex-grow-1  `}>
                     <div className={styles.table_section} >
                         {/* Table */}
-                        <div className={styles.table_container} >
+                        <div className={`${styles.table_container} ${styles.tablePay}`} >
                             <table className={styles.transactions_table}>
                                 <thead>
                                     <tr>

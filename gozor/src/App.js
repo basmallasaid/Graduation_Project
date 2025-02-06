@@ -35,6 +35,7 @@ import Shopping from './Components/FarmerDashboard/Shopping';
 import ViewCrops from './Components/FarmerDashboard/ViewCrops';
 import PaymentF from './Components/FarmerDashboard/financial reporting/PaymentF';
 import HomeFarmer from './Components/FarmerDashboard/Main/HomeFarmer';
+import Agricultural from './Components/FarmerDashboard/AgriculturalManagement/Agricultural';
 
 
 
@@ -72,13 +73,15 @@ function App() {
           <Route path="/Updateclosecycle" element={<Updateclosecycle/>} />
           <Route path="/Viewnew" element={<Viewnew/>} />
           <Route path="/Editupdatenewcycle" element={<Editupdatenewcycle/>} />
-
           <Route path='WeatherF' element={<WeatherF/>}/> 
           <Route path="AI"  element={<AImodel/>}/>
           <Route path="Shopping" element={<Shopping/>}/>
           <Route path='ViewCrops' element={<ViewCrops/>}/>
          <Route path='HomeFarmer' element={<HomeFarmer/>}/>
           <Route path='PaymentF' element={<PaymentF/>}/>
+          <Route path='Agricultural' element={<Agricultural/>}/>
+          
+
          
            </Routes>}
  

@@ -118,6 +118,13 @@
       "username": "",
       "feedback": "ghfgd",
       "date": "2024-12-26T21:02:26.800Z"
+    },
+    {
+      "id": "ec59",
+      "rating": 5,
+      "username": "",
+      "feedback": "تحفه",
+      "date": "2025-02-03T20:26:14.422Z"
     }
   ],
   "contacts": [
@@ -222,6 +229,10 @@
     {
       "id": "1735246907651",
       "imageUrl": "/assets/uploads/cucumber.png"
+    },
+    {
+      "id": "1738612682333",
+      "imageUrl": "/assets/uploads/Aiplanee.png"
     }
   ],
   "plant": [
@@ -845,201 +856,554 @@
       "username": "[[[",
       "bio": "kkkkkkkkkkk"
     }
-
   ],
-
- "transactions":{
-  "paymentDetails": [
-    {
-      "paymentId": 9,
-      "paymentDate": "2024-12-26T10:15:45.1234567",
-      "amount": 7200,
-      "type": "استثمار",
-      "payerName": "مريم احمد",
-      "payeeName": "فاطمة محمد",
-      "payerEmail": "maryamahmed@example.com",
-      "payeeEmail": "fatimamahmed@example.com",
-      "paymentMethod": "Visa",
-      "status": "مقبول",
-      "associatedCycle": {
-        "cycleId": 15,
-        "cycleName": "دورة تعلم البرمجة"
+  "transactions": {
+    "paymentDetails": [
+      {
+        "paymentId": 9,
+        "paymentDate": "2024-12-26T10:15:45.1234567",
+        "amount": 7200,
+        "type": "استثمار",
+        "payerName": "مريم احمد",
+        "payeeName": "فاطمة محمد",
+        "payerEmail": "maryamahmed@example.com",
+        "payeeEmail": "fatimamahmed@example.com",
+        "paymentMethod": "Visa",
+        "status": "مقبول",
+        "associatedCycle": {
+          "cycleId": 15,
+          "cycleName": "دورة تعلم البرمجة"
+        },
+        "associatedHarvest": null
       },
-      "associatedHarvest": null
-    },
-    {
-      "paymentId": 10,
-      "paymentDate": "2024-12-26T14:20:00.2345678",
-      "amount": 3500,
-      "type": "شراء",
-      "payerName": "عادل علي",
-      "payeeName": "سارة خالد",
-      "payerEmail": "adelali@example.com",
-      "payeeEmail": "sarahkhaled@example.com",
-      "paymentMethod": "MasterCard",
-      "status": "مقبول",
-      "associatedCycle": null,
-      "associatedHarvest": {
-        "harvestId": 2,
-        "harvestName": "خيار"
-      }
-    },
-    {
-      "paymentId": 11,
-      "paymentDate": "2024-12-27T08:30:20.3456789",
-      "amount": 1200,
-      "type": "استثمار",
-      "payerName": "عبدالله سعيد",
-      "payeeName": "منى إبراهيم",
-      "payerEmail": "abdullahsaeed@example.com",
-      "payeeEmail": "monaibrahim@example.com",
-      "paymentMethod": "Cash",
-      "status": "مقبول",
-      "associatedCycle": {
-        "cycleId": 16,
-        "cycleName": "دورة المحاسبة"
+      {
+        "paymentId": 10,
+        "paymentDate": "2024-12-26T14:20:00.2345678",
+        "amount": 3500,
+        "type": "شراء",
+        "payerName": "عادل علي",
+        "payeeName": "سارة خالد",
+        "payerEmail": "adelali@example.com",
+        "payeeEmail": "sarahkhaled@example.com",
+        "paymentMethod": "MasterCard",
+        "status": "مقبول",
+        "associatedCycle": null,
+        "associatedHarvest": {
+          "harvestId": 2,
+          "harvestName": "خيار"
+        }
       },
-      "associatedHarvest": null
-    },
-    {
-      "paymentId": 12,
-      "paymentDate": "2024-12-27T16:40:10.4567890",
-      "amount": 4800,
-      "type": "شراء",
-      "payerName": "علي حسين",
-      "payeeName": "سامي فؤاد",
-      "payerEmail": "alihussein@example.com",
-      "payeeEmail": "samefoad@example.com",
-      "paymentMethod": "Paypal",
-      "status": "مقبول",
-      "associatedCycle": null,
-      "associatedHarvest": {
-        "harvestId": 3,
-        "harvestName": "جزر"
-      }
-    },
-    {
-      "paymentId": 13,
-      "paymentDate": "2024-12-28T12:55:05.5678901",
-      "amount": 8900,
-      "type": "استثمار",
-      "payerName": "سالم مصطفى",
-      "payeeName": "خالد سعيد",
-      "payerEmail": "salemmostafa@example.com",
-      "payeeEmail": "khalidsaid@example.com",
-      "paymentMethod": "Paypal",
-      "status": "مقبول",
-      "associatedCycle": {
-        "cycleId": 17,
-        "cycleName": "دورة التسويق الإلكتروني"
+      {
+        "paymentId": 11,
+        "paymentDate": "2024-12-27T08:30:20.3456789",
+        "amount": 1200,
+        "type": "استثمار",
+        "payerName": "عبدالله سعيد",
+        "payeeName": "منى إبراهيم",
+        "payerEmail": "abdullahsaeed@example.com",
+        "payeeEmail": "monaibrahim@example.com",
+        "paymentMethod": "Cash",
+        "status": "مقبول",
+        "associatedCycle": {
+          "cycleId": 16,
+          "cycleName": "دورة المحاسبة"
+        },
+        "associatedHarvest": null
       },
-      "associatedHarvest": null
-    },
-    {
-      "paymentId": 14,
-      "paymentDate": "2024-12-28T19:10:25.6789012",
-      "amount": 4300,
-      "type": "شراء",
-      "payerName": "غادة يوسف",
-      "payeeName": "سليم طارق",
-      "payerEmail": "ghadayoosef@example.com",
-      "payeeEmail": "salimtarik@example.com",
-      "paymentMethod": "Visa",
-      "status": "مقبول",
-      "associatedCycle": null,
-      "associatedHarvest": {
-        "harvestId": 4,
-        "harvestName": "فلفل"
-      }
-    },
-    {
-      "paymentId": 15,
-      "paymentDate": "2024-12-29T07:45:30.7890123",
-      "amount": 5500,
-      "type": "استثمار",
-      "payerName": "فاطمة زكريا",
-      "payeeName": "أحمد سعيد",
-      "payerEmail": "fatimazakeria@example.com",
-      "payeeEmail": "ahmedsaid@example.com",
-      "paymentMethod": "MasterCard",
-      "status": "مقبول",
-      "associatedCycle": {
-        "cycleId": 18,
-        "cycleName": "دورة اللغة الإنجليزية"
+      {
+        "paymentId": 12,
+        "paymentDate": "2024-12-27T16:40:10.4567890",
+        "amount": 4800,
+        "type": "شراء",
+        "payerName": "علي حسين",
+        "payeeName": "سامي فؤاد",
+        "payerEmail": "alihussein@example.com",
+        "payeeEmail": "samefoad@example.com",
+        "paymentMethod": "Paypal",
+        "status": "مقبول",
+        "associatedCycle": null,
+        "associatedHarvest": {
+          "harvestId": 3,
+          "harvestName": "جزر"
+        }
       },
-      "associatedHarvest": null
-    },
-    {
-      "paymentId": 16,
-      "paymentDate": "2024-12-29T13:20:40.8901234",
-      "amount": 6800,
-      "type": "شراء",
-      "payerName": "رندا عبد الله",
-      "payeeName": "سامي محمد",
-      "payerEmail": "randaa@example.com",
-      "payeeEmail": "samee@example.com",
-      "paymentMethod": "Cash",
-      "status": "مقبول",
-      "associatedCycle": null,
-      "associatedHarvest": {
-        "harvestId": 5,
-        "harvestName": "بصل"
-      }
-    },
-    {
-      "paymentId": 17,
-      "paymentDate": "2024-12-30T10:05:50.9012345",
-      "amount": 3000,
-      "type": "استثمار",
-      "payerName": "إيمان عبد الرحمن",
-      "payeeName": "محمد علي",
-      "payerEmail": "emanalrahman@example.com",
-      "payeeEmail": "mohammedali@example.com",
-      "paymentMethod": "Visa",
-      "status": "مقبول",
-      "associatedCycle": {
-        "cycleId": 19,
-        "cycleName": "دورة إدارة الأعمال"
+      {
+        "paymentId": 13,
+        "paymentDate": "2024-12-28T12:55:05.5678901",
+        "amount": 8900,
+        "type": "استثمار",
+        "payerName": "سالم مصطفى",
+        "payeeName": "خالد سعيد",
+        "payerEmail": "salemmostafa@example.com",
+        "payeeEmail": "khalidsaid@example.com",
+        "paymentMethod": "Paypal",
+        "status": "مقبول",
+        "associatedCycle": {
+          "cycleId": 17,
+          "cycleName": "دورة التسويق الإلكتروني"
+        },
+        "associatedHarvest": null
       },
-      "associatedHarvest": null
-    },
-    {
-      "paymentId": 18,
-      "paymentDate": "2024-12-30T18:00:00.0123456",
-      "amount": 8000,
-      "type": "شراء",
-      "payerName": "يوسف عز الدين",
-      "payeeName": "عائشة حسان",
-      "payerEmail": "youssefazdin@example.com",
-      "payeeEmail": "aishahassan@example.com",
-      "paymentMethod": "Paypal",
-      "status": "مقبول",
-      "associatedCycle": null,
-      "associatedHarvest": {
-        "harvestId": 6,
-        "harvestName": "باذنجان"
+      {
+        "paymentId": 14,
+        "paymentDate": "2024-12-28T19:10:25.6789012",
+        "amount": 4300,
+        "type": "شراء",
+        "payerName": "غادة يوسف",
+        "payeeName": "سليم طارق",
+        "payerEmail": "ghadayoosef@example.com",
+        "payeeEmail": "salimtarik@example.com",
+        "paymentMethod": "Visa",
+        "status": "مقبول",
+        "associatedCycle": null,
+        "associatedHarvest": {
+          "harvestId": 4,
+          "harvestName": "فلفل"
+        }
+      },
+      {
+        "paymentId": 15,
+        "paymentDate": "2024-12-29T07:45:30.7890123",
+        "amount": 5500,
+        "type": "استثمار",
+        "payerName": "فاطمة زكريا",
+        "payeeName": "أحمد سعيد",
+        "payerEmail": "fatimazakeria@example.com",
+        "payeeEmail": "ahmedsaid@example.com",
+        "paymentMethod": "MasterCard",
+        "status": "مقبول",
+        "associatedCycle": {
+          "cycleId": 18,
+          "cycleName": "دورة اللغة الإنجليزية"
+        },
+        "associatedHarvest": null
+      },
+      {
+        "paymentId": 16,
+        "paymentDate": "2024-12-29T13:20:40.8901234",
+        "amount": 6800,
+        "type": "شراء",
+        "payerName": "رندا عبد الله",
+        "payeeName": "سامي محمد",
+        "payerEmail": "randaa@example.com",
+        "payeeEmail": "samee@example.com",
+        "paymentMethod": "Cash",
+        "status": "مقبول",
+        "associatedCycle": null,
+        "associatedHarvest": {
+          "harvestId": 5,
+          "harvestName": "بصل"
+        }
+      },
+      {
+        "paymentId": 17,
+        "paymentDate": "2024-12-30T10:05:50.9012345",
+        "amount": 3000,
+        "type": "استثمار",
+        "payerName": "إيمان عبد الرحمن",
+        "payeeName": "محمد علي",
+        "payerEmail": "emanalrahman@example.com",
+        "payeeEmail": "mohammedali@example.com",
+        "paymentMethod": "Visa",
+        "status": "مقبول",
+        "associatedCycle": {
+          "cycleId": 19,
+          "cycleName": "دورة إدارة الأعمال"
+        },
+        "associatedHarvest": null
+      },
+      {
+        "paymentId": 18,
+        "paymentDate": "2024-12-30T18:00:00.0123456",
+        "amount": 8000,
+        "type": "شراء",
+        "payerName": "يوسف عز الدين",
+        "payeeName": "عائشة حسان",
+        "payerEmail": "youssefazdin@example.com",
+        "payeeEmail": "aishahassan@example.com",
+        "paymentMethod": "Paypal",
+        "status": "مقبول",
+        "associatedCycle": null,
+        "associatedHarvest": {
+          "harvestId": 6,
+          "harvestName": "باذنجان"
+        }
       }
-    }
-  ],
-  "paymentsSummary": [
+    ],
+    "paymentsSummary": [
+      {
+        "year": 2023,
+        "purchasesPerMonth": [
+          2540000,
+          150000,
+          250000,
+          600000,
+          120000,
+          220000,
+          220000,
+          580000,
+          950000,
+          320000,
+          400000,
+          520000
+        ],
+        "investmentsPerMonth": [
+          250000,
+          150000,
+          250000,
+          600000,
+          120000,
+          220000,
+          220000,
+          580000,
+          950000,
+          320000,
+          400000,
+          520000
+        ]
+      },
+      {
+        "year": 2024,
+        "purchasesPerMonth": [
+          200000,
+          140000,
+          230000,
+          550000,
+          110000,
+          200000,
+          210000,
+          500000,
+          900000,
+          300000,
+          390000,
+          500000
+        ],
+        "investmentsPerMonth": [
+          210000,
+          130000,
+          240000,
+          580000,
+          100000,
+          210000,
+          200000,
+          520000,
+          880000,
+          310000,
+          380000,
+          510000
+        ]
+      },
+      {
+        "year": 2025,
+        "purchasesPerMonth": [
+          260000,
+          160000,
+          270000,
+          620000,
+          130000,
+          240000,
+          230000,
+          600000,
+          970000,
+          340000,
+          420000,
+          540000
+        ],
+        "investmentsPerMonth": [
+          270000,
+          170000,
+          260000,
+          640000,
+          140000,
+          250000,
+          240000,
+          610000,
+          980000,
+          350000,
+          430000,
+          550000
+        ]
+      }
+    ]
+  },
+  "Farm": [
     {
-      "year": 2023,
-        "purchasesPerMonth": [2540000, 150000, 250000, 600000, 120000, 220000, 220000, 580000, 950000, 320000, 400000, 520000],
-        "investmentsPerMonth": [250000, 150000, 250000, 600000, 120000, 220000, 220000, 580000, 950000, 320000, 400000, 520000]
+      "farmId": 20,
+      "farmName": "مزرعة الفجر",
+      "location": "المدينة المنورة",
+      "size": 25000,
+      "numbersOfLands": 3,
+      "landParcels": [
+        {
+          "parcelId": 43,
+          "farmId": 20,
+          "farmLocation": "المدينة المنورة",
+          "status": "Available",
+          "landName": "الورد",
+          "cycleName": "دورة زراعة الورد",
+          "imageUrl": "/assets/Land.png"
+        },
+        {
+          "parcelId": 44,
+          "farmId": 20,
+          "farmLocation": "المدينة المنورة",
+          "status": "Occupied",
+          "landName": "الخزامى",
+          "cycleName": "دورة زراعة الخزامى",
+          "imageUrl": "/assets/Land.png"
+        },
+        {
+          "parcelId": 45,
+          "farmId": 20,
+          "farmLocation": "المدينة المنورة",
+          "status": "Available",
+          "landName": "الزنبق",
+          "cycleName": "دورة زراعة الزنبق",
+          "imageUrl": "/assets/Land.png"
+        }
+      ],
+      "id": "dd46"
     },
     {
-      "year": 2024,
-        "purchasesPerMonth": [200000, 140000, 230000, 550000, 110000, 200000, 210000, 500000, 900000, 300000, 390000, 500000],
-        "investmentsPerMonth": [210000, 130000, 240000, 580000, 100000, 210000, 200000, 520000, 880000, 310000, 380000, 510000]
+      "farmId": 21,
+      "farmName": "مزرعة الربيع",
+      "location": "القصيم",
+      "size": 13000,
+      "numbersOfLands": 2,
+      "landParcels": [
+        {
+          "parcelId": 46,
+          "farmId": 21,
+          "farmLocation": "القصيم",
+          "status": "Available",
+          "landName": "المروج",
+          "cycleName": "دورة زراعة الطماطم",
+          "imageUrl": "/assets/Land.png"
+        },
+        {
+          "parcelId": 47,
+          "farmId": 21,
+          "farmLocation": "القصيم",
+          "status": "Occupied",
+          "landName": "الحقول",
+          "cycleName": "دورة زراعة الفلفل",
+          "imageUrl": "/assets/Land.png"
+        }
+      ],
+      "id": "2333"
     },
     {
-      "year": 2025,
-        "purchasesPerMonth": [260000, 160000, 270000, 620000, 130000, 240000, 230000, 600000, 970000, 340000, 420000, 540000],
-        "investmentsPerMonth": [270000, 170000, 260000, 640000, 140000, 250000, 240000, 610000, 980000, 350000, 430000, 550000]
+      "farmId": 22,
+      "farmName": "مزرعة السهول",
+      "location": "حائل",
+      "size": 18000,
+      "numbersOfLands": 4,
+      "landParcels": [
+        {
+          "parcelId": 48,
+          "farmId": 22,
+          "farmLocation": "حائل",
+          "status": "Available",
+          "landName": "الأمجاد",
+          "cycleName": "دورة زراعة الفواكه",
+          "imageUrl": "/assets/Land.png"
+        },
+        {
+          "parcelId": 49,
+          "farmId": 22,
+          "farmLocation": "حائل",
+          "status": "Occupied",
+          "landName": "النسيم",
+          "cycleName": "دورة زراعة البطاطا",
+          "imageUrl": "/assets/Land.png"
+        },
+        {
+          "parcelId": 50,
+          "farmId": 22,
+          "farmLocation": "حائل",
+          "status": "Available",
+          "landName": "الجبال",
+          "cycleName": "دورة زراعة البرتقال",
+          "imageUrl": "/assets/Land.png"
+        },
+        {
+          "parcelId": 51,
+          "farmId": 22,
+          "farmLocation": "حائل",
+          "status": "Occupied",
+          "landName": "العيون",
+          "cycleName": "دورة زراعة الجزر",
+          "imageUrl": "/assets/Land.png"
+        }
+      ],
+      "id": "0275"
+    },
+    {
+      "farmId": 23,
+      "farmName": "مزرعة الفارس",
+      "location": "الرياض",
+      "size": 22000,
+      "numbersOfLands": 3,
+      "landParcels": [
+        {
+          "parcelId": 52,
+          "farmId": 23,
+          "farmLocation": "الرياض",
+          "status": "Available",
+          "landName": "البراري",
+          "cycleName": "دورة زراعة الحنطة",
+          "imageUrl": "/assets/Land.png"
+        },
+        {
+          "parcelId": 53,
+          "farmId": 23,
+          "farmLocation": "الرياض",
+          "status": "Occupied",
+          "landName": "العيون",
+          "cycleName": "دورة زراعة البذور",
+          "imageUrl": "/assets/Land.png"
+        },
+        {
+          "parcelId": 54,
+          "farmId": 23,
+          "farmLocation": "الرياض",
+          "status": "Available",
+          "landName": "الروضة",
+          "cycleName": "دورة زراعة العنب",
+          "imageUrl": "/assets/Land.png"
+        }
+      ],
+      "id": "8584"
+    },
+    {
+      "farmId": 24,
+      "farmName": "مزرعة الندى",
+      "location": "مكة المكرمة",
+      "size": 16000,
+      "numbersOfLands": 2,
+      "landParcels": [
+        {
+          "parcelId": 55,
+          "farmId": 24,
+          "farmLocation": "مكة المكرمة",
+          "status": "Available",
+          "landName": "الزهور",
+          "cycleName": "دورة زراعة الورود",
+          "imageUrl": "/assets/Land.png"
+        },
+        {
+          "parcelId": 56,
+          "farmId": 24,
+          "farmLocation": "مكة المكرمة",
+          "status": "Occupied",
+          "landName": "السواحل",
+          "cycleName": "دورة زراعة السمسم",
+          "imageUrl": "/assets/Land.png"
+        }
+      ],
+      "id": "a1b8"
+    },
+    {
+      "farmId": 25,
+      "farmName": "مزرعة العبير",
+      "location": "أبها",
+      "size": 14000,
+      "numbersOfLands": 2,
+      "landParcels": [
+        {
+          "parcelId": 57,
+          "farmId": 25,
+          "farmLocation": "أبها",
+          "status": "Available",
+          "landName": "الجبال",
+          "cycleName": "دورة زراعة الفواكه",
+          "imageUrl": "/assets/Land.png"
+        },
+        {
+          "parcelId": 58,
+          "farmId": 25,
+          "farmLocation": "أبها",
+          "status": "Occupied",
+          "landName": "الوادي",
+          "cycleName": "دورة زراعة المانجو",
+          "imageUrl": "/assets/Land.png"
+        }
+      ],
+      "id": "b9c8"
+    },
+    {
+      "farmId": 26,
+      "farmName": "مزرعة البحر",
+      "location": "جازان",
+      "size": 20000,
+      "numbersOfLands": 3,
+      "landParcels": [
+        {
+          "parcelId": 59,
+          "farmId": 26,
+          "farmLocation": "جازان",
+          "status": "Available",
+          "landName": "الشواطئ",
+          "cycleName": "دورة زراعة القمح",
+          "imageUrl": "/assets/Land.png"
+        },
+        {
+          "parcelId": 60,
+          "farmId": 26,
+          "farmLocation": "جازان",
+          "status": "Occupied",
+          "landName": "الكرم",
+          "cycleName": "دورة زراعة الفاصوليا",
+          "imageUrl": "/assets/Land.png"
+        },
+        {
+          "parcelId": 61,
+          "farmId": 26,
+          "farmLocation": "جازان",
+          "status": "Available",
+          "landName": "الأمواج",
+          "cycleName": "دورة زراعة النخيل",
+          "imageUrl": "/assets/Land.png"
+        }
+      ],
+      "id": "5566"
+    },
+    {
+      "farmId": 27,
+      "farmName": "مزرعة الفلاح",
+      "location": "القصيم",
+      "size": 13000,
+      "numbersOfLands": 1,
+      "landParcels": [
+        {
+          "parcelId": 62,
+          "farmId": 27,
+          "farmLocation": "القصيم",
+          "status": "Available",
+          "landName": "الحديقة",
+          "cycleName": "دورة زراعة اللوز",
+          "imageUrl": "/assets/Land.png"
+        }
+      ],
+      "id": "49db"
+    },
+    {
+      "id": "e2f5",
+      "farmName": "المزرعة الشقية",
+      "location": "الشرقية",
+      "size": "2000"
+    },
+    {
+      "id": "744e",
+      "farmName": "ghfgf",
+      "location": "vbc",
+      "size": "7655"
+    },
+    {
+      "id": "41db",
+      "farmName": "kkj",
+      "location": "vbc",
+      "size": "7655"
     }
   ]
 }
-  
-    
- }
-  

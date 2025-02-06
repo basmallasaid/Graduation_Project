@@ -2546,3 +2546,85 @@ font-size: 20px;
      width: 100%;
      margin-left: 40px;
 }
+
+
+/* Investor pages */
+
+
+.Invsubscribe {
+  background-color: #6C4C94;
+  color: #fff;
+  padding: 0.3em 1.5em; /* Changed to em for better scaling */
+  border-radius: 0.3em; /* Changed to em for better scaling */
+  box-shadow: #6C4C94 0px 3px 8px;
+    font-size: 1.2rem; /* Add font size here */
+}
+
+.InvButtsubscribe {
+  background-color: #000;
+  color: #fff;
+  padding: 0.1em 3em; /* Changed to em for better scaling */
+  border-radius: 1.2em; /* Changed to em for better scaling */
+  font-size: 1rem; /* Add font size here */
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  cursor: pointer; /* add cursor pointer */
+  transition: background-color 0.3s ease; /* Add a smooth transition effect */
+}
+
+.InvButtsubscribe:hover {
+  background-color: #222; 
+  color:#fff
+}
+
+
+/* For screen sizes smaller than 768px (tablets) */
+@media (max-width: 768px) {
+    .Invsubscribe {
+        font-size: 1rem; /* Reduce font size */
+        padding: 0.3em 1em;
+    }
+
+    .InvButtsubscribe {
+        font-size: 0.9rem; /* Reduce font size */
+        padding: 0.1em 2em;
+    }
+}
+
+/* For even smaller screens (phones) */
+@media (max-width: 480px) {
+    .Invsubscribe {
+        font-size: 0.9rem; /* Reduce font size */
+        padding: 0.2em 0.8em;
+    }
+    .InvButtsubscribe {
+        font-size: 0.8rem; /* Reduce font size */
+        padding: 0.1em 1.5em;
+    }
+}
+.Invtitledetails{
+  text-align: center;
+  font-size: 2.3rem;
+  color: #6C4C94;
+  font-weight: 600;
+  padding: 10px;
+}
+.customscrollbar::-webkit-scrollbar {
+  width: 16px; /* Increased width for a thicker scrollbar */
+}
+
+.customscrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 8px; /* Increased border-radius for a slightly rounded track */
+}
+
+.customscrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 8px; /* Increased border-radius for a slightly rounded thumb */
+  border: 3px solid transparent; /* Add some transparent border to make the thumb appear less wide*/
+  background-clip: padding-box; /* Make background respect the border */
+}
+
+
+.customscrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

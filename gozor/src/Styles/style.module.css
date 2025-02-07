@@ -2107,6 +2107,7 @@ font-size: 20px;
   transition: background-color 0.2s ease;
 }
 
+
 .dropdown_item:hover {
   background-color: #f5f5f5;
 }

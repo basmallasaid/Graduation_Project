@@ -1405,5 +1405,184 @@
       "location": "vbc",
       "size": "7655"
     }
-  ]
+  ],"transactionsInv": {
+    "paymentDetails": [
+      {
+        "paymentId": 9,
+        "paymentDate": "2024-12-26T10:15:45.1234567",
+        "amount": 7200,
+        "type": "استثمار",
+        "CycleName": "دورة زراعة الزيتون",
+        "payeeName": "فاطمة محمد",
+        "payerEmail": "maryamahmed@example.com",
+        "payeeEmail": "fatimamahmed@example.com",
+        "paymentMethod": "Visa",
+        "status": "مقبول"
+        
+      },
+      {
+        "paymentId": 10,
+        "paymentDate": "2024-12-26T14:20:00.2345678",
+        "amount": 3500,
+        "type": "استثمار",
+        "CycleName": "دورة زراعة البنجر السكري",
+        "payeeName": "سارة خالد",
+        "payerEmail": "adelali@example.com",
+        "payeeEmail": "sarahkhaled@example.com",
+        "paymentMethod": "MasterCard",
+        "status": "مقبول"
+       
+      },
+      {
+        "paymentId": 11,
+        "paymentDate": "2024-12-27T08:30:20.3456789",
+        "amount": 1200,
+        "type": "استثمار",
+        "CycleName": "دورة زراعة البطاطس",
+        "payeeName": "منى إبراهيم",
+        "payerEmail": "abdullahsaeed@example.com",
+        "payeeEmail": "monaibrahim@example.com",
+        "paymentMethod": "Cash",
+        "status": "مقبول"
+      },
+      {
+        "paymentId": 12,
+        "paymentDate": "2024-12-27T16:40:10.4567890",
+        "amount": 4800,
+        "type": "استثمار",
+        "CycleName": "دورة زراعة الفول",
+        "payeeName": "سامي فؤاد",
+        "payerEmail": "alihussein@example.com",
+        "payeeEmail": "samefoad@example.com",
+        "paymentMethod": "Paypal",
+        "status": "مقبول"
+      },
+      {
+        "paymentId": 13,
+        "paymentDate": "2024-12-28T12:55:05.5678901",
+        "amount": 8900,
+        "type": "استثمار",
+        "CycleName": "دورة زراعة البنجر السكري",
+        "payeeName": "خالد سعيد",
+        "payerEmail": "salemmostafa@example.com",
+        "payeeEmail": "khalidsaid@example.com",
+        "paymentMethod": "Paypal",
+        "status": "مقبول"
+      },
+      {
+        "paymentId": 14,
+        "paymentDate": "2024-12-28T19:10:25.6789012",
+        "amount": 4300,
+        "type": "استثمار",
+        "CycleName": "دورة زراعة البطاطس",
+        "payeeName": "سليم طارق",
+        "payerEmail": "ghadayoosef@example.com",
+        "payeeEmail": "salimtarik@example.com",
+        "paymentMethod": "Visa",
+        "status": "مقبول"
+      },
+      {
+        "paymentId": 15,
+        "paymentDate": "2024-12-29T07:45:30.7890123",
+        "amount": 5500,
+        "type": "استثمار",
+        "CycleName": "دورة زراعة الفول",
+        "payeeName": "أحمد سعيد",
+        "payerEmail": "fatimazakeria@example.com",
+        "payeeEmail": "ahmedsaid@example.com",
+        "paymentMethod": "MasterCard",
+        "status": "مقبول"
+      },
+      {
+        "paymentId": 16,
+        "paymentDate": "2024-12-29T13:20:40.8901234",
+        "amount": 6800,
+        "type": "استثمار",
+        "CycleName": "دورة زراعة الأرز",
+        "payeeName": "سامي محمد",
+        "payerEmail": "randaa@example.com",
+        "payeeEmail": "samee@example.com",
+        "paymentMethod": "Cash",
+        "status": "مقبول"
+        
+      },
+      {
+        "paymentId": 17,
+        "paymentDate": "2024-12-30T10:05:50.9012345",
+        "amount": 3000,
+        "type": "استثمار",
+        "CycleName": "دورة زراعة الأرز",
+        "payeeName": "محمد علي",
+        "payerEmail": "emanalrahman@example.com",
+        "payeeEmail": "mohammedali@example.com",
+        "paymentMethod": "Visa",
+        "status": "مقبول"
+      },
+      {
+        "paymentId": 18,
+        "paymentDate": "2024-12-30T18:00:00.0123456",
+        "amount": 8000,
+        "type": "استثمار",
+        "CycleName": "دورة زراعة الزيتون",
+        "payeeName": "عائشة حسان",
+        "payerEmail": "youssefazdin@example.com",
+        "payeeEmail": "aishahassan@example.com",
+        "paymentMethod": "Paypal",
+        "status": "مقبول"
+      }
+    ],
+    "paymentsSummary": [
+      {
+        "year": 2023,
+        "investmentsPerMonth": [
+          250000,
+          150000,
+          250000,
+          600000,
+          120000,
+          220000,
+          220000,
+          580000,
+          950000,
+          320000,
+          400000,
+          520000
+        ]
+      },
+      {
+        "year": 2024,
+        "investmentsPerMonth": [
+          210000,
+          130000,
+          240000,
+          580000,
+          100000,
+          210000,
+          200000,
+          520000,
+          880000,
+          310000,
+          380000,
+          510000
+        ]
+      },
+      {
+        "year": 2025,
+        "investmentsPerMonth": [
+          270000,
+          170000,
+          260000,
+          640000,
+          140000,
+          250000,
+          240000,
+          610000,
+          980000,
+          350000,
+          430000,
+          550000
+        ]
+      }
+    ]
+  }
 }

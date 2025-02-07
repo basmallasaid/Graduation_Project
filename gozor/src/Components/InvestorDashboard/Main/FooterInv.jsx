@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from "../../../Styles/style.module.css"; 
 import { Link } from 'react-router-dom';
-const FooterF = () => {
+const FooterInv = () => {
     return (
         <>
         <footer className={` text-white ${styles.footerF}`} style={{backgroundColor:"#073B3A"}}>
@@ -131,4 +131,4 @@ const FooterF = () => {
      );
    }
 
-export default FooterF;
+export default FooterInv;

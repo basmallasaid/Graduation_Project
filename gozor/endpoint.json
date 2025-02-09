@@ -854,6 +854,26 @@
       "category": "merchant",
       "username": "jojooo",
       "bio": "مزارعه من الدرجه الاولي"
+    },
+    {
+      "id": "f626",
+      "name": "شذي احمد",
+      "email": "shazaahmed13@gmail.com",
+      "phone": "01063494670",
+      "password": "12345678",
+      "category": "farmer",
+      "username": "شوشو",
+      "bio": "شوشو الروشه"
+    },
+    {
+      "id": "06c4",
+      "name": "اسراء سوسو",
+      "email": "soso@gmail.com",
+      "phone": "01061107459",
+      "password": "12345678",
+      "category": "farmer",
+      "username": "soso",
+      "bio": "no"
     }
   ],
   "transactions": {

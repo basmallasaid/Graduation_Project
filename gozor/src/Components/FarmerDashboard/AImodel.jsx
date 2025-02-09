@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from "../../Styles/style.module.css";
-import Navbar from '../Navbar';
+import NavbarF from '../FarmerDashboard/Main/NavbarF';
 import axios from 'axios';
 import FooterF from './Main/FooterF';
 
@@ -89,7 +89,7 @@ const AImodel = () => {
 
     return (
         <>
-            <Navbar />
+            <NavbarF />
             <div className={styles.containerf}>
                 <div className={`row ${styles.Ai}`}>
                     <div className='col-3'>

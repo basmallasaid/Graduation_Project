@@ -11,7 +11,7 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
   const [visibleEditCrop, setVisibleEditCrop] = useState(false);
   const [visibletalabatCrop, setVisibletalabatCrop] = useState(false);
   const [currentCrop, setCurrentCrop] = useState(crop); // Local state for crop data
-  
+
 
   const deletePost = async () => {
     // Show the SweetAlert2 confirmation dialog
@@ -24,20 +24,19 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
       cancelButtonColor: "#d33",
       confirmButtonText: "نعم، احذفها!"
     });
-  
+
     // If the user confirms the deletion
     if (isConfirmed.isConfirmed) {
       try {
         console.log(`Attempting to delete crop with ID: ${currentCrop.id}`);
-        await axios.delete(`http://localhost:8100/cropview/${currentCrop.id}`);
+        await axios.delete(`http://localhost:8000/cropview/${currentCrop.id}`);
         Swal.fire({
           title: "تم الحذف!",
           text: "تم حذف المحصول بنجاح.",
           icon: "success",
           confirmButtonColor: "#28a745" // Set the color of the confirm button to green
-
         });
-  
+
         if (onCropDeleted) {
           onCropDeleted(currentCrop.id); // Notify parent about deletion
         }
@@ -63,7 +62,7 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
       denyButtonText: "الغاء التعديل", // Change "Don't save" to "الغاء التعديل"
       cancelButtonText: "الغاء" // Change "Cancel" to "الغاء"
     });
-  
+
     if (result.isConfirmed) {
       // If user clicks "Save"
       setCurrentCrop(updatedCrop); // Update local state with new crop data
@@ -77,14 +76,14 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
         icon: "success",
         confirmButtonColor: "#28a745" // Set color of "تم التعديل" button to green
       });
-    }else if (result.isDenied) {
+    } else if (result.isDenied) {
       // If user clicks "الغاء التعديل"
       Swal.fire({
         title: "لم يتم حفظ التعديلات",
         icon: "info",  // Use "info" icon for the denied message
         confirmButtonColor: "#28a745" // Set the color of the confirm button to green
       });
-      
+
       setVisibleEditCrop(false); // Close the modal without saving
     }
   };
@@ -97,7 +96,7 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
       padding: "10px",
       borderRadius: "10px",
       maxHeight: "600px",
-      backgroundColor:"#F5F5F5"
+      backgroundColor: "#F5F5F5"
 
     },
     overlay: {
@@ -178,7 +177,7 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
                     {currentCrop.name}
                   </label>
                 </div>
- 
+
                 <div className="col-md-12">
                   <label className="form-label" style={{ fontSize: "23px" }}>
                     السعر:
@@ -225,14 +224,14 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
                     حالة المحصول:
                   </label>
                   <button
-                      className={`btn ${crop.status === 'تحت الطلب' ? styles.croppending : crop.status === 'نفذت الكمية' ? styles.cropempty : styles.cropava}`}
-                   
-                    >
-                      {crop.status}
-                    </button>             
-                    
-                       </div>
-                           {/* Show the button only if there are requests */}
+                    className={`btn ${crop.status === 'تحت الطلب' ? styles.croppending : crop.status === 'نفذت الكمية' ? styles.cropempty : styles.cropava}`}
+
+                  >
+                    {crop.status}
+                  </button>
+
+                </div>
+                {/* Show the button only if there are requests */}
                 {currentCrop.reuestsCount > 0 && (
                   <button
                     className={styles.talabat}
@@ -244,29 +243,29 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
                     عرض تفاصيل الطلبات
                   </button>
                 )}
-                       <Modal
-                    isOpen={visibletalabatCrop}
-                    onRequestClose={() => setVisibletalabatCrop(false)}
-                    ariaHideApp={false}
-                    style={talabatStyles}
+                <Modal
+                  isOpen={visibletalabatCrop}
+                  onRequestClose={() => setVisibletalabatCrop(false)}
+                  ariaHideApp={false}
+                  style={talabatStyles}
+                >
+                  <button
+                    onClick={() => setVisibletalabatCrop(false)}
+                    style={{
+                      backgroundColor: "transparent",
+                      border: "none",
+                      fontSize: "20px",
+                      color: "#333",
+                      cursor: "pointer",
+                      position: "absolute",
+                      top: "10px",
+                      right: "10px",
+                    }}
                   >
-                    <button
-                      onClick={() => setVisibletalabatCrop(false)}
-                      style={{
-                        backgroundColor: "transparent",
-                        border: "none",
-                        fontSize: "20px",
-                        color: "#333",
-                        cursor: "pointer",
-                        position: "absolute",
-                        top: "10px",
-                        right: "10px",
-                      }}
-                    >
-                      <i className="fa-solid fa-xmark"></i>
-                    </button>
-                   <Croprequests purchaseRequests={currentCrop.purchases}/>
-                  </Modal>
+                    <i className="fa-solid fa-xmark"></i>
+                  </button>
+                  <Croprequests purchaseRequests={currentCrop.purchases} />
+                </Modal>
 
 
               </div>

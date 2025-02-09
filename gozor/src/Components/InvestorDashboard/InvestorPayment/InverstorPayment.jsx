@@ -1,58 +1,82 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import YearlyCharts from './YearlyCharts';
-import TransactionModal from './TransactionModal';
+import React, { useEffect, useState } from 'react';
+import YearlyChartsInv from './YearlyChartsInv';
+import FooterInv from '../Main/FooterInv';
+import TransactionModalInv from './TransactionModalInv';
+import NavSideInv from '../Main/NavSideInv';
+import NavbarInv from '../Main/NavbarInv';
 import styles from "../../../Styles/style.module.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle';
-import NavbarF from '../Main/NavbarF';
-import FooterF from '../Main/FooterF';
-import NavSideF from '../Main/NavSideF';
+import stylesInv from "../StylesInv/stylesInv.module.css";
+import axios from 'axios';
 
-const PaymentF = () => {
-    const [transactions, setTransactions] = useState({
-        paymentDetails: [],
-        paymentsSummary: [
-            
-        ],
-
-    });
-    const [filteredTransactions, setFilteredTransactions] = useState({
+const InverstorPayment = () => {
+    const [transactionsInv, settransactionsInv] = useState({
         paymentDetails: [],
         paymentsSummary: [],
-
+    });
+    const [filteredtransactionsInv, setFilteredtransactionsInv] = useState({
+        paymentDetails: [],
+        paymentsSummary: [],
     });
     const [showTypeDropdown, setShowTypeDropdown] = useState(false);
     const [showDateDropdown, setShowDateDropdown] = useState(false);
     const [dateRange, setDateRange] = useState({ from: '', to: '' });
     const [activeTypeFilter, setActiveTypeFilter] = useState('all');
+    const [activeCycleFilter, setActiveCycleFilter] = useState('all'); // فلتر الدورة
     const [selectedTransaction, setSelectedTransaction] = useState(null);
+    const [minPrice, setMinPrice] = useState();
+    const [maxPrice, setMaxPrice] = useState();
+    const [showPriceDropdown, setShowPriceDropdown] = useState(false);
+    const [loading, setLoading] = useState(true); // حالة التحميل
+    const [error, setError] = useState(null); // حالة الخطأ
+    const [cycles, setCycles] = useState([]); // حالة لتخزين الدورات
+    const [totalInvestment, setTotalInvestment] = useState(0); // حالة لتخزين إجمالي الاستثمار
 
     useEffect(() => {
+        setLoading(true); // تعيين حالة التحميل إلى true
         axios
-            .get("http://localhost:3100/transactions")
+            .get("http://localhost:3100/transactionsInv")
             .then((res) => {
                 if (res.data && res.data.paymentDetails) {
-                    setTransactions(res.data);
-                    setFilteredTransactions(res.data);
+                    settransactionsInv(res.data);
+                    setFilteredtransactionsInv(res.data);
+                    // استخراج الدورات الفريدة من البيانات
+                    const uniqueCycles = [...new Set(res.data.paymentDetails.map(transaction => transaction.CycleName))];
+                    setCycles(uniqueCycles);
+                    
+                    // حساب إجمالي الاستثمار عند تحميل البيانات
+                    const totalInvestmentValue = res.data.paymentDetails
+                        .filter(transaction => transaction.type === 'استثمار')
+                        .reduce((sum, transaction) => sum + transaction.amount, 0);
+                    setTotalInvestment(totalInvestmentValue); // تعيين إجمالي الاستثمار
                 } else {
                     console.error("Unexpected data format:", res.data);
+                    setError("تنسيق البيانات غير متوقع."); // تعيين رسالة الخطأ
                 }
             })
-            .catch((err) => console.error("Error fetching data:", err));
+            .catch((err) => {
+                console.error("Error fetching data:", err);
+                setError("حدث خطأ أثناء جلب البيانات."); // تعيين رسالة الخطأ
+            })
+            .finally(() => {
+                setLoading(false); // تعيين حالة التحميل إلى false
+            });
     }, []);
 
-    const applyFilters = (type, dateRange) => {
-        let filtered = transactions.paymentDetails;
+    const applyFilters = (type, dateRange, minPrice, maxPrice, cycle) => {
+        let filtered = transactionsInv.paymentDetails;
 
-        // Apply type filter
+        // فلترة حسب النوع
         if (type !== 'الغاء' && type !== 'all') {
             filtered = filtered.filter(transaction => transaction.type === type);
         }
 
-        // Apply date filter
-        if (dateRange.from && dateRange.to) {
+        // فلترة حسب الدورة
+        if (cycle !== 'all' && cycle) {
+            filtered = filtered.filter(transaction => transaction.CycleName === cycle);
+        }
+
+        // فلترة حسب التاريخ
+        if (dateRange && dateRange.from && dateRange.to) {
             if (new Date(dateRange.from) > new Date(dateRange.to)) {
                 console.error("Invalid date range: 'From' date cannot be after 'To' date.");
                 return;
@@ -63,13 +87,33 @@ const PaymentF = () => {
             });
         }
 
-        setFilteredTransactions({ ...transactions, paymentDetails: filtered });
+        // فلترة حسب السعر
+        filtered = filtered.filter(transaction => transaction.amount >= (minPrice || 0) && transaction.amount <= (maxPrice || Infinity));
+
+        setFilteredtransactionsInv({ ...transactionsInv, paymentDetails: filtered });
+        calculateTotals(filtered); // حساب الإجماليات بعد الفلترة
     };
 
-    const handleTypeFilter = (type) => {
-        setActiveTypeFilter(type);
-        applyFilters(type, dateRange);
-        setShowTypeDropdown(false);
+    const resetFilters = () => {
+        setActiveTypeFilter('all');
+        setActiveCycleFilter('all'); // إعادة تعيين فلتر الدورة
+        setDateRange({ from: '', to: '' });
+        setMinPrice(0);
+        setMaxPrice(0);
+        setFilteredtransactionsInv(transactionsInv);
+    };
+
+    const handleCycleFilter = (cycle) => {
+        setActiveCycleFilter(cycle);
+        applyFilters(activeTypeFilter, dateRange, minPrice, maxPrice, cycle);
+    };
+
+    const handleDateRangeChange = (field, value) => {
+        const newDateRange = { ...dateRange, [field]: value };
+        setDateRange(newDateRange);
+        if (newDateRange.from && newDateRange.to) {
+            applyFilters(activeTypeFilter, newDateRange, minPrice, maxPrice, activeCycleFilter);
+        }
     };
 
     const handleDateFilter = (filterType) => {
@@ -110,38 +154,27 @@ const PaymentF = () => {
         }
 
         setDateRange(newDateRange);
-        applyFilters(activeTypeFilter, newDateRange);
+        applyFilters(activeTypeFilter, newDateRange, minPrice, maxPrice, activeCycleFilter);
         setShowDateDropdown(false);
     };
 
-    const handleDateRangeChange = (field, value) => {
-        const newDateRange = { ...dateRange, [field]: value };
-        setDateRange(newDateRange);
-        if (newDateRange.from && newDateRange.to) {
-            applyFilters(activeTypeFilter, newDateRange);
-        }
-    };
-
-    const calculateTotals = () => {
-        const totalInvestment = filteredTransactions.paymentDetails
+    const calculateTotals = (filteredData) => {
+        const totalInvestment = filteredData
             .filter(transaction => transaction.type === 'استثمار')
             .reduce((sum, transaction) => sum + transaction.amount, 0);
 
-        const totalPurchase = filteredTransactions.paymentDetails
-            .filter(transaction => transaction.type === 'شراء')
-            .reduce((sum, transaction) => sum + transaction.amount, 0);
-
-        return { totalInvestment, totalPurchase };
+        setTotalInvestment(totalInvestment); // تحديث الحالة الإجمالية
     };
-    const { totalInvestment, totalPurchase } = calculateTotals();
 
     return (
         <div className="d-flex flex-column min-vh-100">
-            <NavbarF/>
+            <NavbarInv />
             <div className="d-flex flex-grow-1 ">
-                <NavSideF/>
+                <NavSideInv />
                 <main className={` flex-grow-1  `}>
                     <div className={styles.table_section} >
+                        {loading && <div>جاري تحميل البيانات...</div>} {/* رسالة التحميل */}
+                        {error && <div style={{ color: 'red' }}>{error}</div>} {/* رسالة الخطأ */}
                         {/* Table */}
                         <div className={`${styles.table_container} ${styles.tablePay}`} >
                             <table className={styles.transactions_table}>
@@ -151,32 +184,33 @@ const PaymentF = () => {
                                         <th>تاريخ المعاملة</th>
                                         <th>المبلغ</th>
                                         <th>نوع المعاملة</th>
-                                        <th>الطرف الدافع</th>
+                                        <th>اسم الدورة</th>
                                         <th>الطرف المستقبل</th>
                                         <th>طريقة الدفع</th>
                                         <th>حالة الدفع</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {Array.isArray(filteredTransactions.paymentDetails) &&
-                                        filteredTransactions.paymentDetails.map((transaction) => (
+                                    {Array.isArray(filteredtransactionsInv.paymentDetails) &&
+                                        filteredtransactionsInv.paymentDetails.map((transaction) => (
                                             <tr
                                                 key={transaction.paymentId}
                                                 onClick={() => setSelectedTransaction(transaction)}
                                                 className={styles.clickable_row}
+                                                aria-label={`Transaction ID: ${transaction.paymentId}`} // تحسين إمكانية الوصول
                                             >
                                                 <td>{transaction.paymentId}</td>
                                                 <td>{new Date(transaction.paymentDate).toLocaleDateString('ar-EG')}</td>
                                                 <td>{transaction.amount} ج.م</td>
                                                 <td>{transaction.type}</td>
-                                                <td>{transaction.payerName}</td>
+                                                <td>{transaction.CycleName}</td>
                                                 <td>{transaction.payeeName}</td>
                                                 <td>{transaction.paymentMethod}</td>
                                                 <td>{transaction.status}</td>
                                             </tr>
                                         ))}
 
-                                    {filteredTransactions.paymentDetails.length === 0 && (
+                                    {filteredtransactionsInv.paymentDetails.length === 0 && (
                                         <tr>
                                             <td colSpan="8" style={{ textAlign: "center" }}>لا توجد معاملات لعرضها</td>
                                         </tr>
@@ -185,7 +219,7 @@ const PaymentF = () => {
                             </table>
 
                             {selectedTransaction && (
-                                <TransactionModal
+                                <TransactionModalInv
                                     transaction={selectedTransaction}
                                     onClose={() => setSelectedTransaction(null)}
                                 />
@@ -193,33 +227,67 @@ const PaymentF = () => {
                         </div>
                         {/* Filters */}
                         <div className={styles.filter_section}>
-                            <div className={styles.filter_dropdown}>
+                            <div className={`${styles.filter_dropdown} `}>
+                                <span>
+                                    <select
+                                        value={activeCycleFilter}
+                                        onChange={(e) => handleCycleFilter(e.target.value)}
+                                        className={`${styles.filter_button} ${stylesInv.parentfilter}`}
+                                    >
+                                        <option value="all">كل الدورات</option>
+                                        {cycles.map((cycle, index) => (
+                                            <option key={index} value={cycle}>{cycle}</option>
+                                        ))}
+                                    </select>
+                                </span>
+
                                 <button
                                     className={styles.filter_button}
-                                    onClick={() => {
-                                        setShowTypeDropdown(!showTypeDropdown);
-                                        setShowDateDropdown(false);
-                                    }}
+                                    onClick={() => setShowPriceDropdown(!showPriceDropdown)}
+                                    aria-label="Filter by price" // تحسين إمكانية الوصول
                                 >
-                                    <span>تصفية بنوع المعاملة</span>
+                                    <span>تصفية بالسعر</span>
                                     <span className={styles.arrow_icon}>▼</span>
                                 </button>
-                                {showTypeDropdown && (
+
+                                {showPriceDropdown && (
                                     <div className={styles.dropdown_menu}>
-                                        <div className={styles.dropdown_item} onClick={() => handleTypeFilter("استثمار")}>استثمار</div>
-                                        <div className={styles.dropdown_item} onClick={() => handleTypeFilter('شراء')}>شراء</div>
-                                        <div className={styles.dropdown_item} onClick={() => handleTypeFilter('الغاء')}>الغاء</div>
+                                        <div className={`${stylesInv.down}`}>
+                                            <label>الحد الأدني للسعر:</label>
+                                            <input className={`${styles.dropdown_item} `} type="number" value={minPrice} onChange={(e) => setMinPrice(Number(e.target.value))} />
+                                        </div>
+                                        <div className={`${stylesInv.down}`}>
+                                            <label>الحد الأقصي للسعر:</label>
+                                            <input className={`${styles.dropdown_item} `} type="number" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} />
+                                        </div>
+                                        <div className={`${styles.dropdown_item} ${stylesInv.down}`} onClick={() => {
+                                            setShowPriceDropdown(false);
+                                            applyFilters(activeTypeFilter, dateRange || { from: '', to: '' }, minPrice || 0, maxPrice || Infinity, activeCycleFilter);
+                                        }}>تطبيق</div>
+                                        <div className={`${styles.dropdown_item} ${stylesInv.down}`} onClick={resetFilters}>إلغاء</div>
                                     </div>
                                 )}
                             </div>
 
                             <div className={styles.filter_dropdown}>
                                 <button
+                                    className={`${styles.filter_button} ${stylesInv.parentfilter} `}
+                                    onClick={() => {
+                                        setShowDateDropdown(!showDateDropdown);
+                                        setShowTypeDropdown(false);
+                                    }}
+                                    aria-label="Filter by return type" // تحسين إمكانية الوصول
+                                >
+                                    <span>تصفية بنوع العائد</span>
+                                    <span className={styles.calendar_icon}>📅</span>
+                                </button>
+                                <button
                                     className={styles.filter_button}
                                     onClick={() => {
                                         setShowDateDropdown(!showDateDropdown);
                                         setShowTypeDropdown(false);
                                     }}
+                                    aria-label="Filter by date" // تحسين إمكانية الوصول
                                 >
                                     <span>تصفية بالتاريخ</span>
                                     <span className={styles.calendar_icon}>📅</span>
@@ -265,19 +333,16 @@ const PaymentF = () => {
                         {/* Totals */}
                         <div className={styles.totals_section}>
                             <div className={styles.total_item}>
-                                إجمالي الإيرادات الناتجة من عمليات الشراء: <span>{totalPurchase} ج.م</span>
-                            </div>
-                            <div className={styles.total_item}>
                                 إجمالي الإيرادات الناتجة من عمليات الاستثمار: <span>{totalInvestment} ج.م</span>
                             </div>
                         </div>
-                     </div>
-                    <YearlyCharts />
+                    </div>
+                    <YearlyChartsInv />
                 </main>
             </div>
-           <FooterF/>
+            <FooterInv />
         </div>
     );
 };
 
-export default PaymentF;
+export default InverstorPayment;

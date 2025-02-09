@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from "./../../../Styles/style.module.css";
 import { Link } from 'react-router-dom';
-const NavSideF = () => {
+const NavSideInv = () => {
         const [isCollapsed, setIsCollapsed] = useState(true);
         const toggleCollapse = () => {
             setIsCollapsed(!isCollapsed);
@@ -31,4 +31,4 @@ const NavSideF = () => {
     );
 };
 
-export default NavSideF ;
+export default NavSideInv  ;

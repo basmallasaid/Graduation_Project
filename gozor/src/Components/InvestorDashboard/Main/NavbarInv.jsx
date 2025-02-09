@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from "../../../Styles/style.module.css"; 
-const NavbarF = () => {
+const NavbarInv = () => {
         const [visiblelog, setVisiblelog] = useState(false);
         const [username, setUsername] = useState(""); 
         const navigate = useNavigate(); // Initialize useNavigate
@@ -46,4 +46,4 @@ const NavbarF = () => {
     );
 };
 
-export default NavbarF;
+export default NavbarInv;

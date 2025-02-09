@@ -279,6 +279,7 @@ const handleFavoriteToggle = async () => {
               };
             }
           }, [investorId, cycleId]);
+          
 
     return (
         <div className="d-flex flex-column min-vh-100">
@@ -329,6 +330,13 @@ const handleFavoriteToggle = async () => {
                     </button>
                 </div>
             ) : (
+                <>
+                <div style={{display:"flex",flexWrap:"wrap"}} > 
+                <div >
+                                <button style={{marginLeft:"150px",marginTop:"10px",border:"none",padding:"5px 20px",borderRadius:"10px",backgroundColor:"rgb(208, 4, 4)",color:"#fff"}}> الغاء طلب الاستثمار </button>
+                                </div>
+                                <div style={{marginRight:"200px"}}>
+
                 <p
                     style={{
                         color: "black",
@@ -340,6 +348,9 @@ const handleFavoriteToggle = async () => {
                     <i className="fa-solid fa-hourglass-start" style={{ marginLeft: "10px" }}></i>
                     {buttonText}
                 </p>
+                </div>
+                </div>
+                </>
             )}
             <Modal
                 isOpen={visibleInvestment}

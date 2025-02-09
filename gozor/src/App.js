@@ -12,6 +12,7 @@ import Services from './Components/Services';
 import About from './Components/About';
 import Instructions from './Components/Instructions';
 import Register from './Authentication/Register';
+import Newpassword from './Authentication/Newpassword';
 import Opinon from './Components/Opinon';
 // import ViewCrops from './Components/FarmerDashboard/ViewCrops';
 import Addcrop from './Components/FarmerDashboard/addcrop';
@@ -81,6 +82,7 @@ function App() {
           <Route path='PaymentF' element={<PaymentF/>}/>
           <Route path='SeeDetails' element={<SeeDetails/>}/>
           <Route path='Invnewupdates' element={<Invnewupdates/>}/>
+          <Route path='Newpassword' element={<Newpassword/>}/>
 
          
            </Routes>}

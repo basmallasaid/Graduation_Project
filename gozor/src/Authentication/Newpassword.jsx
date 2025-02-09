@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import styles from '../Styles/style.module.css';
-import toast, { Toaster } from "react-hot-toast"; 
-import axios from "axios"; 
+import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 export default function PasswordPage({ email, code, onLoginSuccess }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,8 +23,8 @@ export default function PasswordPage({ email, code, onLoginSuccess }) {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/users",
-        { email, code, password }, 
+        "http://localhost:3100/newpassword", // Corrected endpoint here
+        { email, code, password },
         {
           headers: {
             "Content-Type": "application/json",
@@ -30,13 +32,13 @@ export default function PasswordPage({ email, code, onLoginSuccess }) {
         }
       );
 
-   
       toast.success("تم تحديث كلمة المرور بنجاح!");
       setTimeout(() => {
-        onLoginSuccess(); 
+        onLoginSuccess(); // Redirect after successful reset
+        navigate('/login'); // Redirect to login page after 2 seconds
       }, 2000);
     } catch (err) {
-      console.log(err); 
+      console.log(err);
       toast.error(
         `خطأ: ${err.response?.data?.message || "حدث خطأ أثناء الاتصال بالخادم."}`
       );
@@ -45,7 +47,7 @@ export default function PasswordPage({ email, code, onLoginSuccess }) {
 
   return (
     <div>
-            <Toaster position="top-center" reverseOrder={false} /> 
+        <Toaster position="top-center" reverseOrder={false} />
 
       <div className={styles.logcontainer}>
         <form className={styles.forgetform} onSubmit={handleSubmit}>
@@ -88,9 +90,6 @@ export default function PasswordPage({ email, code, onLoginSuccess }) {
           </div>
         </form>
       </div>
-
-    
     </div>
   );
 }
-

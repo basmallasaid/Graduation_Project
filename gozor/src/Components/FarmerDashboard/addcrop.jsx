@@ -75,7 +75,7 @@ export default function Addcrop({onCropAdded,onaddSuccess}) {
     };
 
     try {
-      const response = await axios.post("http://localhost:8000/cropview", cropData);
+      const response = await axios.post("http://localhost:8100/cropview", cropData);
 
       // Notify success
       toast.success("تم إضافة المحصول بنجاح!");
@@ -97,7 +97,7 @@ export default function Addcrop({onCropAdded,onaddSuccess}) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8001/cropname");
+        const response = await axios.get("http://localhost:8100/cropname");
         setCropNames(response.data);
       } catch (err) {
         console.error(err);

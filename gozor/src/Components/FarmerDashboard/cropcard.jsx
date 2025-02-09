@@ -29,7 +29,7 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
     if (isConfirmed.isConfirmed) {
       try {
         console.log(`Attempting to delete crop with ID: ${currentCrop.id}`);
-        await axios.delete(`http://localhost:8000/cropview/${currentCrop.id}`);
+        await axios.delete(`http://localhost:8100/cropview/${currentCrop.id}`);
         Swal.fire({
           title: "تم الحذف!",
           text: "تم حذف المحصول بنجاح.",

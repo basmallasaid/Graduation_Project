@@ -25,23 +25,28 @@ export default function Code({ email }) {
   const handleSubmit = async (event) => {
     event.preventDefault();  
   
-
+    if (!email) {
+      toast.error("البريد الإلكتروني غير متوفر!");
+      return;
+    }
+  
     try {
-      const response = await axios.post("http://localhost:8000/users", {
-        email: email, 
+      const response = await axios.post("http://localhost:3100/code", {
+        email: email,  
         code: code  
       });
   
-
       if (response.data.isValid) {
         setVisiblenew(true);
       } else {
         toast.error('الكود غير صحيح');  
       }
     } catch (error) {
+      console.error('Error verifying code:', error);
       toast.error('حدث خطأ. يرجى المحاولة لاحقاً');  
     }
   };
+  
   
 
   return (
@@ -101,7 +106,7 @@ export default function Code({ email }) {
               }}
             ></i>
           </button>
-          <New />
+          <New email={email} code={code}/>
         </Modal>
       </div>
     </>

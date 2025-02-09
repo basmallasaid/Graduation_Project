@@ -17,7 +17,7 @@ const HomeFarmer = () => {
         navigate("/PaymentF")
     }
     const agriculturalCourses = () => {
-        navigate("/agricultural")
+        navigate("/Cropmenuview")
     }
     return (
         <div className="d-flex flex-column min-vh-100">

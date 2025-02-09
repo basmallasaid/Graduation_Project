@@ -65,7 +65,7 @@ function App() {
           <Route path='Opinon' element={<Opinon/>}/>
           <Route path='WeatherF' element={<WeatherF/>}/> 
           <Route path="/viewcrops" element={<ViewCrops/>} />
-          <Route path="/Cropmenuview" element={<Cropmenuview/>} />
+          <Route path="Cropmenuview" element={<Cropmenuview/>} />
           <Route path="/Updateoncycle" element={<Updatenewcycle/>} />
           <Route path="/Addcycletasks" element={<Addcycletasks/>} />
           <Route path="/Addopencycle" element={<Addopencycle/>} />
@@ -83,7 +83,7 @@ function App() {
           <Route path='PaymentF' element={<PaymentF/>}/>
           <Route path='SeeDetails' element={<SeeDetails/>}/>
           <Route path='Invnewupdates' element={<Invnewupdates/>}/>
-          <Route path='Agricultural' element={<Agricultural/>}/>
+          <Route path='farmManagement' element={<Agricultural/>}/>
           <Route path='InvestorHome' element={<InvestorHome/>}/>
           <Route path='InverstorPayment' element={<InverstorPayment/>}/>
          

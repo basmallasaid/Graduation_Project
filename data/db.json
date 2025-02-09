@@ -233,6 +233,10 @@
     {
       "id": "1738612682333",
       "imageUrl": "/assets/uploads/Aiplanee.png"
+    },
+    {
+      "id": "1739020749309",
+      "imageUrl": "/assets/uploads/Screenshot 2024-10-28 170551.png"
     }
   ],
   "plant": [
@@ -1405,7 +1409,8 @@
       "location": "vbc",
       "size": "7655"
     }
-  ],"transactionsInv": {
+  ],
+  "transactionsInv": {
     "paymentDetails": [
       {
         "paymentId": 9,
@@ -1418,7 +1423,6 @@
         "payeeEmail": "fatimamahmed@example.com",
         "paymentMethod": "Visa",
         "status": "مقبول"
-        
       },
       {
         "paymentId": 10,
@@ -1431,7 +1435,6 @@
         "payeeEmail": "sarahkhaled@example.com",
         "paymentMethod": "MasterCard",
         "status": "مقبول"
-       
       },
       {
         "paymentId": 11,
@@ -1504,7 +1507,6 @@
         "payeeEmail": "samee@example.com",
         "paymentMethod": "Cash",
         "status": "مقبول"
-        
       },
       {
         "paymentId": 17,

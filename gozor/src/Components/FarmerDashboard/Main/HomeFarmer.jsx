@@ -11,14 +11,15 @@ const HomeFarmer = () => {
     }
     const navigate = useNavigate();
     const farmManagement = () => {
-        navigate("/farm_management")
+        navigate("/farmManagement")
     }
     const financialReport = () => {
         navigate("/PaymentF")
     }
     const agriculturalCourses = () => {
-        navigate("/agricultural")
+        navigate("/Cropmenuview")
     }
+
     return (
         <div className="d-flex flex-column min-vh-100">
          <NavbarF/>
@@ -28,7 +29,7 @@ const HomeFarmer = () => {
                 <div className={styles.divflex}>
                         <div className={styles.farm_management} onClick={farmManagement}>
                             <h4>إدارة المزارع</h4>
-                            <img src="/assets/Naturalist.png" alt="Naturalist" />
+                            <img src="/assets/Naturalist.png" alt="Naturalist"  />
                             <h5 className={styles.tooltip_text}>تنظيم المزارع و الاراضي المرتبطة بها بدقة</h5>
                         </div>
                         <div className={styles.Crop_Services} onClick={showInfo}>
@@ -52,7 +53,7 @@ const HomeFarmer = () => {
                             <img src="/assets/problem.png" alt="Naturalist" />
                             <h5 className={styles.tooltip_text}>استعراض و تحليل جميع المعاملات المادية بسلاسة</h5>
                         </div>
-                        <div className={styles.agr_courses} onclick={agriculturalCourses}>
+                        <div className={styles.agr_courses} onClick={agriculturalCourses}>
                             <h4>إدارة الدورات الزراعية</h4>
                             <img src="/assets/Process.png" alt="Naturalist" />
                             <h5 className={styles.tooltip_text}>متابعة دوراتك الحالية و المنتهية بسهولة</h5>

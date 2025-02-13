@@ -120,11 +120,18 @@
       "date": "2024-12-26T21:02:26.800Z"
     },
     {
-      "id": "ec59",
-      "rating": 5,
+      "id": "ca26",
+      "rating": 3,
       "username": "",
-      "feedback": "تحفه",
-      "date": "2025-02-03T20:26:14.422Z"
+      "feedback": "ggfhgfhg",
+      "date": "2025-02-10T06:45:01.582Z"
+    },
+    {
+      "id": "1be0",
+      "rating": 3,
+      "username": "",
+      "feedback": "bb",
+      "date": "2025-02-10T11:21:46.726Z"
     }
   ],
   "contacts": [
@@ -162,6 +169,11 @@
       "id": "e463",
       "subject": "شكوي",
       "message": "ااتلت"
+    },
+    {
+      "id": "8c09",
+      "subject": "شكوي",
+      "message": "بلييل"
     }
   ],
   "weather": {
@@ -231,12 +243,8 @@
       "imageUrl": "/assets/uploads/cucumber.png"
     },
     {
-      "id": "1738612682333",
-      "imageUrl": "/assets/uploads/Aiplanee.png"
-    },
-    {
-      "id": "1739020749309",
-      "imageUrl": "/assets/uploads/Screenshot 2024-10-28 170551.png"
+      "id": "1739170192240",
+      "imageUrl": "/assets/uploads/happy-elder-woman-gardening-tool-working-compressed.jpg"
     }
   ],
   "plant": [
@@ -859,6 +867,46 @@
       "category": "merchant",
       "username": "[[[",
       "bio": "kkkkkkkkkkk"
+    },
+    {
+      "id": "83e1",
+      "name": "جوجو احمد",
+      "email": "jojohamada14@gmail.com",
+      "phone": "01061107459",
+      "password": "123456شسي",
+      "category": "merchant",
+      "username": "jojooo",
+      "bio": "مزارعه من الدرجه الاولي"
+    },
+    {
+      "id": "f626",
+      "name": "شذي احمد",
+      "email": "shazaahmed13@gmail.com",
+      "phone": "01063494670",
+      "password": "12345678",
+      "category": "farmer",
+      "username": "شوشو",
+      "bio": "شوشو الروشه"
+    },
+    {
+      "id": "06c4",
+      "name": "اسراء سوسو",
+      "email": "soso@gmail.com",
+      "phone": "01061107459",
+      "password": "12345678",
+      "category": "farmer",
+      "username": "soso",
+      "bio": "no"
+    },
+    {
+      "id": "fc57",
+      "name": "basmala said ",
+      "email": "basmala30311@gmail.com",
+      "phone": "01018447538",
+      "password": "12345678",
+      "category": "farmer",
+      "username": "Basmala Said",
+      "bio": "مزارع"
     }
   ],
   "transactions": {
@@ -1130,6 +1178,20 @@
       }
     ]
   },
+  "forgetemail": [
+    {
+      "id": "f0b6",
+      "email": "jojohamada14@gmail.com"
+    }
+  ],
+  "code": [
+    {
+      "id": "4fda",
+      "email": "jojohamada14@gmail.com",
+      "code": "12345678"
+    }
+  ],
+  "newpassword": [],
   "Farm": [
     {
       "farmId": 20,

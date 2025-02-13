@@ -20,7 +20,7 @@ export default function ViewCrops() {
   useEffect(() => {
    const fetchCrops = async () => {
   try {
-    const response = await fetch("http://localhost:8000/cropview");
+    const response = await fetch("http://localhost:8100/cropview");
     const data = await response.json();
     console.log(data); // Log to verify structure
     setCrops(data.cropview || data); // Adjust based on the response structure

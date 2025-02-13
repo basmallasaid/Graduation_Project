@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // Import axios
+import axios from 'axios';
 import styles from '../Styles/style.module.css';
 import Modal from 'react-modal';
 import Email from './Email';
-import toast, { Toaster } from "react-hot-toast"; // Import toast for notifications
-import Code from './Code';  // Import Code component
+import toast, { Toaster } from "react-hot-toast";
+import Code from './Code';
 
 export default function Forget() {
-  const [visibleemail, setVisibleemail] = useState(false); // Modal visibility state
-  const [email, setEmail] = useState(''); // State to store email input
-  const [isLoading, setIsLoading] = useState(false); // Loading state for async operations
+  const [visibleemail, setVisibleemail] = useState(false);
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const emailStyles = {
     content: {
@@ -25,23 +25,23 @@ export default function Forget() {
   };
 
   const handleEmailChange = (event) => {
-    setEmail(event.target.value); 
+    setEmail(event.target.value);
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault(); 
+    event.preventDefault();
 
-    if (!email.trim()) { 
-      toast.error("يرجى إدخال البريد الإلكتروني"); 
-      return; 
+    if (!email.trim()) {
+      toast.error("يرجى إدخال البريد الإلكتروني");
+      return;
     }
 
     setVisibleemail(true);
 
-    setIsLoading(true); 
+    setIsLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:8000/users", { email });
+      const response = await axios.post("http://localhost:3100/forgetemail", { email });
 
       if (response.status === 200) {
         toast.success("تم إرسال البريد الإلكتروني بنجاح");
@@ -49,13 +49,13 @@ export default function Forget() {
     } catch (error) {
       console.error('Error sending email:', error);
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} /> 
+      <Toaster position="top-center" reverseOrder={false} />
       <div>
         <div className={styles.logcontainer}>
           <form className={styles.forgetform}>
@@ -73,8 +73,8 @@ export default function Forget() {
                 <input
                   type="email"
                   name="email"
-                  value={email} // Bind email state to the input
-                  onChange={handleEmailChange} // Update state on input change
+                  value={email}
+                  onChange={handleEmailChange}
                   placeholder="البريد الالكتروني"
                   className={styles.loginput}
                 />
@@ -82,9 +82,9 @@ export default function Forget() {
               <button
                 type="submit"
                 className={styles.logButton}
-                onClick={handleSubmit} // Handle submit with Axios
+                onClick={handleSubmit}
               >
-                {isLoading ? 'جاري ارسال...' : 'ارسال'} {/* Show loading text if request is in progress */}
+                {isLoading ? 'جاري ارسال...' : 'ارسال'}
               </button>
               <Modal
                 isOpen={visibleemail}
@@ -108,15 +108,12 @@ export default function Forget() {
                     }}
                   ></i>
                 </button>
-                <Email />
+                <Email email={email} /> {/* Pass the email prop here */}
               </Modal>
             </div>
           </form>
         </div>
       </div>
-
-      {/* Pass the email as a prop to the Code component */}
-      <Code email={email} />
     </>
   );
 }

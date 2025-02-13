@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styles from "../../Styles/style.module.css";
 
-import Navbar from '../Navbar';
+import NavbarF from '../FarmerDashboard/Main/NavbarF';
 import FooterF from './Main/FooterF';
 
 const WeatherF = () => {
@@ -32,7 +32,7 @@ const WeatherF = () => {
 
     return (
         <>
-            <Navbar />
+            <NavbarF/>
             <div className={styles.containerf}>
                 <div className={styles.headerf}>
                     <div className={styles.cweather}>

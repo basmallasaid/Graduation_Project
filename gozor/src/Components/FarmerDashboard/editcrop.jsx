@@ -83,7 +83,7 @@ export default function Editcrop({ crop, onCropUpdated ,oneditSuccess}) {
 
     try {
       const response = await axios.put(
-        `http://localhost:8000/cropview/${crop.id}`,
+        `http://localhost:8100/cropview/${crop.id}`,
         updatedCropData
       );
      
@@ -100,7 +100,7 @@ export default function Editcrop({ crop, onCropUpdated ,oneditSuccess}) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8001/cropname");
+        const response = await axios.get("http://localhost:8100/cropname");
         setCropNames(response.data);
       } catch (err) {
         console.error(err);

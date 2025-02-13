@@ -4,18 +4,18 @@ import React, { useState } from 'react';
 import Code from "./Code";
 
 
-export default function Email() {
+export default function Email({email}) { // Get the email prop
     const [visiblecode, setVisiblecode] = useState(false);
     const codeStyles = {
       content: {
-        maxWidth: '500px', // Set your desired width
-        margin: ' auto', // Centers the modal horizontally
-        padding: '10px', // Add padding for better spacing
-        borderRadius: '10px', // Optional: round corners
+        maxWidth: '500px', 
+        margin: ' auto', 
+        padding: '10px', 
+        borderRadius: '10px',
         height:'400px'
       },
       overlay: {
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: dim background
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
       },
     };
     return (
@@ -39,10 +39,7 @@ export default function Email() {
                   top: '10px', 
                   right: '10px', 
                 }} ></i></button>
-              <Code
-              
-              />
-
+             <Code email={email} /> {/* Pass the email prop here */}
             </Modal>
                 </p>
                 <hr />

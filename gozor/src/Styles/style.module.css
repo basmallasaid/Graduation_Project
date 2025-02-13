@@ -1757,20 +1757,7 @@ font-size: 20px;
   height: 100hv;
   padding:10px 40px 40px;
 }
-/*Farmer Home*/
-/* .item1 { grid-area: header; }
-.item2 { grid-area: main; }
-.item3 { grid-area: navside; }
-.item4 { grid-area: footer; } */
 
-/* .grid_container {
-  display: grid;
-  grid-template-areas:
-    'header header header header header header'
-    'navside main main main main main  '
-    'footer footer footer footer footer footer';
-    /* background: linear-gradient(to bottom, rgb(183, 220, 183), white); 
-} */
 .greenline_bg{
   background: linear-gradient(to bottom, rgb(183, 220, 183), white);
 }
@@ -1781,10 +1768,13 @@ font-size: 20px;
   width: 250px;
   display: flex;
   flex-direction: column; 
-  justify-content: space-around; 
+  /* justify-content: space-around;  */
   cursor: pointer; 
   transition: width 0.3s ease;
   align-items: center;
+}
+.iconNavSide{
+  margin: 40px 0px;
 }
 .item3.collapsed {
   width: 70px; 

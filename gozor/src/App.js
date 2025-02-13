@@ -41,6 +41,7 @@ import SeeDetails from './Components/InvestorDashboard/Investorpages/SeeDetails/
 import Invnewupdates from './Components/InvestorDashboard/Investorpages/SeeDetails/Invnewupdates'
 import InvestorHome from './Components/InvestorDashboard/InvestorHome/InvestorHome';
 import InverstorPayment from './Components/InvestorDashboard/InvestorPayment/InverstorPayment';
+import FavouritePage from './Components/InvestorDashboard/FavPage/FavouritePage';
 
 // >>>>>>> 854142225220f439e2c00c42ebb6c9345aae2d54
 function App() {
@@ -89,6 +90,7 @@ function App() {
           <Route path='farmManagement' element={<Agricultural/>}/>
           <Route path='InvestorHome' element={<InvestorHome/>}/>
           <Route path='InverstorPayment' element={<InverstorPayment/>}/>
+          <Route path="FavouritePage" element={<FavouritePage/>}/>
          
            </Routes>}
  

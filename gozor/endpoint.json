@@ -1648,5 +1648,71 @@
         ]
       }
     ]
-  }
+  },
+  "Fav": [
+    {
+      "name": "محمد أحمد شبير",
+      "phone": "012563146134",
+      "email": "mostafa6613@gmail.com",
+      "imageUrl": "/assets/pro.png",
+      "description": "مزارع بخبرة 10 سنوات في الزراعة المستدامة متخصص في زراعة المحاصيل الحيوية تحت التقنيات الحديثة بجودة عالية لتحقيق أفضل المواد الاستثمارية.",
+      "rating": 3
+    },
+    {
+      "name": "أحمد خالد العطار",
+      "phone": "010987654321",
+      "email": "ahmed.alattar@gmail.com",
+      "imageUrl": "/assets/pro.png",
+      "description": "خبير زراعي معتمد مع خبرة واسعة في زراعة الفواكه العضوية وتطبيق الأساليب الحديثة لضمان الإنتاج المستدام.",
+      "rating": 5
+    },
+    {
+      "name": "سالم عبد الرحمن",
+      "phone": "011234567890",
+      "email": "salem.abdulrahman@gmail.com",
+      "imageUrl": "/assets/pro.png",
+      "description": "مهندس زراعي متخصص في تطوير الأراضي وتحسين إنتاجية المحاصيل باستخدام التكنولوجيا الذكية.",
+      "rating": 4
+    },
+    {
+      "name": "يوسف عبد الله",
+      "phone": "0101122334455",
+      "email": "yousef.abdullah@gmail.com",
+      "imageUrl": "/assets/pro.png",
+      "description": "مزارع متخصص في زراعة الحبوب العضوية، مع اهتمام خاص بالاستدامة والجودة.",
+      "rating": 4
+    },
+    {
+      "name": "خالد محمود",
+      "phone": "0115566778899",
+      "email": "khaled.mahmoud@gmail.com",
+      "imageUrl": "/assets/pro.png",
+      "description": "خبير في زراعة الخضروات باستخدام أنظمة الري الذكي، لضمان إنتاج محاصيل صحية.",
+      "rating": 5
+    },
+    {
+      "name": "عبد الرحمن طارق",
+      "phone": "0122233445566",
+      "email": "abdulrahman.tarek@gmail.com",
+      "imageUrl": "/assets/pro.png",
+      "description": "متخصص في تطوير مشروعات الزراعة المائية وزيادة الإنتاجية.",
+      "rating": 3
+    },
+    {
+      "name": "محمود السيد",
+      "phone": "0109988776655",
+      "email": "mahmoud.sayed@gmail.com",
+      "imageUrl": "/assets/pro.png",
+      "description": "مزارع ذو خبرة طويلة في إنتاج الفاكهة العضوية وتحقيق أعلى معايير الجودة.",
+      "rating": 5
+    },
+    {
+      "name": "عمر فتحي",
+      "phone": "0116677889900",
+      "email": "omar.fathy@gmail.com",
+     "imageUrl": "/assets/pro.png",
+      "description": "متخصص في زراعة النباتات الطبية والعطرية باستخدام الأساليب المستدامة.",
+      "rating": 4
+    }
+  ]
 }

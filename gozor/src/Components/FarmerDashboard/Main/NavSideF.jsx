@@ -9,19 +9,19 @@ const NavSideF = () => {
     return (
          <>
                     <div className={`${styles.item3} ${isCollapsed ? styles.collapsed : ''}`} onClick={toggleCollapse} >
-                        <p>
+                        <p className={styles.iconNavSide}>
                             <img style={{ width: "20px" }} src='/assets/account_circle.png' alt="account_circle" />
                             {!isCollapsed && ' الملف الشخصي'}
                         </p>
-                        <p>
+                        <p className={styles.iconNavSide}>
                             <img src='/assets/chat.png' alt='chat' />
                             {!isCollapsed && ' الدردشة'}
                         </p>
-                        <Link className="navbar-brand text-black" to="/Shopping">
+                        <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/Shopping">
                             <img src='/assets/add_business.png' alt='add_business' />
                             {!isCollapsed && ' السوق'}
                         </Link>
-                        <Link className="navbar-brand text-black" to="/WeatherF">
+                        <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/WeatherF">
                             <img src="/assets/partly_cloudy_day.png" alt='partly_cloudy_day' />
                             {!isCollapsed && ' الطقس'}
                         </Link>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios'; // Import axios
 import NavbarInv from '../Main/NavbarInv';
 import NavSideInv from '../Main/NavSideInv';
 import FooterInv from '../Main/FooterInv';
@@ -24,6 +25,17 @@ const FavouritePage = () => {
         fetchData();
     }, []);
 
+    // Function to handle deletion
+    const handleDelete = async (id) => {
+        try {
+            await axios.delete(`http://localhost:3100/Fav/${id}`);
+            // Update the state to remove the deleted farmer
+            setFarmers(farmers.filter(farmer => farmer.id !== id));
+        } catch (error) {
+            console.error('Error deleting farmer:', error);
+        }
+    };
+
     const sortedFarmers = [...farmers]
         .filter(farmer =>
             farmer.rating >= filterRating &&
@@ -46,7 +58,6 @@ const FavouritePage = () => {
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
-
 
                     <div className="d-flex justify-content-center align-items-center mb-3">
                         <select className={`form-select w-auto ms-5 ${stylesInv.filter}`} onChange={(e) => setSortOrder(e.target.value)}>
@@ -97,7 +108,13 @@ const FavouritePage = () => {
 
                                             ))}
                                         </div>
-                                        <span className={`text-danger ${stylesInv.delete} `} style={{ cursor: "pointer" }} > 🗑 </span>
+                                        <span 
+                                            className={`text-danger ${stylesInv.delete}`} 
+                                            style={{ cursor: "pointer" }} 
+                                            onClick={() => handleDelete(farmer.id)} // Add onClick event
+                                        >
+                                            🗑 
+                                        </span>
                                     </div>
                                 </div>
                             </div>

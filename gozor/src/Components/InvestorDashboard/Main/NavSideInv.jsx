@@ -21,7 +21,12 @@ const NavSideInv = () => {
                             <img src='/assets/add_business.png' alt='add_business' />
                             {!isCollapsed && ' السوق'}
                         </Link>
-                        <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/WeatherF">
+                        <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/FavouritePage">
+                            {/* <img src="/assets/favorite.jpeg" alt='partly_cloudy_day' /> */}
+                            <i class="fa-regular fa-heart" style={{fontSize:"1.3rem"}}></i>
+                            {!isCollapsed && ' المفضله'}
+                        </Link>
+                        <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/FavouritePage">
                             {/* <img src="/assets/favorite.jpeg" alt='partly_cloudy_day' /> */}
                             <i class="fa-regular fa-heart" style={{fontSize:"1.3rem"}}></i>
                             {!isCollapsed && ' المفضله'}

@@ -1,14 +1,15 @@
 /*page InvestorHome*/
 .cycles{
-  background: linear-gradient(to bottom, #5FBAEF, #192F31);
+  
+  background: linear-gradient(to bottom, #459595, #0f2c2c);
 }
-.cycles img , .FS img , .NewCycle img{
+.cycles img , .FSMer img , .Browsecrops img{
     width: 25%;
     margin: 15px;
     
 }
-.bgInv{
-  background-image: url('../../../../public/assets/invbg2.jpg');
+.bgMer{
+  background-image: url('../../../../public/assets/Merbg5.jpg');
   height: 100vh;
 }
 .Home{
@@ -22,11 +23,12 @@
   width:100%
 }
 
-.FS{
-    background: linear-gradient(to bottom, #5FBAEF, #192F31);
+.FSMer{
+  background: linear-gradient(to bottom, #44ae99, #102928);
+    
 }
-.NewCycle{
-  background: linear-gradient(to bottom, #5FBAEF, #192F31);
+.Browsecrops{
+  background: linear-gradient(to bottom, #2a9d8f, #052f2e);
 }
 .ChartInv{
     width: 50%;
@@ -40,7 +42,7 @@
 .whitecolor{
     color: white;
 }
-.FS , .cycles ,.NewCycle{
+.FSMer , .cycles ,.Browsecrops{
   width: 30%;
   height:240px;
   margin: 50px ;
@@ -49,7 +51,7 @@
   padding: 25px;
   color:white;
   cursor: pointer;
-  box-Shadow:5px 5px 15px rgba(50, 50, 50, 0.8);
+  box-Shadow:5px 5px 15px #5df2d436;
     
 }
 .tooltip_textInv {
@@ -67,15 +69,15 @@
     z-index:1000;
     
   }
-  .FS:hover .tooltip_textInv,
-  .NewCycle:hover .tooltip_textInv,
+  .FSMer:hover .tooltip_textInv,
+  .Browsecrops:hover .tooltip_textInv,
   .cycles:hover .tooltip_textInv {
     visibility: visible;
     opacity: 1;
   }
  
-  .FS,
-  .NewCycle,
+  .FSMer,
+  .Browsecrops,
   .cycles
   {
     position: relative;  

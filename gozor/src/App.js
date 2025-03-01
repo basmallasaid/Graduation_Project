@@ -42,6 +42,8 @@ import Invnewupdates from './Components/InvestorDashboard/Investorpages/SeeDetai
 import InvestorHome from './Components/InvestorDashboard/InvestorHome/InvestorHome';
 import InverstorPayment from './Components/InvestorDashboard/InvestorPayment/InverstorPayment';
 import FavouritePage from './Components/InvestorDashboard/FavPage/FavouritePage';
+import MerchentHome from './Components/merchantDashboard/MerchentHome/MerchentHome';
+import MerchentPayment from './Components/merchantDashboard/MerchentPayment/MerchentPayment';
 
 // >>>>>>> 854142225220f439e2c00c42ebb6c9345aae2d54
 function App() {
@@ -91,7 +93,8 @@ function App() {
           <Route path='InvestorHome' element={<InvestorHome/>}/>
           <Route path='InverstorPayment' element={<InverstorPayment/>}/>
           <Route path="FavouritePage" element={<FavouritePage/>}/>
-         
+          <Route path="MerchentHome" element={<MerchentHome/>}/>
+          <Route path="MerchentPayment" element={<MerchentPayment/>}/>
            </Routes>}
  
 

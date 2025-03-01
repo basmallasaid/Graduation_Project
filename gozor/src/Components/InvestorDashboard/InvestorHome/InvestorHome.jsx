@@ -30,17 +30,17 @@ const InvestorHome = () => {
                         <div className={`${stylesInv.FS}`} onClick={InverstorPayment}>
                             <h4>الخدمات المالية</h4>
                             <img src="/assets/receipt_long.png" alt="receipt_long" />
-                            <h5 className={`${stylesInv.tooltip_textInv}`}>استعراض و تحليل جميع المعاملات المادية بسلاسة</h5>
+                            <h5 className={`${stylesInv.tooltip_textInv}`}>قسم مخصص لإدارة ومتابعة العمليات المالية المتعلقة بالاستثمارات، بما في ذلك عرض سجل المعاملات المالية والتقارير البيانية.</h5>
                         </div>
                         <div className={`${stylesInv.NewCycle}`} onClick={financialReport}>
                             <h4>تصفح الدورات الجديدة</h4>
                             <img src="/assets/NewCycle.png" alt="NewCycle" />
-                            <h5 className={`${stylesInv.tooltip_textInv}`}>استعراض الدورات الجديدة</h5>
+                            <h5 className={`${stylesInv.tooltip_textInv}`}>يتيح للمستثمر استكشاف فرص الاستثمار المتاحة، مع إمكانية البحث والتصفية حسب معايير مختلفة.</h5>
                         </div>
                         <div className={`${stylesInv.cycles}`} onClick={agriculturalCourses}>
                             <h4>الدورات الخاصة</h4>
                             <img src="/assets/compost.png" alt="compost" />
-                            <h5 className={`${stylesInv.tooltip_textInv}`}>متابعة دوراتك الحالية و المنتهية بسهولة</h5>
+                            <h5 className={`${stylesInv.tooltip_textInv}`}>يعرض جميع الدورات التي اشترك فيها المستثمر، سواء كانت نشطة أو منتهية، مع تفاصيل مثل حالة الدورة ونوع العائد.</h5>
                         </div>
                     </div>
                 </main>

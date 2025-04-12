@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from "../../../Styles/style.module.css";
 import axios from "axios";
 import Swal from "sweetalert2";
-
+import api from "../../../API/axiosInstance";
 const AddFarm = ({ onClose }) => {
     // حالة لإضافة مزرعة جديدة
     const [newFarm, setNewFarm] = useState({

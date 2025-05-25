@@ -6,6 +6,7 @@ import NavSide from '../NavSide';
 import axios from 'axios';
 import YearlyCharts from './YearlyCharts';
 import TransactionModal from './TransactionModal';
+import api from '../../../API/axiosInstance';
 const CycleFrameold = () => {
   const [transactions, setTransactions] = useState({
     paymentDetails: [],
@@ -24,10 +25,11 @@ const CycleFrameold = () => {
   const [dateRange, setDateRange] = useState({ from: '', to: '' });
   const [activeTypeFilter, setActiveTypeFilter] = useState('all');
   const [selectedTransaction, setSelectedTransaction] = useState(null);
-
+  const userData = JSON.parse(localStorage.getItem("user_data"));
+  const userId = userData?.userId;
   useEffect(() => {
-    axios
-      .get("http://localhost:3100/transactions")
+    api
+    .get(`/Payments?Id=${userId}`)
       .then((res) => {
         if (res.data && res.data.paymentDetails) {
           setTransactions(res.data);

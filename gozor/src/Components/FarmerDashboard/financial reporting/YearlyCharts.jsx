@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import styles from "../../../Styles/style.module.css";
 import { Bar } from 'react-chartjs-2';
 import {
@@ -11,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import api from '../../../API/axiosInstance';
 
 ChartJS.register(
   CategoryScale,
@@ -22,25 +22,39 @@ ChartJS.register(
 );
 
 const YearlyCharts = () => {
-  const [selectedYear, setSelectedYear] = useState('2024');
+  const [selectedYear, setSelectedYear] = useState('');
   const [transactions, setTransactions] = useState({
     paymentsSummary: []
   });
 
-  useEffect(() => {
+  const userData = JSON.parse(localStorage.getItem("user_data"));
+  const userId = userData?.userId;
 
-    axios.get("http://localhost:3100/transactions")
-      .then((response) => {
-        setTransactions(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
+  useEffect(() => {
+    if (userId) {
+      api.get(`/Payments?Id=${userId}`)
+        .then((response) => {
+          if (response.data && response.data.paymentsSummary) {
+            setTransactions(response.data);
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (transactions.paymentsSummary.length > 0 && !selectedYear) {
+      setSelectedYear(transactions.paymentsSummary[0].year.toString());
+    }
+  }, [transactions]);
 
   const months = ['يناير', 'فبراير', 'مارس', 'ابريل', 'مايو', 'يونيو', 'يوليو', 'اغسطس', 'سبتمبر', 'اكتوبر', 'نوفمبر', 'ديسمبر'];
 
-  const selectedSummary = transactions.paymentsSummary.find(summary => summary.year.toString() === selectedYear);
+  const selectedSummary = transactions.paymentsSummary.find(
+    summary => summary.year.toString() === selectedYear
+  );
 
   const purchasesData = {
     labels: months,
@@ -48,7 +62,7 @@ const YearlyCharts = () => {
       {
         label: 'تقرير عمليات الشراء',
         data: selectedSummary ? selectedSummary.purchasesPerMonth : Array(12).fill(0),
-        backgroundColor: 'rgb(75, 192, 92)',
+        backgroundColor: 'rgb(75, 192, 192)',
       },
     ],
   };
@@ -58,8 +72,8 @@ const YearlyCharts = () => {
     datasets: [
       {
         label: 'تقرير عمليات الاستثمار',
-        data: selectedSummary ? selectedSummary.investmentsPerMonth : Array(12).fill(0),
-        backgroundColor: 'rgb(75, 192, 92)',
+        data: selectedSummary ? selectedSummary.investmentsPerMonth: Array(12).fill(0),
+        backgroundColor: 'rgb(153, 102, 255)',
       },
     ],
   };
@@ -74,7 +88,8 @@ const YearlyCharts = () => {
     scales: {
       y: {
         beginAtZero: true,
-        max: 1000000,
+        // Remove or comment out the max property:
+        // max: 1000000,
       },
     },
   };
@@ -83,15 +98,21 @@ const YearlyCharts = () => {
     <div className={styles.ChartPage}>
       <div style={{ textAlign: 'center', marginBottom: '50px' }}>
         <span style={{ margin: "5px" }}>ادخل السنة لعرض التقارير</span>
-        <select className={styles.SelectYearly}
-          value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} >
+        <select
+          className={styles.SelectYearly}
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(e.target.value)}
+        >
           {transactions.paymentsSummary.map((summary) => (
-            <option key={summary.year} value={summary.year}>{summary.year}</option>
+            <option key={summary.year} value={summary.year}>
+              {summary.year}
+            </option>
           ))}
         </select>
       </div>
-      <div  className={styles.Chart}>
-        <div  className={styles.Bar}>
+
+      <div className={styles.Chart}>
+        <div className={styles.Bar}>
           <Bar data={purchasesData} options={options} />
         </div>
         <div className={styles.Bar}>

@@ -1,39 +1,20 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import styles from "../../Styles/style.module.css";
 import NavbarF from '../FarmerDashboard/Main/NavbarF';
-import axios from 'axios';
 import FooterF from './Main/FooterF';
+import api from '../../API/axiosInstance';
 
 const AImodel = () => {
     const [files, setFiles] = useState([]);
-    const [plantDiseaseData, setPlantDiseaseData] = useState(null);
     const fileInputRef = useRef(null);
     const [plantName, setPlantName] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
-
-    useEffect(() => {
-        axios.get('http://localhost:3100/plantName')
-            .then(response => {
-                setPlantName(response.data[0]?.name);
-            })
-            .catch(error => {
-                console.error('Error fetching plant name:', error);
-            });
-    }, []);
-
-    useEffect(() => {
-        axios.get('http://localhost:3100/plantDiseaseData')
-            .then((response) => {
-                setPlantDiseaseData(response.data[0]);
-            })
-            .catch((error) => {
-                console.error("Error fetching plant disease data:", error);
-            });
-    }, []);
+    const [plantDiseaseData, setPlantDiseaseData] = useState(null);
 
     const handleFileChange = (event) => {
         const selectedFiles = Array.from(event.target.files);
         const fileItems = selectedFiles.map(file => ({
+            file,
             name: file.name,
             progress: 0,
             status: 'uploading',
@@ -41,46 +22,56 @@ const AImodel = () => {
         }));
         setFiles(fileItems);
 
-        // Simulate successful upload immediately
         selectedFiles.forEach((file, index) => {
             simulateUpload(file, index);
         });
     };
 
     const simulateUpload = (file, index) => {
-        // Create a fake progress animation
         let progress = 0;
         const interval = setInterval(() => {
             progress += 10;
-            setFiles((prevFiles) => {
-                const newFiles = [...prevFiles];
-                newFiles[index].progress = progress;
-                return newFiles;
+            setFiles(prevFiles => {
+                const updated = [...prevFiles];
+                updated[index].progress = progress;
+                return updated;
             });
 
             if (progress >= 100) {
                 clearInterval(interval);
-                const fakeImageUrl = `/assets/uploads/${file.name}`;/*note */
-                setImageUrl(fakeImageUrl);
 
-                // Update the plantimg data in json-server
-                axios.post('http://localhost:3100/plantimg', {
-                    id: Date.now().toString(),
-                    imageUrl: fakeImageUrl
+                const formData = new FormData();
+                formData.append('file', file);
+
+                api.post('Ai/predict', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
                 })
-                .then(() => {
-                    setFiles((prevFiles) => {
-                        const newFiles = [...prevFiles];
-                        newFiles[index].status = 'success';
-                        return newFiles;
+                .then(response => {
+                    const data = response.data;
+                    setFiles(prevFiles => {
+                        const updated = [...prevFiles];
+                        updated[index].status = 'success';
+                        return updated;
                     });
+
+                    setImageUrl(data.imageUrl || URL.createObjectURL(file));
+
+                    if (data.isIll) {
+                        setPlantDiseaseData(data);
+                        setPlantName(null);
+                    } else {
+                        setPlantDiseaseData(null);
+                        setPlantName(data.name); // اسم النبات
+                    }
                 })
-                .catch((error) => {
-                    console.error('Error saving image URL:', error);
-                    setFiles((prevFiles) => {
-                        const newFiles = [...prevFiles];
-                        newFiles[index].status = 'error';
-                        return newFiles;
+                .catch(error => {
+                    console.error('Error uploading image:', error);
+                    setFiles(prevFiles => {
+                        const updated = [...prevFiles];
+                        updated[index].status = 'error';
+                        return updated;
                     });
                 });
             }
@@ -104,10 +95,10 @@ const AImodel = () => {
                 </div>
 
                 <div className={styles.imginfo}>
-                    <p className={`${styles.titleimg}`}>التقط صورة، دعنا نحلل، ونحمي مزرعتك من أي تهديد!</p>
+                    <p className={styles.titleimg}>التقط صورة، دعنا نحلل، ونحمي مزرعتك من أي تهديد!</p>
                     <div className='row'>
                         <div className={`col ${styles.uploadBox}`}>
-                            <img src={`/assets/upload.png`} alt="plane" />
+                            <img src={`/assets/upload.png`} alt="upload" />
                             <p>اسحب الصور هنا لتحميلها</p>
                             <div className={styles.imagePreview}>
                                 {files.length > 0 && files[0].preview && (
@@ -143,12 +134,15 @@ const AImodel = () => {
                                             className={`${styles.progressBar} ${file.status}`}
                                             style={{
                                                 width: `${file.progress}%`,
-                                                backgroundColor: file.status === 'success' ? 'green' : (file.status === 'error' ? 'red' : 'blue')
+                                                backgroundColor:
+                                                    file.status === 'success' ? 'green' :
+                                                    file.status === 'error' ? 'red' : 'blue'
                                             }}
                                         />
                                     </div>
                                     <span className={styles.status}>
-                                        {file.status === 'success' ? 'Upload Successful' : file.status === 'error' ? 'Upload Failed' : ''}
+                                        {file.status === 'success' ? 'تم الرفع بنجاح' :
+                                         file.status === 'error' ? 'فشل في الرفع' : ''}
                                     </span>
                                 </div>
                             ))}
@@ -156,35 +150,36 @@ const AImodel = () => {
                     </div>
                 </div>
 
-                <div className={styles.showplane}>
-                    {plantDiseaseData && plantDiseaseData.isIll ? (
-                        <>
-                            <h3><b>اسم المرض : {plantDiseaseData.name}</b></h3>
-                            <br />
-                            <p>التشخيص :</p>
-                            <p>{plantDiseaseData.diagnosis}</p>
-                            <br />
-                            <h3><b>الحلول المختارة:</b></h3>
-                            <ol>
-                                {plantDiseaseData.recommendation.split(',').map((recommendation, index) => (
-                                    <li key={index}>{recommendation}</li>
-                                ))}
-                            </ol>
-                        </>
-                    ) : (
-                        <div className={styles.showplane}>
-                            <p>اسم النبات: {plantName ? plantName : 'جاري تحميل اسم النبات...'}</p>
-                            {imageUrl && (
-                                <div>
+                {/* يظهر هذا الجزء فقط بعد رفع الصورة */}
+                {imageUrl && (
+                    <div className={styles.showplane}>
+                        {plantDiseaseData ? (
+                            <>
+                                <h3><b>اسم المرض: {plantDiseaseData.name}</b></h3>
+                                <br />
+                                <p>التشخيص:</p>
+                                <p>{plantDiseaseData.diagnosis}</p>
+                                <br />
+                                <h3><b>الحلول المختارة:</b></h3>
+                                <ol>
+                                    {plantDiseaseData.recommendation.split('\n').map((rec, i) => (
+                                        <li key={i}>{rec}</li>
+                                    ))}
+                                </ol>
+                            </>
+                        ) : (
+                            <>
+                                {plantName && <p>اسم النبات: {plantName}</p>}
+                                <div >
                                     <p>تم رفع الصورة بنجاح!</p>
-                                    <img src={imageUrl} alt="Uploaded" className={styles.imgPreview} />
+                                    <img src={imageUrl} alt="Uploaded" className={styles.imgPreview} style={{width:"30%"}} />
                                 </div>
-                            )}
-                        </div>
-                    )}
-                </div>
+                            </>
+                        )}
+                    </div>
+                )}
             </div>
-            <FooterF/>
+            <FooterF />
         </>
     );
 };

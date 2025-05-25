@@ -3,7 +3,7 @@ import styles from '../Styles/style.module.css';
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
-
+import api from '../API/axiosInstance';
 export default function PasswordPage({ email, code, onLoginSuccess }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -22,8 +22,8 @@ export default function PasswordPage({ email, code, onLoginSuccess }) {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:3100/newpassword", // Corrected endpoint here
+      const response = await api.post(
+        "/Authentication/change-password", // Corrected endpoint here
         { email, code, password },
         {
           headers: {

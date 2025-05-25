@@ -15,10 +15,10 @@ const InvestorHome = () => {
         navigate("/InverstorPayment")
     }
     const financialReport = () => {
-        navigate("/PaymentF")
+        navigate("/NewCycles")
     }
     const agriculturalCourses = () => {
-        navigate("/agricultural")
+        navigate("/PrivateCycles")
     }
     return (
         <div className="d-flex flex-column min-vh-100">

@@ -1,33 +1,53 @@
 import React, { useState } from 'react';
 import styles from "../../../Styles/style.module.css";
-import axios from "axios";
 import Swal from "sweetalert2";
 import api from "../../../API/axiosInstance";
+
 const AddFarm = ({ onClose }) => {
-    // حالة لإضافة مزرعة جديدة
     const [newFarm, setNewFarm] = useState({
         farmName: "",
         location: "",
         size: ""
     });
 
-    // تحديث القيم عند التغيير
     const handleChange = (e) => {
         setNewFarm({ ...newFarm, [e.target.name]: e.target.value });
     };
 
-    // إضافة مزرعة جديدة
     const handleAdd = () => {
-        axios.post("http://localhost:3100/Farm", newFarm)
-            .then((response) => {
-                console.log("Farm added:", response.data);
-                Swal.fire("تمت الإضافة!", "تمت إضافة المزرعة بنجاح.", "success");
-                onClose(); // إغلاق النافذة بعد الحفظ
-            })
-            .catch((err) => {
-                console.error("Error adding farm:", err);
-                Swal.fire("خطأ!", "حدثت مشكلة أثناء الإضافة.", "error");
-            });
+        try {
+            // استخراج loggedId من localStorage
+            const userData = JSON.parse(localStorage.getItem("user_data"));
+            const farmerId = userData?.loggedId; // تأكد من أن الحقل هو loggedId
+
+            if (!farmerId) {
+                Swal.fire("خطأ!", "لم يتم العثور على معرف المستخدم.", "error");
+                return;
+            }
+
+           
+            const farmData = {
+                farmerId: farmerId,  
+                farmName: newFarm.farmName,
+                location: newFarm.location,
+                size: newFarm.size
+            };
+
+            api.post("/Farm/AddFarm", farmData)
+                .then((response) => {
+                    console.log("Farm added:", response.data);
+                    Swal.fire("تمت الإضافة!", "تمت إضافة المزرعة بنجاح.", "success");
+                    onClose(); 
+                })
+                .catch((err) => {
+                    console.error("Error adding farm:", err);
+                    Swal.fire("خطأ!", "حدثت مشكلة أثناء الإضافة.", "error");
+                });
+
+        } catch (error) {
+            console.error("Error parsing user data:", error);
+            Swal.fire("خطأ!", "فشل في جلب بيانات المستخدم.", "error");
+        }
     };
 
     return (
@@ -67,8 +87,8 @@ const AddFarm = ({ onClose }) => {
                         />
                     </div>
                     <div className={styles.btnEdit}>
-                        <button className="btn btn-dark mb-3" style={{ borderRadius: "10px" }} onClick={handleAdd }>
-                           حفظ
+                        <button className="btn btn-dark mb-3" style={{ borderRadius: "10px" }} onClick={handleAdd}>
+                            حفظ
                         </button>
                     </div>
                 </div>

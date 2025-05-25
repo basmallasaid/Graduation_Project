@@ -19,7 +19,7 @@ const Navbar = () => {
     };
     const handleLoginSuccess = () => {
         setVisible(false); // Close the modal
-        navigate("/HomeFarmer"); // Navigate to the home page
+        // navigate("/HomeFarmer"); // Navigate to the home page
     };
 
     const customStyles = {
@@ -112,7 +112,7 @@ const Navbar = () => {
 
                         <div className="d-flex ms-auto">
                             <button className={`btn me-2 ${styles.loginButton}`} onClick={() => setVisiblelog(true)}>
-                                تسجيل الدخول
+                            انضم إلينا
                             </button>
 
                             {/* Modal Component */}
@@ -139,7 +139,7 @@ const Navbar = () => {
                                 {/* Pass callback to child */}
                                 <Register onRegistrationSuccess={handleRegistrationSuccess}  setVisibleRegister={setVisiblelog} setVisibleLogin={setVisible}/>
                             </Modal>
-                            <button className={`btn ${styles.registerButton}`} onClick={() => setVisible(true)}>انضم إلينا</button>
+                            <button className={`btn ${styles.registerButton}`} onClick={() => setVisible(true)}>تسجيل الدخول</button>
                             <Modal isOpen={visible} onRequestClose={() => setVisible(false)}
                                 ariaHideApp={false}
 

@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../Styles/style.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import Forget from '../Authentication/Forget';
 import toast, { Toaster } from "react-hot-toast";
-import axios from 'axios';
 import Cookies from "js-cookie";
-import Register from './Register';
+import api from '../API/axiosInstance';
 
 export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegister }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const [visibleForget, setVisibleForget] = useState(false);
-
-    const [users, setUsers] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     const forgetStyles = {
         content: {
@@ -36,71 +35,91 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
             if (savedEmail) setEmail(savedEmail);
             setRememberMe(true);
         }
-        // Fetch users on component mount
-        fetchUsers();
     }, []);
 
     const validate = () => {
-        if (email === "" || password === "") {
-            toast.error("برجاء ادخال البريد الالكتروني او كلمه المرور", { duration: 3000 });
+        if (!email || !password) {
+            toast.error("الرجاء إدخال البريد الإلكتروني وكلمة المرور", { duration: 3000 });
             return false;
         }
         return true;
     };
 
-    // Fetch all users
-    const fetchUsers = async () => {
-        try {
-            const response = await axios.get("http://localhost:3100/users");
-            setUsers(response.data);
-        } catch (error) {
-            console.error("Error fetching users:", error);
-            toast.error("Failed to load user data.", { duration: 3000 });
-        }
-    };
-
     const proceedLogin = async (e) => {
         e.preventDefault();
+        if (!validate()) return;
 
-        if (validate()) {
-            const user = users.find(u => u.email === email);
+        setIsLoading(true);
 
-            if (!user) {
-                toast.error("لا يوجد هذا البريد الالكتروني", { duration: 3000 });
-                return;
+        try {
+            const response = await api.post("/Authentication/login", {
+                email,
+                password
+            });
+
+            const { token, role } = response.data;
+
+            if (!token || !role) {
+                throw new Error("لم يتم استلام بيانات الدخول بشكل صحيح");
             }
 
-            if (user.password !== password) {
-                toast.error("خطأ في كلمة المرور", { duration: 3000 });
-                return;
-            }
+            const cookieOptions = {
+                secure: true,
+                sameSite: 'Strict',
+                expires: rememberMe ? 7 : 1
+            };
 
-            Cookies.set("user", JSON.stringify(user), { expires: 1 });
+            Cookies.set("access_token", token, cookieOptions);
+            localStorage.setItem("user_data", JSON.stringify(response.data));
+            localStorage.setItem("name", email); // ✅ لحفظ الإيميل في localStorage
 
             if (rememberMe) {
-                Cookies.set("email", email, { expires: 7 });
-                Cookies.set("rememberMe", "true", { expires: 7 });
+                Cookies.set("email", email, cookieOptions);
+                Cookies.set("rememberMe", "true", cookieOptions);
             } else {
                 Cookies.remove("email");
                 Cookies.remove("rememberMe");
             }
 
-            toast.success("تم تسجيل الدخول بنجاح !", { duration: 4000 });
-             // Delay navigation and modal close after toast
-            setTimeout(() => {
-                onLoginSuccess(); // Navigate home
-                setVisibleLogin(false) // Close the modal
-             }, 2000);
+            toast.success("تم تسجيل الدخول بنجاح!", { duration: 1000 });
 
+            setTimeout(() => {
+                if (role === "Farmer") {
+                    navigate("/HomeFarmer");
+                } else if (role === "Investor") {
+                    navigate("/InvestorHome");
+                } else if (role === "Merchant") {
+                    navigate("/MerchentHome");
+                } else {
+                    navigate("/");
+                }
+
+                onLoginSuccess();
+                setVisibleLogin(false);
+                window.location.reload(); // ✅ لإعادة تحميل Navbar وقراءة الاسم
+            }, 2000);
+
+        } catch (error) {
+            console.error("Login error:", error);
+            if (error.response) {
+                if (error.response.status === 401) {
+                    toast.error("البريد الإلكتروني أو كلمة المرور غير صحيحة", { duration: 3000 });
+                } else {
+                    toast.error("حدث خطأ في الخادم", { duration: 3000 });
+                }
+            } else {
+                toast.error("فشل الاتصال بالخادم", { duration: 3000 });
+            }
+        } finally {
+            setIsLoading(false);
         }
     };
+
     const handleCreateAccountClick = (e) => {
         e.preventDefault();
-        setVisibleLogin(false);  // Close the Login modal
+        setVisibleLogin(false);
         setVisibleRegister(true);
-
     };
-
 
     return (
         <div>
@@ -113,29 +132,31 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
                     <div className={styles.holder}>
                         <div className={styles.reginput}>
                             <label htmlFor="email" className={styles.reglabel}>
-                                <i className="fa-solid fa-envelope" style={{ paddingLeft: "15px" }}></i>البريد الالكتروني
+                                <i className="fa-solid fa-envelope" style={{ paddingLeft: "15px" }}></i>البريد الإلكتروني
                             </label>
                             <input
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 type="email"
                                 name="email"
-                                placeholder="البريد الالكتروني"
+                                placeholder="البريد الإلكتروني"
                                 className={styles.loginput}
+                                disabled={isLoading}
                             />
                         </div>
 
                         <div className={styles.reginput}>
                             <label htmlFor="password" className={styles.reglabel}>
-                                <i className="fa-solid fa-lock" style={{ paddingLeft: "15px" }}></i>كلمه المرور
+                                <i className="fa-solid fa-lock" style={{ paddingLeft: "15px" }}></i>كلمة المرور
                             </label>
                             <input
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 type="password"
                                 name="password"
-                                placeholder="كلمه المرور"
+                                placeholder="كلمة المرور"
                                 className={styles.loginput}
+                                disabled={isLoading}
                             />
                         </div>
 
@@ -144,32 +165,70 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
                                 type="checkbox"
                                 id="rememberMe"
                                 checked={rememberMe}
-                                onChange={() => setRememberMe(prevState => !prevState)} // Use functional update
+                                onChange={() => setRememberMe(prev => !prev)}
+                                disabled={isLoading}
                             />
                             <label htmlFor="rememberMe" style={{ marginRight: "10px" }}>تذكرني</label>
                         </div>
 
-                        <button type="submit" className={styles.logButton}>
-                            دخول
+                        <button 
+                            type="submit" 
+                            className={styles.logButton}
+                            disabled={isLoading}
+                        >
+                            {isLoading ? 'جاري التحميل...' : 'دخول'}
                         </button>
                     </div>
 
                     <div className={styles.forget}>
-                      <div style={{display:"flex",gap:"5px"}}>
-                        <p>ليس لديك حساب؟ </p>
-                        <Link className={styles.linkforget} onClick={handleCreateAccountClick}>انشاء حساب</Link>
+                        <div style={{ display: "flex", gap: "5px" }}>
+                            <p>ليس لديك حساب؟ </p>
+                            <Link 
+                                className={styles.linkforget} 
+                                onClick={handleCreateAccountClick}
+                                style={isLoading ? { pointerEvents: 'none', opacity: 0.7 } : {}}
+                            >
+                                إنشاء حساب
+                            </Link>
                         </div>
-                        <Link className={styles.linkforget} onClick={() => setVisibleForget(true)}>هل نسيت كلمه المرور؟</Link>
+                        <Link 
+                            className={styles.linkforget} 
+                            onClick={() => !isLoading && setVisibleForget(true)}
+                            style={isLoading ? { pointerEvents: 'none', opacity: 0.7 } : {}}
+                        >
+                            هل نسيت كلمة المرور؟
+                        </Link>
 
-                        <Modal isOpen={visibleForget} onRequestClose={() => setVisibleForget(false)} style={forgetStyles}>
-                            <button onClick={() => setVisibleForget(false)}>
-                                <i className="fa-solid fa-xmark" style={{ backgroundColor: 'transparent', border: 'none', fontSize: '24px', color: '#333', cursor: 'pointer', position: 'absolute', top: '10px', right: '10px' }}></i>
+                        <Modal 
+                            isOpen={visibleForget} 
+                            onRequestClose={() => setVisibleForget(false)} 
+                            style={forgetStyles}
+                            ariaHideApp={false}
+                        >
+                            <button 
+                                onClick={() => setVisibleForget(false)}
+                                disabled={isLoading}
+                            >
+                                <i className="fa-solid fa-xmark" style={{
+                                    backgroundColor: 'transparent',
+                                    border: 'none',
+                                    fontSize: '24px',
+                                    color: '#333',
+                                    cursor: 'pointer',
+                                    position: 'absolute',
+                                    top: '10px',
+                                    right: '10px'
+                                }}></i>
                             </button>
                             <Forget />
                         </Modal>
                     </div>
                 </form>
-                <img className={styles.logimg} src="/assets/Rectangle (2).png" alt="Login" />
+                <img 
+                    className={styles.logimg} 
+                    src="/assets/Rectangle (2).png" 
+                    alt="Login" 
+                />
             </div>
         </div>
     );

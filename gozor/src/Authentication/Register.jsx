@@ -3,7 +3,7 @@ import styles from "../Styles/style.module.css";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import Cookies from "js-cookie";
-
+import api from "../API/axiosInstance";
 const CreateAccountForm = ({ onRegistrationSuccess, setVisibleRegister, setVisibleLogin }) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -59,8 +59,8 @@ const CreateAccountForm = ({ onRegistrationSuccess, setVisibleRegister, setVisib
         const regObj = { name, email, phone, password, category, username, bio };
 
         // Use Axios for making POST request
-        axios
-            .post("http://localhost:3100/users", regObj, {
+        api
+            .post("/Authentication/register", regObj, {
                 headers: { "Content-Type": "application/json" },
             })
             .then((response) => {

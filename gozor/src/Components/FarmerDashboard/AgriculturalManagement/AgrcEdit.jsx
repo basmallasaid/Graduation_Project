@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import styles from "../../../Styles/style.module.css";
-import axios from "axios";
 import Swal from "sweetalert2";
-
+import api from '../../../API/axiosInstance';
 const AgrcEdit = ({ transaction, onClose }) => {
-
     const [editedFarm, setEditedFarm] = useState({
         farmName: transaction?.farmName || "",
         location: transaction?.location || "",
@@ -14,7 +12,6 @@ const AgrcEdit = ({ transaction, onClose }) => {
 
     if (!transaction) return null;
 
-    // تحديث القيم عند التغيير
     const handleChange = (e) => {
         setEditedFarm({
             ...editedFarm,
@@ -22,9 +19,15 @@ const AgrcEdit = ({ transaction, onClose }) => {
         });
     };
 
-
     const handleSave = () => {
-        axios.put(`http://localhost:3100/Farm/${transaction.farmId}`, editedFarm)
+        const farmData = {
+            farmId: editedFarm.farmId,
+            farmName: editedFarm.farmName,
+            location: editedFarm.location,
+            size: editedFarm.size
+        };
+
+        api.put("/Farm/EditFarm", farmData)
             .then((response) => {
                 console.log("Updated farm:", response.data);
                 Swal.fire("تم التعديل!", "تم تحديث بيانات المزرعة بنجاح.", "success");

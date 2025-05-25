@@ -5,7 +5,7 @@ import Modal from 'react-modal';
 import Email from './Email';
 import toast, { Toaster } from "react-hot-toast";
 import Code from './Code';
-
+import api from '../API/axiosInstance';
 export default function Forget() {
   const [visibleemail, setVisibleemail] = useState(false);
   const [email, setEmail] = useState('');
@@ -41,7 +41,7 @@ export default function Forget() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:3100/forgetemail", { email });
+      const response = await api.post("/Authentication/forget-password", { email });
 
       if (response.status === 200) {
         toast.success("تم إرسال البريد الإلكتروني بنجاح");

@@ -12,6 +12,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import api from '../../../API/axiosInstance';
 
 ChartJS.register(
   CategoryScale,
@@ -23,26 +24,37 @@ ChartJS.register(
 );
 
 const YearlyChartsInv = () => {
-  const [selectedYear, setSelectedYear] = useState('2024');
+  const [selectedYear, setSelectedYear] = useState('2025');
   const [transactions, setTransactions] = useState({
     paymentsSummary: []
   });
-
+  const userData = JSON.parse(localStorage.getItem("user_data"));
+  const userId = userData?.userId;
   useEffect(() => {
-
-    axios.get("http://localhost:3100/transactions")
+    if(userId){
+    // Adjust axios to get your data as per your backend
+    api.get(`Payments/GetInvestorPayments?Id=${userId}`)
       .then((response) => {
-        setTransactions(response.data);
+        if(response.data&&response.data.paymentsSummary){
+        setTransactions(response.data);}
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
       });
-  }, []);
+    }
+  }, [userId]);
+   useEffect(() => {
+      if (transactions.paymentsSummary.length > 0 && !selectedYear) {
+        setSelectedYear(transactions.paymentsSummary[0].year.toString());
+      }
+    }, [transactions]);
 
   const months = ['يناير', 'فبراير', 'مارس', 'ابريل', 'مايو', 'يونيو', 'يوليو', 'اغسطس', 'سبتمبر', 'اكتوبر', 'نوفمبر', 'ديسمبر'];
 
-  const selectedSummary = transactions.paymentsSummary.find(summary => summary.year.toString() === selectedYear);
-
+  // Get the selected year summary
+  const selectedSummary = transactions.paymentsSummary.find(
+    summary => summary.year.toString() === selectedYear
+  );
 
   const investmentsData = {
     labels: months,
@@ -65,7 +77,7 @@ const YearlyChartsInv = () => {
     scales: {
       y: {
         beginAtZero: true,
-        max: 1000000,
+        // Adjust this based on your data needs
       },
     },
   };
@@ -81,8 +93,7 @@ const YearlyChartsInv = () => {
           ))}
         </select>
       </div>
-      <div  className={`${stylesInv.ChartInv}`}>
-       
+      <div className={`${stylesInv.ChartInv}`}>
         <div className={styles.Bar}>
           <Bar data={investmentsData} options={options} />
         </div>

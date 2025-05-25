@@ -31,7 +31,7 @@ const TransactionModalInv = ({ transaction, onClose }) => {
 
                     <div className={styles.modal_item}>
                         <span className={styles.modal_label}>اسم الدورة</span>
-                        <span className={styles.modal_value}>{transaction.CycleName}</span>
+                        <span className={styles.modal_value}>{transaction.associatedCycle.cycleName}</span>
                     </div>
                     <div className={styles.modal_item}>
                         <span className={styles.modal_label}>طريقة الدفع</span>

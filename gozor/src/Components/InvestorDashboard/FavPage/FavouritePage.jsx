@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'; // Import axios
+import Swal from 'sweetalert2'; // استيراد SweetAlert2
 import NavbarInv from '../Main/NavbarInv';
 import NavSideInv from '../Main/NavSideInv';
 import FooterInv from '../Main/FooterInv';
 import stylesInv from "../StylesInv/stylesInv.module.css";
+import api from '../../../API/axiosInstance';
 
 const FavouritePage = () => {
     const [farmers, setFarmers] = useState([]);
@@ -14,9 +15,8 @@ const FavouritePage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:3100/Fav');
-                const result = await response.json();
-                setFarmers(result);
+                const response = await api.get('FavouriteFarmer/Favourites');
+                setFarmers(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -25,20 +25,36 @@ const FavouritePage = () => {
         fetchData();
     }, []);
 
-    // Function to handle deletion
     const handleDelete = async (id) => {
-        try {
-            await axios.delete(`http://localhost:3100/Fav/${id}`);
-            // Update the state to remove the deleted farmer
-            setFarmers(farmers.filter(farmer => farmer.id !== id));
-        } catch (error) {
-            console.error('Error deleting farmer:', error);
+        // عرض SweetAlert2 للتأكيد قبل الحذف
+        const result = await Swal.fire({
+            title: 'هل أنت متأكد؟',
+            text: "لا يمكنك التراجع عن هذا الإجراء!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'نعم، احذف!',
+            cancelButtonText:'الغاء'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await api.delete('FavouriteFarmer', {
+                    data: { farmerId: id }
+                });
+                setFarmers(farmers.filter(farmer => farmer.farmerId !== id));
+                Swal.fire('تم الحذف!', 'تم حذف المزارع بنجاح.', 'success'); // عرض رسالة نجاح
+            } catch (error) {
+                console.error('Error deleting farmer:', error);
+                Swal.fire('خطأ!', 'حدث خطأ أثناء الحذف.', 'error'); // عرض رسالة خطأ
+            }
         }
     };
 
     const sortedFarmers = [...farmers]
         .filter(farmer =>
-            farmer.rating >= filterRating &&
+            farmer.rate >= filterRating &&
             farmer.name.toLowerCase().includes(searchQuery.toLowerCase())
         )
         .sort((a, b) => sortOrder === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
@@ -73,6 +89,7 @@ const FavouritePage = () => {
                             <option value="5">خمس نجوم</option>
                         </select>
                     </div>
+
                     <div className={`${stylesInv.gridContainer}`}>
                         {sortedFarmers.map((farmer, index) => (
                             <div key={index} className={stylesInv.cardFav}>
@@ -85,7 +102,7 @@ const FavouritePage = () => {
                                             </div>
                                             <div className={`d-flex  ${stylesInv.datacard}`}>
                                                 <h5 className="mb-0"><b>رقم المحمول</b></h5>
-                                                <p className={`mb-1 ${stylesInv.datatitle}`}>{farmer.phone}</p>
+                                                <p className={`mb-1 ${stylesInv.datatitle}`}>{farmer.phoneNumber}</p>
                                             </div>
                                             <div className={`d-flex  ${stylesInv.datacard}`}>
                                                 <h5 className={stylesInv.titemail}><b>البريد الالكتروني</b></h5>
@@ -93,27 +110,27 @@ const FavouritePage = () => {
                                             </div>
                                         </div>
 
-                                        <img src={farmer.imageUrl} alt={farmer.name} className={stylesInv.imgfav} />
-
+                                        {farmer.imageProfileUrl && (
+                                            <img src={farmer.imageProfileUrl} alt={farmer.name} className={stylesInv.imgfav} />
+                                        )}
                                     </div>
                                     <h5><b>البايو</b></h5>
-                                    <p className={` ${stylesInv.info}`}>{farmer.description}</p>
+                                    <p className={` ${stylesInv.info}`}>{farmer.bio}</p>
                                     <div className='d-flex justify-content-center align-items-center'>
                                         <h5 className='ms-3'><b>تقيمه العام</b></h5>
-                                        <div  >
+                                        <div>
                                             {[...Array(5)].map((_, starIndex) => (
-                                                <span key={starIndex} className={`fs-3 ${starIndex < farmer.rating ? 'text-warning' : 'text-secondary'}`}>
+                                                <span key={starIndex} className={`fs-3 ${starIndex < farmer.rate ? 'text-warning' : 'text-secondary'}`}>
                                                     ★
                                                 </span>
-
                                             ))}
                                         </div>
-                                        <span 
-                                            className={`text-danger ${stylesInv.delete}`} 
-                                            style={{ cursor: "pointer" }} 
-                                            onClick={() => handleDelete(farmer.id)} // Add onClick event
+                                        <span
+                                            className={`text-danger ${stylesInv.delete}`}
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => handleDelete(farmer.farmerId)}
                                         >
-                                            🗑 
+                                            🗑
                                         </span>
                                     </div>
                                 </div>

@@ -4,6 +4,7 @@ import styles from "../Styles/style.module.css";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import Swal from 'sweetalert2';
+import api from '../API/axiosInstance';
 const Contact = () => {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
@@ -19,7 +20,7 @@ const Contact = () => {
 
     // إرسال البيانات عبر POST
     try {
-      const response = await axios.post('http://localhost:3100/contacts', {
+      const response = await api.post('Comminucation/SendSupprt', {
         subject,
         message,
       });

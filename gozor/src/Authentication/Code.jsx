@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import New from './Newpassword';
 import axios from 'axios';  
 import toast, { Toaster } from "react-hot-toast";
-
+import api from '../API/axiosInstance';
 export default function Code({ email }) { 
   const [visiblenew, setVisiblenew] = useState(false);
   const [code, setCode] = useState('');  
@@ -31,7 +31,7 @@ export default function Code({ email }) {
     }
   
     try {
-      const response = await axios.post("http://localhost:3100/code", {
+      const response = await api.post("/Authentication/check-reset-code", {
         email: email,  
         code: code  
       });

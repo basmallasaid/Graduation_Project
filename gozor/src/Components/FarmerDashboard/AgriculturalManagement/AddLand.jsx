@@ -1,43 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from "../../../Styles/style.module.css";
-import axios from "axios";
 import Swal from "sweetalert2";
+import api from '../../../API/axiosInstance';
 
-const AddLand = ({ onClose }) => {
+const AddLand = ({ onClose, farmId }) => {
     const [newLand, setNewLand] = useState({
-        landName: "",
-        image: null // لحفظ الصورة
+        farmId: farmId || '',
+        parcelName: '',
+        imageUrl: null
     });
 
-    // تحديث القيم عند التغيير
+    const [imageLoaded, setImageLoaded] = useState(false);
+
+    useEffect(() => {
+        if (farmId) {
+            setNewLand(prev => ({
+                ...prev,
+                farmId: farmId
+            }));
+        }
+    }, [farmId]);
+
     const handleChange = (e) => {
-        if (e.target.name === "image") {
-            setNewLand({ ...newLand, image: e.target.files[0] }); // حفظ الملف
+        const { name, value, files } = e.target;
+
+        if (name === 'imageUrl') {
+            const file = files[0];
+            setNewLand(prev => ({
+                ...prev,
+                imageUrl: file
+            }));
+            setImageLoaded(true);
         } else {
-            setNewLand({ ...newLand, [e.target.name]: e.target.value });
+            setNewLand(prev => ({
+                ...prev,
+                [name]: value
+            }));
         }
     };
 
-    // إضافة أرض جديدة
     const handleAdd = () => {
-        const formData = new FormData();
-        formData.append("landName", newLand.landName);
-        if (newLand.image) {
-            formData.append("image", newLand.image); // إضافة الصورة إلى FormData
+        if (!newLand.farmId) {
+            Swal.fire("خطأ!", "لم يتم تحديد مزرعة صحيحة.", "error");
+            return;
         }
 
-        axios.post("http://localhost:3100/Farm", formData, {
+        if (!newLand.parcelName || !newLand.imageUrl) {
+            Swal.fire("خطأ!", "يرجى تعبئة جميع الحقول المطلوبة.", "error");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("FarmId", newLand.farmId);
+        formData.append("ParcelName", newLand.parcelName);
+        formData.append("Image", newLand.imageUrl);
+
+        api.post("/LandParcel", formData, {
             headers: {
-                "Content-Type": "multipart/form-data", // إرسال البيانات كـ FormData
-            },
+                "Content-Type": "multipart/form-data"
+            }
         })
-            .then((response) => {
-                console.log("Land added:", response.data);
+            .then(response => {
                 Swal.fire("تمت الإضافة!", "تمت إضافة الأرض بنجاح.", "success");
-                onClose(); // إغلاق النافذة بعد الحفظ
+                onClose();
             })
-            .catch((err) => {
-                console.error("Error adding land:", err);
+            .catch(err => {
+                console.error("Error adding land:", err.response?.data || err.message);
                 Swal.fire("خطأ!", "حدثت مشكلة أثناء الإضافة.", "error");
             });
     };
@@ -47,27 +75,27 @@ const AddLand = ({ onClose }) => {
             <div className={styles.modal_contentL} onClick={(e) => e.stopPropagation()}>
                 <button className={styles.modal_closeL} onClick={onClose}>×</button>
                 <div className={styles.modal_gridL}>
-                    {/* الصورة على اليمين والبيانات على اليسار */}
                     <div className={styles.image_and_data_container}>
-                        {/* البيانات على اليسار */}
                         <div className={styles.data_container}>
                             <div className={styles.modal_itemL}>
-                                <span className={styles.modal_labelL} >اسم الأرض</span>
+                                <span className={styles.modal_labelL}>اسم القطعة</span>
                                 <input
                                     type="text"
-                                    name="landName"
-                                    value={newLand.landName}
+                                    name="parcelName"
+                                    value={newLand.parcelName}
                                     onChange={handleChange}
                                     className={styles.modal_inputEdit}
                                 />
                             </div>
                         </div>
 
-                        {/* الصورة على اليمين */}
-                        <div className={styles.image_container}>
+                        <div className={`${styles.image_container} ${imageLoaded ? "has-image" : ""}`}>
+                            {newLand.imageUrl && (
+                                <img src={URL.createObjectURL(newLand.imageUrl)} alt="Uploaded" />
+                            )}
                             <input
                                 type="file"
-                                name="image"
+                                name="imageUrl"
                                 id="imageUpload"
                                 onChange={handleChange}
                                 className={styles.file_inputL}
@@ -76,13 +104,11 @@ const AddLand = ({ onClose }) => {
                         </div>
                     </div>
 
-                    {/* زر الإضافة في الأسفل */}
                     <button
                         className={`btn btn-dark mb-3 ${styles.AddLand_btn}`}
-
                         onClick={handleAdd}
                     >
-                       حفظ
+                        حفظ
                     </button>
                 </div>
             </div>

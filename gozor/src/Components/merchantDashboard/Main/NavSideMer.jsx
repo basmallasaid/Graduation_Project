@@ -9,10 +9,10 @@ const NavSideMer = () => {
     return (
          <>
                     <div className={`${styles.item3} ${isCollapsed ? styles.collapsed : ''}`} onClick={toggleCollapse} style={{backgroundColor:"#2a9d8f"}}>
-                        <p className={styles.iconNavSide}>
-                            <img style={{ width: "20px" }} src='/assets/account_circle.png' alt="account_circle" />
-                            {!isCollapsed && ' الملف الشخصي'}
-                        </p>
+                         <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/ProfileManegment">
+                                                    <img style={{ width: "20px" }} src='/assets/account_circle.png' alt="account_circle" />
+                                                    {!isCollapsed && ' الملف الشخصي'}
+                                                </Link>
                         <p className={styles.iconNavSide}>
                             <img src='/assets/chat.png' alt='chat' />
                             {!isCollapsed && ' الدردشة'}

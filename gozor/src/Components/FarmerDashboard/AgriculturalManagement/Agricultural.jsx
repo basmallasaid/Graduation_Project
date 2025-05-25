@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "../../../Styles/style.module.css";
-import axios from "axios";
 import AgriculturalPop from "./AgriculturalPop";
 import NavbarF from "../Main/NavbarF";
 import FooterF from "../Main/FooterF";
@@ -9,6 +8,7 @@ import NavSideF from "../Main/NavSideF";
 import AgrcEdit from "./AgrcEdit";
 import AddFarm from "./AddFarm";
 import Swal from 'sweetalert2';
+import api from "../../../API/axiosInstance";
 
 const Agricultural = () => {
     const [farmData, setFarmData] = useState([]);
@@ -17,28 +17,27 @@ const Agricultural = () => {
     const [isAddModalOpen, setAddModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
 
+    // Fetch farms using useCallback to optimize performance
+    const fetchFarms = useCallback(async () => {
+        setLoading(true);
+        try {
+            const response = await api.get("/Farm/GetAllFarmasOfFarmerId");
+            const farmsWithServerId = response.data.map(farm => ({
+                ...farm,
+                serverId: farm.id // renaming 'id' to 'serverId'
+            }));
+            setFarmData(farmsWithServerId);
+        } catch (error) {
+            console.error("Error fetching farms:", error);
+            Swal.fire("خطأ!", "حدث خطأ أثناء جلب البيانات.", "error");
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
     useEffect(() => {
-        const fetchFarms = async () => {
-            setLoading(true);
-            try {
-                const response = await axios.get("http://localhost:3100/Farm");
-                 // Map through the response data to include the JSON Server id
-                const farmsWithServerId = response.data.map(farm => ({
-                    ...farm,
-                    serverId: farm.id // rename the 'id' field from JSON Server to 'serverId'
-                }));
-                setFarmData(farmsWithServerId);
-                 console.log('fetchFarms data:', farmsWithServerId)
-            } catch (error) {
-                console.error("Error fetching farms:", error);
-                Swal.fire("خطأ!", "حدث خطأ أثناء جلب البيانات.", "error");
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchFarms();
-    }, []);
+    }, [fetchFarms]);
 
     const handleDelete = async (farmId) => {
         if (!farmId) {
@@ -46,11 +45,10 @@ const Agricultural = () => {
             Swal.fire('خطأ!', 'المزرعة غير موجودة', 'error');
             return;
         }
-        // Find the farm by farmId to get the correct serverId
-        const farmToDelete = farmData.find(farm => farm.farmId === farmId);
 
-         if (!farmToDelete || !farmToDelete.serverId) {
-             Swal.fire('خطأ!', 'المزرعة غير موجودة', 'error');
+        const farmToDelete = farmData.find(farm => farm.farmId === farmId);
+        if (!farmToDelete || !farmToDelete.farmId) {
+            Swal.fire('خطأ!', 'المزرعة غير موجودة', 'error');
             return;
         }
 
@@ -66,17 +64,17 @@ const Agricultural = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                     await axios.delete(`http://localhost:3100/Farm/${farmToDelete.serverId}`); // use serverId here
-                    setFarmData(prevFarmData => prevFarmData.filter(farm => farm.farmId !== farmId)); //filter by farmId
+                    // إرسال طلب الحذف عبر الـ API مع الـ farmId في الرابط
+                    await api.delete(`/Farm/Delete/${farmToDelete.farmId}`);
+                    setFarmData(prevFarmData => prevFarmData.filter(farm => farm.farmId !== farmToDelete.farmId));
                     Swal.fire('تم الحذف!', 'تم حذف المزرعة بنجاح.', 'success');
                 } catch (error) {
-                  console.error("Error deleting farm:", error);
-                  Swal.fire('خطأ!', 'حدثت مشكلة عند الحذف', 'error');
+                    console.error("Error deleting farm:", error);
+                    Swal.fire('خطأ!', 'حدثت مشكلة عند الحذف', 'error');
                 }
             }
         });
     };
-
 
     return (
         <div className="d-flex flex-column min-vh-100">

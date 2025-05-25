@@ -17,6 +17,9 @@ import Updateclosecycle from './Updateclosecycle';
 import Viewnew from "./Viewnew";
 import Cardrequests from './Cardrequets'
 import NavSideF from './Main/NavSideF'
+import axios from 'axios'; // Import axios
+import api from "../../API/axiosInstance";
+
 export default function Cropmenuview() {
   const [showInput, setShowInput] = useState(false);
   const [open, setOpen] = useState(false);
@@ -34,17 +37,99 @@ export default function Cropmenuview() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [modalData, setModalData] = useState(null);
   const [cycleStatus, setCycleStatus] = useState(null);
+  const [lands, setLands] = useState([]); // Add lands state
+
+  const [vegetables, setVegetables] = useState([]);
+  const [fruits, setFruits] = useState([]);
+  const [seeds, setSeeds] = useState([]);
+  const userData = JSON.parse(localStorage.getItem("user_data"));
+    const farmerId = userData?.LoggedId;
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const [cyclesData, landsData , vegetablesRes, fruitsRes, seedsRes] = await Promise.all([
+            api.get(`Cycle/GetAllCycleasOfFarmerId?farmerId=${farmerId}`).then(res => res.data), // Get res.data
+            api.get(`LandParcel/GetAllLandsOfFarmerId?farmerId=${farmerId}`).then(res => res.data), // Get res.data
+            api.get("Crop/CropsOfType?CropTypeId=3"), // Keep as is, data will be in vegetablesRes.data
+            api.get("Crop/CropsOfType?CropTypeId=2"), // Keep as is, data will be in fruitsRes.data
+            api.get("Crop/CropsOfType?CropTypeId=1"), // Keep as is, data will be in seedsRes.data
+          ]);
+  
+          // Note: cyclesData and landsData are now the direct data, not the full response object
+          setData(Array.isArray(cyclesData) ? cyclesData : cyclesData ? [cyclesData] : []);
+          setLands(landsData); // Assuming landsData is already in the correct format
+          setVegetables(vegetablesRes.data);
+          setFruits(fruitsRes.data);
+          setSeeds(seedsRes.data);
+  
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+  
+      if (farmerId) { // Good practice to check if farmerId exists
+          fetchData();
+      }
+    }, [farmerId]);
+
+  const getCropName = (cropId) => {
+    console.log("getCropName called with cropId:", cropId);
+    cropId = Number(cropId); // Convert cropId to a Number
+    const vegetable = vegetables.find(vegetable => vegetable.id === cropId);
+    const fruit = fruits.find(fruit => fruit.id === cropId);
+    const seed = seeds.find(seed => seed.id === cropId);
+  
+    if (vegetable) return vegetable.cropName || vegetable.name;
+    if (fruit) return fruit.cropName || fruit.name;
+    if (seed) return seed.cropName || seed.name;
+  
+    return "غير معروف";
+  };
+  const getParcelName = (parcelId) => {
+    const land = lands.find(land => land.parcelId === parcelId);
+    return land ? land.parcelName : "غير معروف";
+  };
 
   const handleSaveSuccess = (updatedData) => {
     console.log("Updated Data:", updatedData);
     setvisibleupdateclose(false);
+    setvisibleupdateopen(false);
     setModalData(null);
-    setData(prevData => prevData.map(item =>
-      item.id === updatedData.id ? { ...updatedData, cycleId: updatedData.id } : item
-    ));
-  };
+  
+    // Fetch the updated parcel and crop names
+    const parcelName = getParcelName(updatedData.parcelId);
+    const cropName = getCropName(updatedData.cropId); // Get the crop name dynamically
 
+    // Update the main data state
+    setData(prevData =>
+      prevData.map(item =>
+        item.cycleId === updatedData.cycleId
+          ? {
+              ...item,
+              ...updatedData,
+              parcelName,
+              cropName, // Update cropName dynamically
+              isOpenForInvestment: item.isOpenForInvestment
+            }
+          : item
+      )
+    );
 
+    // Update the selected card if it exists
+    setSelectedCard(prevCard =>
+      prevCard && prevCard.cycleId === updatedData.cycleId
+        ? {
+            ...prevCard,
+            ...updatedData,
+            parcelName,
+            cropName, // Ensure cropName updates in real-time
+            isOpenForInvestment: prevCard.isOpenForInvestment
+          }
+        : prevCard
+    );
+};
+  
+  
   const openUpdateModal = (card) => {
     if (card) {
       console.log("Opening modal with card data:", card);
@@ -58,24 +143,11 @@ export default function Cropmenuview() {
   };
 
 
-  useEffect(() => {
-    fetch("http://localhost:8000/viewyield")
-      .then((response) => response.json())
-      .then((result) => {
-        if (Array.isArray(result)) {
-          setData(result);
-        } else {
-          setData([result]);
-        }
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
+  const navigate = useNavigate();
+
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  const navigate = useNavigate();
-
 
   const handleButtonClick = () => {
     setShowInput((prevState) => !prevState);
@@ -124,12 +196,12 @@ export default function Cropmenuview() {
       });
 
       if (isConfirmed.isConfirmed) {
-        const response = await fetch(`http://localhost:8000/viewyield/${id}`, {
+        const response = await fetch(`https://cityroots.runasp.net/api/Cycle/Delete/${id}`, {
           method: "DELETE",
         });
 
         if (response.ok) {
-          setData((prevData) => prevData.filter((item) => item.id !== id));
+          setData((prevData) => prevData.filter((item) => item.cycleId !== id));
           Swal.fire({
             title: "تم!",
             text: "تم حذف الدورة بنجاح.",
@@ -500,7 +572,7 @@ export default function Cropmenuview() {
                   </button>
                   {/* Pass the selected card ID to the UpdateNewCycle component */}
                   <UpdateNewCycle
-                    selectedCardId={selectedCard?.id}
+                    selectedCardId={selectedCard?.cycleId}
                     onupdateSuccess={handleupdateSuccess}
                   />
                 </div>
@@ -554,20 +626,19 @@ export default function Cropmenuview() {
                     <i className="fa-solid fa-xmark"></i>
                   </button>
 
-                  {/* Pass the selected card ID to Addcycletasks */}
                   <Addcycletasks
-                    selectedCardId={selectedCard?.id}
+                    selectedCardId={selectedCard?.cycleId}
                     onaddtasksSuccess={() => {
                       setVisiblecrop2(false); // Close modal on success
                       handleaddtasksSuccess(); // Notify parent component
                     }}
                   />
 
-                  {console.log("Selected Card ID:", selectedCard?.id)}
+                  {console.log("Selected Card ID:", selectedCard?.cycleId)}
                 </div>
               </ReactModal>
 
-              <button
+        <button
                 className={styles.menuviewbutt}
                 style={{
                   backgroundColor: selectedCard ? "#878680" : "#d3d3d3",
@@ -646,12 +717,14 @@ export default function Cropmenuview() {
                     <i className="fa-solid fa-xmark"></i>
                   </button>
                   <Updateopencycle
+
                     selectedCardData={modalData}
-                    onUpdateSuccess={handleSaveSuccess}
+                    // onUpdateSuccess={handleSaveSuccess}
+                    onUpdateSuccess={handleSaveSuccess} // Pass handleSaveSuccess as a prop
+
                   />
                 </div>
               </ReactModal>
-
 
 
               <button
@@ -664,7 +737,7 @@ export default function Cropmenuview() {
                 onClick={(e) => {
                   e.stopPropagation();
                   if (selectedCard) {
-                    handleDelete(selectedCard.id);
+                    handleDelete(selectedCard.cycleId);
                   }
                 }}
               >
@@ -677,7 +750,7 @@ export default function Cropmenuview() {
                   {searchResults.length > 0 ? (
                     searchResults.map((item, index) => (
                       <div
-                        key={item.id}
+                        key={item.cycleId}
                         className="col-lg-6 col-md-6 col-sm-12 mb-4"
                       >
                         <div
@@ -734,7 +807,7 @@ export default function Cropmenuview() {
                                       aria-label="Close"
                                       style={{ fontSize: "20px", color: "#333", cursor: "pointer" }}
                                     />
-                                    <Tabletasks selectedCardId={selectedCard?.id} />
+                                    <Tabletasks selectedCardId={selectedCard?.cycleId} />
                                   </div>
                                 </ReactModal>
 
@@ -764,7 +837,7 @@ export default function Cropmenuview() {
                                       aria-label="Close"
                                       style={{ fontSize: "20px", color: "#333", cursor: "pointer" }}
                                     />
-                                    <Viewnew selectedCardId={selectedCard?.id} />
+                                    <Viewnew selectedCardId={selectedCard?.cycleId} />
                                   </div>
                                 </ReactModal>
                               </div>
@@ -864,12 +937,12 @@ export default function Cropmenuview() {
                             {!item.isOpenForInvestment && (
                               <div className="d-flex align-items-center gap-2 " style={{ marginBottom: "180px" }}>
                                 <p className="mb-0" style={{ fontSize: "1.5rem" }}>
-                                  متوقع انتاجيه المحصول :
+                                  متوقع انتاجيه المحصول بالكيلو:
                                 </p>
                                 <p className="mb-0" style={{ fontSize: "1.5rem" }}>
-                                  {item.expectedProduction || "غير متوفر"}
+                                  {item.expectedYield || "غير متوفر"}
                                 </p>
-                                <p className="mb-0 ms-1" style={{ fontSize: "1.2rem" }}>{item.roiUnit}</p>
+                                <p className="mb-0 ms-1" style={{ fontSize: "1.2rem" }}>كيلو</p>
                               </div>
                             )}
                             {item.isOpenForInvestment && (

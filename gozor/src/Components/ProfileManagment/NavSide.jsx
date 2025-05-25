@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import styles from "./../../../Styles/style.module.css";
+import styles from"../../Styles/style.module.css";
 import { Link } from 'react-router-dom';
-const NavSideF = () => {
+import ChatInterface from './../Chat/ChatInterface';
+const NavSide = () => {
         const [isCollapsed, setIsCollapsed] = useState(true);
         const toggleCollapse = () => {
             setIsCollapsed(!isCollapsed);
@@ -9,14 +10,14 @@ const NavSideF = () => {
     return (
          <>
                     <div className={`${styles.item3} ${isCollapsed ? styles.collapsed : ''}`} onClick={toggleCollapse} >
-                        <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/ProfileManegment">
+                        <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/Shopping">
                             <img style={{ width: "20px" }} src='/assets/account_circle.png' alt="account_circle" />
                             {!isCollapsed && ' الملف الشخصي'}
                         </Link>
-                        <p className={styles.iconNavSide}>
+                        <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/ChatInterface">
                             <img src='/assets/chat.png' alt='chat' />
-                            {!isCollapsed && ' الدردشة'}
-                        </p>
+                            {!isCollapsed && ' الدردشة' }
+                        </Link>
                         <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/Shopping">
                             <img src='/assets/add_business.png' alt='add_business' />
                             {!isCollapsed && ' السوق'}
@@ -30,4 +31,4 @@ const NavSideF = () => {
     );
 };
 
-export default NavSideF ;
+export default NavSide ;

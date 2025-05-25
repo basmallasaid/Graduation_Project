@@ -44,6 +44,12 @@ import InverstorPayment from './Components/InvestorDashboard/InvestorPayment/Inv
 import FavouritePage from './Components/InvestorDashboard/FavPage/FavouritePage';
 import MerchentHome from './Components/merchantDashboard/MerchentHome/MerchentHome';
 import MerchentPayment from './Components/merchantDashboard/MerchentPayment/MerchentPayment';
+import Privatecyles from './Components/InvestorDashboard/cyclesforinvestor/Privatecycles';
+import Newcycles from './Components/InvestorDashboard/cyclesforinvestor/Newcycles';
+import ProfileManegment from './Components/ProfileManagment/ProfileManagment';
+import ChatInterface from './Components/Chat/ChatInterface';
+
+
 
 // >>>>>>> 854142225220f439e2c00c42ebb6c9345aae2d54
 function App() {
@@ -88,6 +94,7 @@ function App() {
           <Route path='SeeDetails' element={<SeeDetails/>}/>
           <Route path='Invnewupdates' element={<Invnewupdates/>}/>
           <Route path='Newpassword' element={<Newpassword/>}/>
+          
 
           <Route path='farmManagement' element={<Agricultural/>}/>
           <Route path='InvestorHome' element={<InvestorHome/>}/>
@@ -95,6 +102,11 @@ function App() {
           <Route path="FavouritePage" element={<FavouritePage/>}/>
           <Route path="MerchentHome" element={<MerchentHome/>}/>
           <Route path="MerchentPayment" element={<MerchentPayment/>}/>
+          <Route path='PrivateCycles' element={<Privatecyles/>}/>
+          <Route path='NewCycles' element={<Newcycles/>}/>
+          <Route path='ProfileManegment' element={<ProfileManegment/>}/>
+          <Route path='ChatInterface' element={<ChatInterface/>}/>
+
            </Routes>}
  
 

@@ -3,21 +3,31 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
+import api from "../../API/axiosInstance";
 
 export default function Updateclosecycle({ selectedCardData, onUpdateSuccess }) {
+const userData = JSON.parse(localStorage.getItem("user_data"));
+
+    const farmerId = userData?.LoggedId; 
   const [formData, setFormData] = useState({
-    cycleId: null,
+    cycleId: selectedCardData?.cycleId || null,
     cycleName: "",
     parcelName: "",
     parcelId: null,
     selectedProductType: "",
     cropId: null,
-    expectedProduction: "",
+    expectedYield: "",
     isOpenForInvestment: false,
     roiUnit: "",
     startDate: "",
-    endDate: ""
+    endDate: "",
   });
+
+  const [parcelName, setParcelName] = useState("");
+  const [parcelId, setParcelId] = useState(null);
+  const [selectedProductType, setSelectedProductType] = useState("");
+  const [selectedCropId, setSelectedCropId] = useState(null);
+  
   const [lands, setLands] = useState([]);
   const [vegetables, setVegetables] = useState([]);
   const [fruits, setFruits] = useState([]);
@@ -26,17 +36,26 @@ export default function Updateclosecycle({ selectedCardData, onUpdateSuccess }) 
   useEffect(() => {
     if (selectedCardData) {
       setFormData({
-        cycleId: selectedCardData.id,
+        cycleId: selectedCardData.cycleId,
         cycleName: selectedCardData.cycleName || "",
         parcelName: selectedCardData.parcelName || "",
         parcelId: selectedCardData.parcelId || null,
         selectedProductType: selectedCardData.selectedProductType || "",
         cropId: selectedCardData.cropId || null,
-        expectedProduction: selectedCardData.expectedProduction?.toString() || "",
+        expectedYield: selectedCardData.expectedYield?.toString() || "",
         roiUnit: selectedCardData.roiUnit || "",
-        startDate: selectedCardData.startDate ? new Date(selectedCardData.startDate).toISOString().split('T')[0] : "",
-        endDate: selectedCardData.endDate ? new Date(selectedCardData.endDate).toISOString().split('T')[0] : ""
+        startDate: selectedCardData.startDate
+          ? new Date(selectedCardData.startDate).toISOString().split("T")[0]
+          : "",
+        endDate: selectedCardData.endDate
+          ? new Date(selectedCardData.endDate).toISOString().split("T")[0]
+          : "",
       });
+
+      setParcelName(selectedCardData.parcelName || "");
+      setParcelId(selectedCardData.parcelId || null);
+      setSelectedProductType(selectedCardData.selectedProductType || "");
+      setSelectedCropId(selectedCardData.cropId || null);
     }
   }, [selectedCardData]);
 
@@ -44,10 +63,10 @@ export default function Updateclosecycle({ selectedCardData, onUpdateSuccess }) 
     const fetchData = async () => {
       try {
         const [landsRes, vegetablesRes, fruitsRes, seedsRes] = await Promise.all([
-          axios.get("http://localhost:8000/lands"),
-          axios.get("http://localhost:8000/vegetables"),
-          axios.get("http://localhost:8000/fruits"),
-          axios.get("http://localhost:8000/seeds"),
+          api.get(`LandParcel/GetAllLandsOfFarmerId?farmerId=${farmerId}`),
+          api.get("Crop/CropsOfType?CropTypeId=3"),
+          api.get("Crop/CropsOfType?CropTypeId=2"),
+          api.get("Crop/CropsOfType?CropTypeId=1"),
         ]);
 
         setLands(landsRes.data);
@@ -55,77 +74,55 @@ export default function Updateclosecycle({ selectedCardData, onUpdateSuccess }) 
         setFruits(fruitsRes.data);
         setSeeds(seedsRes.data);
       } catch (error) {
+        console.error("Error fetching data:", error);
         toast.error("حدث خطأ أثناء تحميل البيانات. يرجى المحاولة مرة أخرى.");
       }
     };
+
     fetchData();
-  }, []);
+  }, [farmerId]);
+
+  useEffect(() => {
+    if (selectedCardData?.parcelId && lands.length > 0) {
+      const land = lands.find((land) => land.parcelId === selectedCardData.parcelId);
+      setParcelName(land ? land.parcelName : "");
+    }
+  }, [selectedCardData, lands]);
+
+  useEffect(() => {
+    if (selectedCropId) {
+      let foundCrop =
+        fruits.find(fruit => fruit.id === selectedCropId || fruit.cropId === selectedCropId) ||
+        vegetables.find(vegetable => vegetable.id === selectedCropId || vegetable.cropId === selectedCropId) ||
+        seeds.find(seed => seed.id === selectedCropId || seed.cropId === selectedCropId);
+
+      if (foundCrop && foundCrop.cropName !== selectedProductType) {
+        setSelectedProductType(foundCrop.cropName || foundCrop.name);
+      }
+    }
+  }, [selectedCropId, fruits, vegetables, seeds]);
 
   const handleSelectChange = (selectedCrop) => {
-    setFormData(prev => ({
-      ...prev,
-      selectedProductType: selectedCrop.name,
-      cropId: selectedCrop.id
-    }));
+    setSelectedProductType(selectedCrop.cropName || selectedCrop.name);
+    setSelectedCropId(selectedCrop.id || selectedCrop.cropId);
   };
 
   const handleLandChange = (e) => {
     const selectedLand = JSON.parse(e.target.value);
-    setFormData(prev => ({
-      ...prev,
-      parcelName: selectedLand.name,
-      parcelId: selectedLand.id
-    }));
+    setParcelName(selectedLand.parcelName);
+    setParcelId(selectedLand.parcelId);
   };
-
-  const validateForm = () => {
-    const validations = [
-      { condition: !formData.cycleId, message: "تعذر تحديد الدورة الحالية" },
-      { condition: !formData.cycleName.trim(), message: "يرجى إدخال اسم الدورة" },
-      { condition: !formData.parcelName, message: "يرجى اختيار الأرض" },
-      { condition: !formData.selectedProductType, message: "يرجى اختيار نوع المحصول" },
-      { condition: !formData.cropId, message: "يرجى اختيار المحصول" },
-      { condition: !formData.expectedProduction, message: "يرجى إدخال الإنتاج المتوقع" },
-      { condition: !formData.roiUnit, message: "يرجى اختيار وحدة العائد" },
-      { condition: !formData.startDate || !formData.endDate, message: "يرجى إدخال تاريخ البداية والنهاية" },
-      {
-        condition: new Date(formData.endDate) <= new Date(formData.startDate),
-        message: "يجب أن يكون تاريخ النهاية بعد تاريخ البداية"
-      }
-    ];
-
-    const error = validations.find(v => v.condition);
-    if (error) {
-      Swal.fire({
-        title: "خطأ",
-        text: error.message,
-        icon: "error",
-        confirmButtonColor: "#28a745"
-      });
-      return false;
-    }
-    return true;
-  };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) {
-      return;
-    }
     try {
-      console.log(formData);
-      const response = await axios.put(`http://localhost:8000/viewyield/${formData.cycleId}`, {
-        cycleName: formData.cycleName,
-        parcelName: formData.parcelName,
-        parcelId: formData.parcelId,
-        selectedProductType: formData.selectedProductType,
-        cropId: formData.cropId,
-        expectedProduction: Number(formData.expectedProduction),
-        roiUnit: formData.roiUnit,
-        startDate: formData.startDate,
-        endDate: formData.endDate,
-        isOpenForInvestment: false
+      const response = await api.put(`Cycle/EditCycle`, {
+        ...formData,
+        parcelName,
+        parcelId,
+        selectedProductType,
+        cropId: selectedCropId,
+        expectedYield: Number(formData.expectedYield),
       });
 
       Swal.fire("تم الحفظ!", "تم تحديث الدورة بنجاح.", "success");
@@ -135,7 +132,6 @@ export default function Updateclosecycle({ selectedCardData, onUpdateSuccess }) 
       Swal.fire("خطأ", "حدث خطأ أثناء تحديث الدورة.", "error");
     }
   };
-
   return (
     <div className="container d-flex justify-content-center align-items-center">
       <ToastContainer
@@ -171,83 +167,84 @@ export default function Updateclosecycle({ selectedCardData, onUpdateSuccess }) 
           </div>
           {/* Land */}
           <div className="col-md-6 mb-2">
-            <label className="form-label">الأرض المرتبطة بالدورة</label>
-            <select
-              className="form-select"
-              value={formData.parcelId ? JSON.stringify({ id: formData.parcelId, name: formData.parcelName }) : ""}
-              onChange={handleLandChange}
-              style={{borderRadius:"10px",
-                borderColor:"#1F4E3D",
-              }}
-            >
-              <option value="">الارض...</option>
-              {lands.map((land) => (
-                <option key={land.id} value={JSON.stringify(land)}>
-                  {land.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="row ">
-          {/* Product Type */}
-          <div className="col-12 ">
-            <label className="form-label">المحصول:</label>
-            <div className="d-flex flex-wrap align-items-center gap-2">
-              <input
-                type="text"
-                className="form-control mb-2 mb-md-0"
-                style={{ width: "440px",borderRadius:"10px",
-                  borderColor:"#1F4E3D", }}
-                value={formData.selectedProductType}
-                readOnly
-              />
-              <select
-                className="form-select  mb-md-0"
-                style={{ width: "230px" ,borderRadius:"10px",
-                  borderColor:"#1F4E3D",}}
-                onChange={(e) => handleSelectChange(JSON.parse(e.target.value))}
-              >
-                <option value="">فواكه...</option>
-                {fruits.map((fruit) => (
-                  <option key={fruit.id} value={JSON.stringify(fruit)}>
-                    {fruit.name}
-                  </option>
-                ))}
-              </select>
-              <select
-                className="form-select  mb-md-0"
-                style={{ width: "230px",borderRadius:"10px",
-                  borderColor:"#1F4E3D", }}
-                onChange={(e) => handleSelectChange(JSON.parse(e.target.value))}
-              >
-                <option value="">خضروات...</option>
-                {vegetables.map((vegetable) => (
-                  <option key={vegetable.id} value={JSON.stringify(vegetable)}>
-                    {vegetable.name}
-                  </option>
-                ))}
-              </select>
-              <select
-                className="form-select  mb-md-0"
-                style={{ width: "230px" ,borderRadius:"10px",
-                  borderColor:"#1F4E3D",}}
-                onChange={(e) => handleSelectChange(JSON.parse(e.target.value))}
-              >
-                <option value="">حبوب...</option>
-                {seeds.map((seed) => (
-                  <option key={seed.id} value={JSON.stringify(seed)}>
-                    {seed.name}
-                  </option>
-                ))}
-              </select>
+          <label className="form-label">الأرض المرتبطة بالدورة</label>
+                        <select
+                            className="form-select"
+                            value={parcelId ? JSON.stringify({ parcelId: parcelId, parcelName: parcelName }) : ""}
+                            onChange={handleLandChange}
+                            style={{ borderRadius: "10px", borderColor: "#1F4E3D" }}
+                        >
+                            <option value="">{parcelName || "الارض..."}</option>
+                            {lands.map((land) => (
+                                <option key={land.parcelId} value={JSON.stringify(land)}>
+                                    {land.parcelName}
+                                </option>
+                            ))}
+
+                        </select>
+               </div>
+         </div>
+         <div className="row">
+     {/* Product Type */}
+     <div className="col-12 ">
+         <label className="form-label">المحصول</label>
+         <div className="d-flex flex-wrap align-items-center gap-2">
+             <input
+                 type="text"
+                 className="form-control  mb-md-0" /* Added mb-md-0 for medium and larger screens */
+                 style={{ width: "450px",borderRadius:"10px",
+                   borderColor:"#1F4E3D" }}
+                 value={selectedProductType}
+                 readOnly
+
+             />
+             <select
+                 className="form-select mb-2 mb-md-0"
+                 style={{ width: "250px",borderRadius:"10px",
+                   borderColor:"#1F4E3D" }}
+                 onChange={(e) => handleSelectChange(JSON.parse(e.target.value))}
+             >
+                 <option value="">فواكه...</option>
+                 {fruits.map((fruit) => (
+                     <option key={fruit.id} value={JSON.stringify(fruit)}>
+                                        {fruit.cropName || fruit.name}
+                                        </option>
+                 ))}
+
+             </select>
+             <select
+                 className="form-select mb-2 mb-md-0"
+                 style={{ width: "250px",borderRadius:"10px",
+                   borderColor:"#1F4E3D" }}
+                 onChange={(e) => handleSelectChange(JSON.parse(e.target.value))}
+             >
+                 <option value="">خضروات...</option>
+                 {vegetables.map((vegetable) => (
+                     <option key={vegetable.id} value={JSON.stringify(vegetable)}>
+                                        {vegetable.cropName || vegetable.name}
+                                        </option>
+                 ))}
+             </select>
+             <select
+                 className="form-select mb-2 mb-md-0"
+                 style={{ width: "250px" ,borderRadius:"10px",
+                   borderColor:"#1F4E3D"}}
+                 onChange={(e) => handleSelectChange(JSON.parse(e.target.value))}
+             >
+                 <option value="">حبوب...</option>
+                 {seeds.map((seed) => (
+                     <option key={seed.id} value={JSON.stringify(seed)}>
+                                        {seed.cropName || seed.name}
+                                        </option>
+                 ))}
+             </select>
             </div>
           </div>
         </div>
         <div className="row">
           {/* Return on Investment */}
           <div className="col-12 col-md-6">
-            <label className="form-label">متوقع انتاجيه المحصول</label>
+            <label className="form-label">متوقع انتاجيه المحصول بالكيلو</label>
             <div className="d-flex flex-wrap align-items-center gap-2">
               <input
                 type="number"
@@ -255,11 +252,11 @@ export default function Updateclosecycle({ selectedCardData, onUpdateSuccess }) 
                 className="form-control  mb-md-0"
                  style={{ width: "400px",borderRadius:"10px",
                   borderColor:"#1F4E3D",}}
-                value={formData.expectedProduction}
-                onChange={(e) => setFormData({ ...formData, expectedProduction: e.target.value })}
+                value={formData.expectedYield}
+                onChange={(e) => setFormData({ ...formData, expectedYield: e.target.value })}
                 
               />
-              <select
+              {/* <select
                 className="form-select  mb-md-0"
                  style={{ width: "100px" ,borderRadius:"10px",
                   borderColor:"#1F4E3D",}}
@@ -269,7 +266,7 @@ export default function Updateclosecycle({ selectedCardData, onUpdateSuccess }) 
                 <option value="">اختر</option>
                 <option value="كيلو">كيلو</option>
                 <option value="طن">طن</option>
-              </select>
+              </select> */}
             </div>
           </div>
         </div>

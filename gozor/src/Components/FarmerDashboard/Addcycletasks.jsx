@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import api from "../../API/axiosInstance";
 
 export default function Addcycletasks({ selectedCardId, onaddtasksSuccess }) {
     const [formData, setFormData] = useState({
@@ -9,7 +10,7 @@ export default function Addcycletasks({ selectedCardId, onaddtasksSuccess }) {
         startDate: "",
         endDate: "",
         status: "لم تبدأ",
-        description: "",
+        TaskDescription: "",
     });
 
     const handleChange = (e) => {
@@ -19,33 +20,53 @@ export default function Addcycletasks({ selectedCardId, onaddtasksSuccess }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         if (Object.values(formData).some((value) => !value)) {
             toast.error("جميع الحقول مطلوبة");
             return;
         }
-
+    
+        // Convert dates to ISO format:
+        const startDateISO = new Date(formData.startDate).toISOString();
+        const endDateISO = new Date(formData.endDate).toISOString();
+    
         const dataToSubmit = {
             ...formData,
+            startDate: startDateISO,  // Use the ISO formatted dates
+            endDate: endDateISO,
             cycleId: selectedCardId
         };
-
+    
         console.log("Data to Submit:", dataToSubmit);
-
+    
         try {
-            const response = await axios.post("http://localhost:8000/cyclestatues", dataToSubmit);
+            const response = await api.post(
+              "Schedule/AddTask",
+              dataToSubmit,
+              {
+                headers: { "Content-Type": "application/json" },
+              }
+            );
             console.log("Response:", response);
-
+          
             if (response.status === 200 || response.status === 201) {
-                toast.success("تم الحفظ بنجاح");
-                setTimeout(() => onaddtasksSuccess(), 2000);
+              toast.success("تم الحفظ بنجاح");
+              setTimeout(() => onaddtasksSuccess(), 2000);
             }
-        } catch (error) {
+          } catch (error) {
             console.error("Error:", error);
-            toast.error(`حدث خطأ أثناء الحفظ: ${error.message}`);
+            if (error.response && error.response.data && error.response.data.errors) {
+              console.error("Validation Errors:", error.response.data.errors); // Log the errors object
+              // Display a more specific error message to the user
+              const errorMessages = Object.entries(error.response.data.errors)
+                .map(([field, messages]) => `${field}: ${messages.join(", ")}`)
+                .join("\n");
+              toast.error(`حدث خطأ في التحقق من الصحة:\n${errorMessages}`);
+            } else {
+              toast.error(`حدث خطأ أثناء الحفظ: ${error.message}`);
+            }
+          }
         }
-    };
-
     return (
         <>
             <form onSubmit={handleSubmit} style={{padding:"20px"}}>
@@ -68,13 +89,13 @@ export default function Addcycletasks({ selectedCardId, onaddtasksSuccess }) {
                         </div>
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="description" className="form-label" style={{ fontSize: "18px", fontWeight: "600" ,marginRight: "10px" }}>
+                        <label htmlFor="TaskDescription" className="form-label" style={{ fontSize: "18px", fontWeight: "600" ,marginRight: "10px" }}>
                             الوصف
                         </label>
                         <textarea
-                            id="description"
-                            name="description"
-                            value={formData.description}
+                            id="TaskDescription"
+                            name="TaskDescription"
+                            value={formData.TaskDescription}
                             onChange={handleChange}
                             rows={5}
                             className="form-control"

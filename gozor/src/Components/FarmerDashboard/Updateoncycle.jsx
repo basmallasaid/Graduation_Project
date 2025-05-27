@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import styles from "../../Styles/style.module.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import api from "../../API/axiosInstance";
 
 export default function UpdateNewCycle({ selectedCardId, onupdateSuccess }) {
   const [imageSrc, setImageSrc] = useState("");
@@ -59,37 +60,39 @@ export default function UpdateNewCycle({ selectedCardId, onupdateSuccess }) {
 
     if (!validateForm()) return;
 
-    const formData = {
-      title,
-      status,
-      description,
-      notes,
-      progress,
-      imageSrc,
-      date: date || new Date().toISOString(),
-      cycleId: selectedCardId, // Include cycleId
-    };
+    const formData = new FormData();
+    formData.append("CycleId", selectedCardId);
+    formData.append("GrowthRate", progress);
+    formData.append("QualityCheck", status);
+    formData.append("AdditionalNotes", notes);
+    formData.append("Title", title);
+    formData.append("Description", description);
 
-    try {
-      const response = await fetch("http://localhost:8000/cycle", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        toast.success("تم تحديث الدورة بنجاح!");
-        setTimeout(() => {
-          onupdateSuccess();
-        }, 2000);
-      } else {
-        toast.error("فشل في تحديث الدورة.");
-      }
-    } catch (error) {
-      toast.error("حدث خطأ أثناء العملية.");
+    // Handle the image file
+    const fileInput = document.getElementById("fileInput"); // Get the file input element
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+        formData.append("Image", fileInput.files[0]);
+    } else {
+        // if no image is chosen send default image
+        console.log('no image ');
     }
+
+try {
+  const response = await api.post("https://cityroots.runasp.net/api/CycleUpdate", formData);
+
+  if (response.status === 200 || response.status === 201) {
+    toast.success("تم تحديث الدورة بنجاح!");
+    setTimeout(() => {
+      onupdateSuccess();
+    }, 2000);
+  } else {
+    toast.error(`فشل في تحديث الدورة. Status: ${response.status}, Message: ${response.statusText}`);
+  }
+} catch (error) {
+  const message = error.response?.data?.message || error.message;
+  toast.error(`حدث خطأ أثناء العملية: ${message}`);
+}
+
   };
 
   return (

@@ -3,6 +3,7 @@ import styles from "../../Styles/style.module.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from 'sweetalert2';
+import api from "../../API/axiosInstance";
 
 export default function Editupdateoncycle({ cycle, onupdateSuccess }) {
   console.log("Editupdateoncycle received cycle:", cycle);
@@ -13,7 +14,7 @@ export default function Editupdateoncycle({ cycle, onupdateSuccess }) {
     title: "",
     status: "",
     description: "",
-    notes: "",
+    AdditionalNotes: "",
     date: "",
     cycleId:""
   });
@@ -24,16 +25,17 @@ export default function Editupdateoncycle({ cycle, onupdateSuccess }) {
 
   // Initialize form data when cycle prop changes
   useEffect(() => {
+    console.log("useEffect triggered. Cycle data:", cycle);  //Check if useEffect is working
     if (cycle) {
       console.log("Initializing form with cycle data:", cycle);
       setFormData({
-        imageSrc: cycle.imageSrc || "",
-        progress: cycle.progress || 0,
+        imageSrc: cycle.imageUrl || "",  //Use imageUrl instead imageSrc
+        progress: cycle.growthRate || 0,  //Use growthRate instead progress
         title: cycle.title || "",
-        status: cycle.status || "",
+        status: cycle.qualityCheck || "",  //Use qualityCheck instead status
         description: cycle.description || "",
-        notes: cycle.notes || "",
-        date: cycle.date ? new Date(cycle.date).toISOString().split('T')[0] : "",
+        AdditionalNotes: cycle.additionalNotes || "",  //Use additionalNotes instead AdditionalNotes
+        date: cycle.updateDate ? new Date(cycle.updateDate).toISOString().split('T')[0] : "",  //Use updateDate instead date
         cycleId:cycle.cycleId
       });
     }
@@ -64,74 +66,87 @@ export default function Editupdateoncycle({ cycle, onupdateSuccess }) {
     const newProgress = Math.min(Math.max(0, (mouseX / width) * 100), 100);
     setFormData(prev => ({ ...prev, progress: newProgress }));
   };
-    
+
   const validateForm = () => {
-      const { title, status, description, notes, imageSrc, date, progress } = formData;
-      if (!title || !status || !description || !notes || !imageSrc || !date || progress === undefined) {
+      const { title, status, description, AdditionalNotes, imageSrc, date, progress } = formData;
+      if (!title || !status || !description || !AdditionalNotes || !imageSrc || !date || progress === undefined) {
         toast.error("جميع الحقول مطلوبة!");
         return false;
       }
       return true;
     };
 
-    const handleFileChange = (event) => {
-      const file = event.target.files[0];
-      
-      if (file) {
-        if (!file.type.startsWith('image/')) {
-          toast.error('الرجاء اختيار ملف صورة');
-          return;
-        }
-  
-        const reader = new FileReader();
-        
-        reader.onload = (e) => {
-          setFormData(prev => ({ ...prev, imageSrc: e.target.result }));
-        };
-  
-        reader.onerror = () => {
-          toast.error('حدث خطأ أثناء قراءة الملف');
-        };
-  
-        reader.readAsDataURL(file);
-      }
-    };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    const handleSubmit = async (e) => {
+      e.preventDefault();
       if (!validateForm()) return;
 
-    try {
-      const response = await fetch(`http://localhost:8000/cycle/${cycle.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      });
+      const formDataForUpload = new FormData();
+      formDataForUpload.append('title', formData.title);
+      formDataForUpload.append('description', formData.description);
+      formDataForUpload.append('additionalNotes', formData.AdditionalNotes);
+      formDataForUpload.append('growthRate', Number(formData.progress)); // Ensure it's a number
+      formDataForUpload.append('qualityCheck', formData.status);
+      formDataForUpload.append('updateId', cycle.updateId);
+      formDataForUpload.append('updateDate', new Date(formData.date).toISOString()); // Add updateDate in ISO format
 
-      if (response.ok) {
-        const updatedData = await response.json();
-        Swal.fire({
-          title: "تم التحديث!",
-          text: "تم تحديث الدورة بنجاح",
-          icon: "success",
-          confirmButtonColor: "#28a745"
-        });
-        onupdateSuccess(updatedData);
-      } else {
-        throw new Error('Failed to update cycle');
+      // Append the image if it's a data URL (meaning it was just uploaded)
+      if (formData.imageSrc.startsWith('data:image')) {
+          const base64Response = await fetch(formData.imageSrc);
+          const blob = await base64Response.blob();
+          const file = new File([blob], "image.jpg", { type: 'image/jpeg' }); // Or determine the file type
+          formDataForUpload.append('image', file);
       }
-    } catch (error) {
-      console.error('Error updating cycle:', error);
-      Swal.fire({
-        title: "خطأ!",
-        text: "حدث خطأ أثناء تحديث الدورة",
-        icon: "error",
-        confirmButtonColor: "#dc3545"
-      });
+
+      try {
+  const response = await api.put(`CycleUpdate/${cycle.updateId}`, formDataForUpload, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+
+  const updatedData = response.data;
+  Swal.fire({
+    title: "تم التحديث!",
+    text: "تم تحديث الدورة بنجاح",
+    icon: "success",
+    confirmButtonColor: "#28a745"
+  });
+  onupdateSuccess(updatedData);
+} catch (error) {
+  console.error('Error updating cycle:', error);
+  Swal.fire({
+    title: "خطأ!",
+    text: "حدث خطأ أثناء تحديث الدورة",
+    icon: "error",
+    confirmButtonColor: "#dc3545"
+  });
+}
+
+    };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast.error('الرجاء اختيار ملف صورة');
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        setFormData(prev => ({ ...prev, imageSrc: e.target.result }));
+      };
+
+      reader.onerror = () => {
+        toast.error('حدث خطأ أثناء قراءة الملف');
+      };
+
+      reader.readAsDataURL(file);
     }
   };
+
 
   return (
     <div className="container" style={{ padding: "20px",fontSize:"20px",fontWeight:"500" }}>
@@ -142,6 +157,7 @@ export default function Editupdateoncycle({ cycle, onupdateSuccess }) {
           <form
             onSubmit={handleSubmit}
             style={{ backgroundColor: "#FFF", padding: "20px", borderRadius: "8px" }}
+            encType="multipart/form-data" // Add enctype for file uploads
           >
             {/* Title Input */}
             <div className="row mb-3">
@@ -218,8 +234,8 @@ export default function Editupdateoncycle({ cycle, onupdateSuccess }) {
                   className="form-control"
                   style={{ borderRadius: "12px",  borderColor: "#1F4E3D",
                   }}
-                  value={formData.notes}
-                  onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
+                  value={formData.AdditionalNotes}
+                  onChange={(e) => setFormData(prev => ({ ...prev, AdditionalNotes: e.target.value }))}
                 />
               </div>
             </div>
@@ -311,7 +327,7 @@ export default function Editupdateoncycle({ cycle, onupdateSuccess }) {
         <div className="col-lg-4 col-md-6 col-12 d-flex flex-column align-items-center mb-4">
           {formData.imageSrc ? (
             <img
-              src={formData.imageSrc}
+              src={`https://cityroots.runasp.net/${formData.imageSrc}`}
               alt="صورة المحصول"
               style={{
                 width: "100%",

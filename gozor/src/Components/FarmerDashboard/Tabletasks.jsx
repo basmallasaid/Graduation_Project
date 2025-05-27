@@ -3,37 +3,69 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import Edittabletasks from "./Edittabletasks";
 import ReactModal from "react-modal";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import api from "../../API/axiosInstance";
 const Taskstable = ({ selectedCardId }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [visiblecrop, setVisiblecrop] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+useEffect(() => {
+  const fetchData = async () => {
+    setLoading(true); // Good practice to set loading true at the start
+    setError(null);   // Clear previous errors
+    try {
+      const url = `https://cityroots.runasp.net/api/Schedule/GetAllTasks/${selectedCardId}`;
+      const response = await api.get(url); // Assuming api.get is axios-like
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-          const response = await fetch(`http://localhost:8000/cyclestatues?cycleId=${selectedCardId}`); // Changed to use id
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+      // With axios, data is directly in response.data for successful requests
+      // axios throws an error for HTTP error codes, so no need for response.ok check here.
+      const responseData = response.data;
+
+      setData(Array.isArray(responseData) ? responseData : responseData.cyclestatues || []);
+
+    } catch (err) {
+      // Handle errors, including HTTP errors thrown by axios
+      if (err.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        const errorData = err.response.data; // Server's error payload
+        const status = err.response.status;
+        let errorMessage = `HTTP error! Status: ${status}`;
+        if (errorData && typeof errorData === 'string') { // Simple string error
+            errorMessage += `, Message: ${errorData}`;
+        } else if (errorData && errorData.message) { // Object with message property
+            errorMessage += `, Message: ${errorData.message}`;
+        } else if (errorData && errorData.title && errorData.errors) { // ASP.NET Core validation problem details
+            errorMessage += `, Title: ${errorData.title}. Details: ${JSON.stringify(errorData.errors)}`;
         }
-        const json = await response.json();
-        setData(Array.isArray(json) ? json : json.cyclestatues || []);
-      } catch (err) {
+        toast.error(errorMessage);
+        setError(errorMessage); // Set a more descriptive error
+      } else if (err.request) {
+        // The request was made but no response was received
+        toast.error("Network error: No response received from server.");
+        setError("Network error: No response received from server.");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        toast.error(`Error: ${err.message}`);
         setError(err.message);
-      } finally {
-        setLoading(false);
       }
-    };
-
-    if (selectedCardId) {
-      fetchData();
+      // The toast.error(`حدث خطأ: ${err.message}`); might be too generic if err.response exists
+    } finally {
+      setLoading(false);
     }
-  }, [selectedCardId]);
+  };
 
-  const handleDelete = async (id) => {
-    console.log("handleDelete called with id:", id); // Debug log
+  if (selectedCardId) {
+    fetchData();
+  }
+}, [selectedCardId, api]); 
+
+
+  const handleDelete = async (scheduleId) => { // Changed parameter name
+    console.log("handleDelete called with scheduleId:", scheduleId); // Debug log
     const isConfirmed = await Swal.fire({
         title: "هل أنت متأكد؟",
         text: "لن تتمكن من التراجع عن هذا!",
@@ -46,10 +78,10 @@ const Taskstable = ({ selectedCardId }) => {
 
     if (isConfirmed.isConfirmed) {
         try {
-            console.log("Sending DELETE request to:", `http://localhost:8000/cyclestatues/${id}`); // Debug log
-            await axios.delete(`http://localhost:8000/cyclestatues/${id}`);
+            // console.log("Sending DELETE request to:", `https://cityroots.runasp.net/api/Schedule/${scheduleId}`); 
+            await api.delete(`Schedule/${scheduleId}`);
             setData((prevData) => {
-                const filteredData = prevData.filter((item) => item.id !== id);
+                const filteredData = prevData.filter((item) => item.scheduleId !== scheduleId); // changed to scheduleId
                 console.log("Data after deletion:", filteredData); // Debug log
                 return filteredData;
             });
@@ -185,7 +217,7 @@ const handleTaskUpdate = (updatedTask) => {
                   }}
                 >
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <div>{item.description}</div>
+                    <div>{item.taskDescription}</div>
                     <div style={{ display: "flex", gap: "10px" }}>
                       <button
                         style={{ border: "none", backgroundColor: "transparent" }}
@@ -221,11 +253,18 @@ const handleTaskUpdate = (updatedTask) => {
                         />
                       </ReactModal>
                       <button
-                        style={{ border: "none", backgroundColor: "transparent" }}
-                        onClick={() => handleDelete(item.id)}
-                      >
-                        <i className="fa-solid fa-trash"></i>
-                      </button>
+    style={{ border: "none", backgroundColor: "transparent" }}
+    onClick={() => {
+        if (item.scheduleId) { // Changed to scheduleId
+            handleDelete(item.scheduleId); // Changed to scheduleId
+        } else {
+            console.warn("Skipping delete because item.scheduleId is undefined or null"); // Changed to scheduleId
+            // Optionally, display a message to the user that this item cannot be deleted
+        }
+    }}
+>
+    <i className="fa-solid fa-trash"></i>
+</button>
                     </div>
                   </div>
                 </td>

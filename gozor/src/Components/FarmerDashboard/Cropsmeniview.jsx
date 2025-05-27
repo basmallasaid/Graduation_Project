@@ -1,3 +1,5 @@
+
+
 import NavbarF from "./Main/NavbarF";
 import FooterF from "./Main/FooterF";
 import styles from "../../Styles/style.module.css";
@@ -42,35 +44,36 @@ export default function Cropmenuview() {
   const [vegetables, setVegetables] = useState([]);
   const [fruits, setFruits] = useState([]);
   const [seeds, setSeeds] = useState([]);
-  const userData = JSON.parse(localStorage.getItem("user_data"));
-    const farmerId = userData?.LoggedId;
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const [cyclesData, landsData , vegetablesRes, fruitsRes, seedsRes] = await Promise.all([
-            api.get(`Cycle/GetAllCycleasOfFarmerId?farmerId=${farmerId}`).then(res => res.data), // Get res.data
-            api.get(`LandParcel/GetAllLandsOfFarmerId?farmerId=${farmerId}`).then(res => res.data), // Get res.data
-            api.get("Crop/CropsOfType?CropTypeId=3"), // Keep as is, data will be in vegetablesRes.data
-            api.get("Crop/CropsOfType?CropTypeId=2"), // Keep as is, data will be in fruitsRes.data
-            api.get("Crop/CropsOfType?CropTypeId=1"), // Keep as is, data will be in seedsRes.data
-          ]);
-  
-          // Note: cyclesData and landsData are now the direct data, not the full response object
-          setData(Array.isArray(cyclesData) ? cyclesData : cyclesData ? [cyclesData] : []);
-          setLands(landsData); // Assuming landsData is already in the correct format
-          setVegetables(vegetablesRes.data);
-          setFruits(fruitsRes.data);
-          setSeeds(seedsRes.data);
-  
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
-  
-      if (farmerId) { // Good practice to check if farmerId exists
-          fetchData();
+   const userData = JSON.parse(localStorage.getItem("user_data"));
+
+    const farmerId = userData?.LoggedId; 
+     useEffect(() => {
+    const fetchData = async () => {
+      try {
+      const [cyclesResponse, landsResponse , vegetablesRes, fruitsRes, seedsRes] = await Promise.all([
+  api.get(`Cycle/GetAllCycleasOfFarmerId?farmerId=${farmerId}`).then(res => res.data),
+  api.get(`LandParcel/GetAllLandsOfFarmerId?farmerId=${farmerId}`).then(res => res.data),
+  api.get("Crop/CropsOfType?CropTypeId=3"), // res.data will be used directly below
+  api.get("Crop/CropsOfType?CropTypeId=2"),
+  api.get("Crop/CropsOfType?CropTypeId=1"),
+]);
+
+
+       setData(Array.isArray(cyclesResponse) ? cyclesResponse : cyclesResponse ? [cyclesResponse] : []);
+setLands(landsResponse);
+setVegetables(vegetablesRes.data);
+setFruits(fruitsRes.data);
+setSeeds(seedsRes.data);
+
+   
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
-    }, [farmerId]);
+    };
+
+    fetchData();
+  }, [farmerId]);
 
   const getCropName = (cropId) => {
     console.log("getCropName called with cropId:", cropId);
@@ -182,48 +185,48 @@ export default function Cropmenuview() {
     setSearchQuery(e.target.value);
   };
 
-  const handleDelete = async (id) => {
-    try {
-      const isConfirmed = await Swal.fire({
-        title: "هل أنت متأكد؟",
-        text: "لن تتمكن من التراجع عن هذا!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#28a745",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "نعم، احذفها!",
-        cancelButtonText: "إلغاء"
-      });
+ const handleDelete = async (id) => {
+  try {
+    const isConfirmed = await Swal.fire({
+      title: "هل أنت متأكد؟",
+      text: "لن تتمكن من التراجع عن هذا!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#28a745",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "نعم، احذفها!",
+      cancelButtonText: "إلغاء"
+    });
 
-      if (isConfirmed.isConfirmed) {
-        const response = await fetch(`https://cityroots.runasp.net/api/Cycle/Delete/${id}`, {
-          method: "DELETE",
+    if (isConfirmed.isConfirmed) {
+      const response = await api.delete(`Cycle/Delete/${id}`);
+
+      if (response.status === 200) {
+        setData((prevData) => prevData.filter((item) => item.cycleId !== id));
+        Swal.fire({
+          title: "تم!",
+          text: "تم حذف الدورة بنجاح.",
+          icon: "success",
+          confirmButtonColor: '#28a745'
         });
-
-        if (response.ok) {
-          setData((prevData) => prevData.filter((item) => item.cycleId !== id));
-          Swal.fire({
-            title: "تم!",
-            text: "تم حذف الدورة بنجاح.",
-            icon: "success",
-            confirmButtonColor: '#28a745'
-          });
-        } else {
-          Swal.fire({
-            title: "خطأ!",
-            text: "حدث خطأ أثناء حذف الدورة.",
-            icon: "error"
-          });
-        }
+      } else {
+        Swal.fire({
+          title: "خطأ!",
+          text: "حدث خطأ أثناء حذف الدورة.",
+          icon: "error"
+        });
       }
-    } catch (error) {
-      Swal.fire({
-        title: "خطأ!",
-        text: "حدث خطأ أثناء حذف الدورة.",
-        icon: "error"
-      });
     }
-  };
+  } catch (error) {
+    console.error("Error during delete:", error); // helpful for debugging
+    Swal.fire({
+      title: "خطأ!",
+      text: "حدث خطأ أثناء حذف الدورة.",
+      icon: "error"
+    });
+  }
+};
+
 
 
   const cropStyles = {

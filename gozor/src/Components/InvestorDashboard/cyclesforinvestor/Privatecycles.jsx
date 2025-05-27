@@ -21,7 +21,7 @@ const Privatecyles = () => {
     const almaraiFont = {
         fontFamily: 'Almarai, sans-serif',
     };
-    const userData = JSON.parse(localStorage.getItem("user_data"));
+  const userData = JSON.parse(localStorage.getItem("user_data"));
     const InvestorId = userData?.LoggedId;
     useEffect(() => {
         const fetchCycles = async () => {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import api from "../../API/axiosInstance";
 
 export default function AddCloseCycle({ isOpenForInvestment, onCropAdded, onaddcloseSuccess }) {
     const [lands, setLands] = useState([]);
@@ -18,15 +19,17 @@ export default function AddCloseCycle({ isOpenForInvestment, onCropAdded, onaddc
   const [roiUnit, setRoiUnit] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const userData = JSON.parse(localStorage.getItem("user_data"));
 
+    const farmerId = userData?.LoggedId;
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [landsRes, vegetablesRes, fruitsRes, seedsRes] = await Promise.all([
-          axios.get("http://localhost:8000/lands"),
-          axios.get("http://localhost:8000/vegetables"),
-          axios.get("http://localhost:8000/fruits"),
-          axios.get("http://localhost:8000/seeds"),
+            api.get(`LandParcel/GetAllLandsOfFarmerId?farmerId=${farmerId}`),
+            api.get("Crop/CropsOfType?CropTypeId=3"),
+            api.get("Crop/CropsOfType?CropTypeId=2"),
+            api.get("Crop/CropsOfType?CropTypeId=1"),
         ]);
 
         setLands(landsRes.data);
@@ -40,16 +43,15 @@ export default function AddCloseCycle({ isOpenForInvestment, onCropAdded, onaddc
 
     fetchData();
   }, []);
-    const handleSelectChange = (selectedCrop) => {
-    setSelectedProductType(selectedCrop.name);
-    setSelectedCropId(selectedCrop.id); // Set the crop ID
-  };
-  
-  const handleLandChange = (e) => {
-        const selectedLand = JSON.parse(e.target.value);
-    setparcelName(selectedLand.name);
-    setParcelId(selectedLand.id); // Set the land ID
-  };
+  const handleSelectChange = (selectedCrop) => {
+    setSelectedProductType(selectedCrop.cropName || selectedCrop.name); //Handles both objects
+    setSelectedCropId(selectedCrop.id || selectedCrop.cropId);
+};
+const handleLandChange = (e) => {
+    const selectedLand = JSON.parse(e.target.value);
+    setparcelName(selectedLand.parcelName);
+    setParcelId(selectedLand.parcelId);
+};
 
 
   const validateForm = () => {
@@ -73,10 +75,7 @@ export default function AddCloseCycle({ isOpenForInvestment, onCropAdded, onaddc
       return false;
     }
 
-    if (!roiUnit) {
-      toast.error("يرجى اختيار وحدة العائد");
-      return false;
-    }
+    
 
     if (!startDate || !endDate) {
       toast.error("يرجى إدخال تاريخ البداية والنهاية");
@@ -92,8 +91,7 @@ export default function AddCloseCycle({ isOpenForInvestment, onCropAdded, onaddc
 
     return true;
   };
-
- const resetForm = () => {
+  const resetForm = () => {
     setCycleName("");
     setparcelName("");
     setParcelId(null);
@@ -107,36 +105,33 @@ export default function AddCloseCycle({ isOpenForInvestment, onCropAdded, onaddc
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-      if (!validateForm()) {
+    if (!validateForm()) {
       return;
     }
-        const data = {
+
+    const data = {
+      parcelId: Number(parcelId), // Convert to Number
+      cropId: Number(selectedCropId), // Convert to Number
       cycleName,
-      parcelName,
-       parcelId,
-        selectedProductType,
-       cropId:selectedCropId,
-      expectedProduction: Number(expectedProduction),
-      roiUnit,
-      startDate,
-      endDate,
-      isOpenForInvestment: false  
+      startDate: new Date(startDate).toISOString(), // Format the date
+      endDate: new Date(endDate).toISOString(),     // Format the date
+      expectedYield: Number(expectedProduction), // expectedProduction instead of expectedYield
+      // isOpenForInvestment should NOT be included in the request body for closed cycles.
     };
 
     try {
-      const response = await axios.post("http://localhost:8000/viewyield", data);
-         toast.success("تم إضافة الدورة المغلقه بنجاح");
-          setTimeout(() => {
+      const response = await api.post("Cycle/AddCycle", data);
+      toast.success("تم إضافة الدورة المغلقه بنجاح");
+      setTimeout(() => {
         onaddcloseSuccess();
       }, 2000);
       if (onCropAdded) {
-          // Assign cycleId from the id in the response.
+        // Assign cycleId from the id in the response.
         onCropAdded({ ...response.data, cycleId: response.data.id });
-       
       }
-       resetForm();
+      resetForm();
     } catch (error) {
-        const errorMessage = error.response?.data?.message || "حدث خطأ أثناء إضافة الدورة";
+      const errorMessage = error.response?.data?.message || "حدث خطأ أثناء إضافة الدورة";
       toast.error(errorMessage);
     }
   };
@@ -175,83 +170,79 @@ export default function AddCloseCycle({ isOpenForInvestment, onCropAdded, onaddc
           </div>
            {/* Land */}
            <div className="col-md-6 ">
-              <label className="form-label">الأرض المرتبطة بالدورة</label>
-                <select
-                className="form-select"
-                value={parcelId ? JSON.stringify({ id: parcelId, name: parcelName }) : ""}
-                onChange={handleLandChange}
-                style={{borderRadius:"10px",
-                  borderColor:"#1F4E3D",
-                }}
-              >
-                <option value="">الارض...</option>
-                  {lands.map((land) => (
-                    <option key={land.id} value={JSON.stringify(land)}>
-                      {land.name}
-                    </option>
-                  ))}
-                </select>
+           <label className="form-label">الأرض المرتبطة بالدورة</label>
+                        <select
+                            className="form-select"
+                            value={parcelId ? JSON.stringify({ parcelId: parcelId, parcelName: parcelName }) : ""}
+                            onChange={handleLandChange}
+                            style={{ borderRadius: "10px", borderColor: "#1F4E3D" }}
+                        >
+                            <option value="">{parcelName || "الارض..."}</option>
+                            {lands.map((land) => (
+                                <option key={land.parcelId} value={JSON.stringify(land)}>
+                                    {land.parcelName}
+                                </option>
+                            ))}
+
+                        </select>
               </div>
         </div>
         <div className="row ">
             {/* Product Type */}
            <div className="col-12 " >
-              <label className="form-label">المحصول:</label>
-                  <div className="d-flex flex-wrap align-items-center gap-2">
-                    <input
-                      type="text"
-                      className="form-control  mb-md-0"
-                      style={{width:"450px",borderRadius:"10px",
-                        borderColor:"#1F4E3D"}}
-                      value={selectedProductType}
-                      readOnly
-                    />
-                      <select
-                        className="form-select  mb-md-0"
-                        style={{ width: "230px" ,borderRadius:"10px",
-                          borderColor:"#1F4E3D"}}
-                        onChange={(e) => handleSelectChange(JSON.parse(e.target.value))}
-                      >
-                        <option value="">فواكه...</option>
-                        {fruits.map((fruit) => (
-                          <option key={fruit.id} value={JSON.stringify(fruit)}>
-                            {fruit.name}
-                          </option>
-                        ))}
-                      </select>
-                       <select
-                            className="form-select mb-md-0"
-                            style={{ width: "230px" ,borderRadius:"10px",
-                              borderColor:"#1F4E3D"}}
-                           onChange={(e) => handleSelectChange(JSON.parse(e.target.value))}
-                       >
-                            <option value="">خضروات...</option>
-                             {vegetables.map((vegetable) => (
-                                <option key={vegetable.id} value={JSON.stringify(vegetable)}>
-                                  {vegetable.name}
-                                </option>
-                              ))}
-                         </select>
-                       <select
-                           className="form-select  mb-md-0"
-                           style={{ width: "230px" ,borderRadius:"10px",
-                            borderColor:"#1F4E3D"}}
-                           onChange={(e) => handleSelectChange(JSON.parse(e.target.value))}
-                       >
-                            <option value="">حبوب...</option>
-                             {seeds.map((seed) => (
-                                 <option key={seed.id} value={JSON.stringify(seed)}>
-                                   {seed.name}
-                                 </option>
-                             ))}
-                      </select>
+           <label className="form-label">المحصول</label>
+                        <div className="d-flex flex-wrap align-items-center gap-2">
+                            <input
+                                type="text"
+                                className="form-control  mb-md-0"
+                                style={{ width: "450px", borderRadius: "10px", borderColor: "#1F4E3D" }}
+                                value={selectedProductType}
+                                readOnly
+                            />
+                            <select
+                                className="form-select mb-2 mb-md-0"
+                                style={{ width: "250px", borderRadius: "10px", borderColor: "#1F4E3D" }}
+                                onChange={(e) => handleSelectChange(JSON.parse(e.target.value))}
+                            >
+                                <option value="">فواكه...</option>
+                                {fruits.map((fruit) => (
+                                    <option key={fruit.id} value={JSON.stringify(fruit)}>
+                                        {fruit.cropName || fruit.name}
+                                    </option>
+                                ))}
+
+                            </select>
+                            <select
+                                className="form-select mb-2 mb-md-0"
+                                style={{ width: "250px", borderRadius: "10px", borderColor: "#1F4E3D" }}
+                                onChange={(e) => handleSelectChange(JSON.parse(e.target.value))}
+                            >
+                                <option value="">خضروات...</option>
+                                {vegetables.map((vegetable) => (
+                                    <option key={vegetable.id} value={JSON.stringify(vegetable)}>
+                                        {vegetable.cropName || vegetable.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <select
+                                className="form-select mb-2 mb-md-0"
+                                style={{ width: "250px", borderRadius: "10px", borderColor: "#1F4E3D" }}
+                                onChange={(e) => handleSelectChange(JSON.parse(e.target.value))}
+                            >
+                                <option value="">حبوب...</option>
+                                {seeds.map((seed) => (
+                                    <option key={seed.id} value={JSON.stringify(seed)}>
+                                        {seed.cropName || seed.name}
+                                    </option>
+                                ))}
+                            </select>
                 </div>
             </div>
         </div>
         <div className="row ">
     {/* Return on Investment */}
     <div className="col-12 col-md-6"> {/* Modified column class */}
-        <label className="form-label">متوقع انتاجيه المحصول</label>
+        <label className="form-label">متوقع انتاجيه المحصول بالكيلو</label>
         <div className="d-flex flex-wrap align-items-center gap-2"> {/* Added flex-wrap */}
             <input
                 type="number"
@@ -261,8 +252,8 @@ export default function AddCloseCycle({ isOpenForInvestment, onCropAdded, onaddc
                  value={expectedProduction}
                 onChange={(e) => setexpectedProduction(e.target.value)}
             />
-            <select
-                className="form-select mb-2 mb-md-0"  /* Added mb-md-0 for medium and larger screens */
+            {/* <select
+                className="form-select mb-2 mb-md-0"  
                 style={{ width: "100px",borderRadius:"10px",borderColor:"#1F4E3D" }}
                 value={roiUnit}
                 onChange={(e) => setRoiUnit(e.target.value)}
@@ -270,7 +261,7 @@ export default function AddCloseCycle({ isOpenForInvestment, onCropAdded, onaddc
                 <option value="">اختر</option>
                 <option value="كيلو">كيلو</option>
                 <option value="طن">طن</option>
-            </select>
+            </select> */}
         </div>
     </div>
 </div>

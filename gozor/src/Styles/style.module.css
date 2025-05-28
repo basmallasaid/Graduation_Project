@@ -2674,3 +2674,225 @@ font-size: 20px;
 .customscrollbar::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+/* --- Keep all your previous styles from the last good version --- */
+.chatContainer {
+  height: 95vh;
+  margin-top: 2.5vh;
+  overflow: hidden;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  background-color: #fff;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  direction: rtl;
+}
+
+/* Right Sidebar (Contact List) */
+.contactListContainer {
+  border-left: 1px solid #dee2e6; /* Separator on large screens */
+  height: 100%; /* Full height within row on large screens */
+  display: flex;
+  flex-direction: column;
+}
+
+.contactListHeader {
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+  flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.contactsScrollable {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.contactItem {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.activeContact {
+  background-color: #e9ecef;
+}
+
+.contactItem:not(.activeContact):hover {
+  background-color: #f8f9fa;
+}
+
+
+.contactAvatar {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+}
+
+.contactName {
+  font-weight: 500;
+}
+
+.contactPreview,
+.contactTime {
+  font-size: 0.85rem;
+  color: #6c757d; /* text-muted */
+}
+
+/* Left Side (Chat Window) */
+.chatWindow {
+  height: 100%; /* Full height within row on large screens */
+  display: flex;
+  flex-direction: column;
+}
+
+.chatHeader {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+  flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.chatHeaderAvatar {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  background-color: #198754;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px; /* RTL */
+}
+
+/* --- Keep base styles for .chatMessages, etc. --- */
+.chatMessages {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+}
+
+/* Base Message Container Flex settings */
+.messageContainer {
+   display: flex;
+   align-items: flex-end; /* Align avatar/bubble vertically to bottom */
+   margin-bottom: 0.75rem;
+   max-width: 85%; /* Prevent full width */
+}
+
+
+/* --- SENT MESSAGES (From 'me') --- */
+/* Align to the RIGHT */
+.messageContainer.sent {
+    justify-content: flex-start; /* Align container content to the start (right in RTL) */
+    margin-right: auto;        /* Push container itself to the right */
+    margin-left: 0;
+}
+
+
+
+.sentBubble {
+  background-color: rgb(57, 189, 57); /* Example blue for sent */
+  color: white;
+  border-radius: 15px 15px 0 15px; /* Example bubble shape */
+  align-self: flex-end; /* Ensure bubble aligns with the 'sent' container alignment */
+}
+
+.receivedBubble {
+  background-color: #e9ecef; /* Example gray for received */
+  color: black;
+  border-radius: 15px 15px 15px 0; /* Example bubble shape */
+  align-self: flex-start; /* Ensure bubble aligns with the 'received' container alignment */
+}
+.messageContainer.received {
+    justify-content: flex-end; /* Align container content to the end (left in RTL) */
+    margin-left: auto;        /* Push container itself to the left */
+    margin-right: 0;
+}
+
+/* General styles for the avatar */
+.chatAvatar {
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    border-radius: 50%;
+    flex-shrink: 0; /* Prevent avatar from shrinking */
+}
+
+/* Bubble comes FIRST visually (left side in RTL default flow) */
+
+
+
+.messageContainer.received .chatAvatar {
+   /* Inherits base .chatAvatar styles */
+   /* Add space to the LEFT of the avatar (between bubble and avatar in RTL) */
+   margin-left: 0.5rem;
+   margin-right: 0; /* Ensure no margin on the far right */
+}
+
+
+/* --- (Rest of your CSS: input area, responsive media queries, etc.) --- */
+
+.chatInputArea {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+  flex-shrink: 0;
+  direction: rtl; /* Ensure input area is RTL */
+}
+
+.chatInput {
+  border-radius: 1.5rem;
+  text-align: right; /* Align placeholder/input text right */
+}
+
+.sendButton {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0 0.5rem;
+    transform: scaleX(-1); /* Flip send arrow for RTL */
+}
+.sendButton:hover {
+    color: green;
+}
+
+.messageCountBadge {
+    font-size: 1rem;
+    padding: 0.3em 0.6em;
+}
+
+.noChatSelected {
+  background-color: #f8f9fa;
+}
+
+/* --- Responsive Adjustments (Keep these the same) --- */
+@media (max-width: 767.98px) {
+  /* ... (small screen styles) ... */
+   .chatContainer { height: auto; max-height: none; margin-top: 1rem; margin-bottom: 1rem; overflow: visible; border: none; box-shadow: none; border-radius: 0; }
+   .chatContainer .row.h-100 { height: auto !important; }
+   .contactListContainer, .chatWindow { height: auto; max-height: none; border-left: none; }
+   .chatWindow { border-bottom: 1px solid #dee2e6; }
+   .contactListContainer { border-bottom: none; }
+   .contactsScrollable { max-height: 45vh; flex-grow: 0; }
+   .chatMessages { min-height: 300px; }
+   .messageContainer { max-width: 90%; }
+}
+
+@media (min-width: 768px) {
+  /* ... (large screen styles) ... */
+    .chatContainer { height: 95vh; overflow: hidden; border: 1px solid #dee2e6; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); border-radius: 0.5rem; margin-top: 2.5vh; margin-bottom: 0; }
+    .chatContainer .row.h-100 { height: 100% !important; }
+    .contactListContainer, .chatWindow { height: 100%; max-height: none; }
+    .contactListContainer { border-left: 1px solid #dee2e6; border-bottom: none; }
+    .chatWindow { border-bottom: none; }
+    .contactsScrollable { max-height: none; flex-grow: 1; }
+    .chatMessages { min-height: 0; flex-grow: 1; }
+    .messageContainer { max-width: 85%; }
+}

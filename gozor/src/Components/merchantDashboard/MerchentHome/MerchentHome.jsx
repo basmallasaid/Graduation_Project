@@ -16,10 +16,10 @@ const MerchentHome = () => {
         navigate("/MerchentPayment")
     }
     const financialReport = () => {
-        navigate("/PaymentF")
+        navigate("/Browseharvest")
     }
     const agriculturalCourses = () => {
-        navigate("/agricultural")
+        navigate("/Merchorders")
     }
     return (
         <div className="d-flex flex-column min-vh-100">

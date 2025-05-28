@@ -48,6 +48,8 @@ import Privatecyles from './Components/InvestorDashboard/cyclesforinvestor/Priva
 import Newcycles from './Components/InvestorDashboard/cyclesforinvestor/Newcycles';
 import ProfileManegment from './Components/ProfileManagment/ProfileManagment';
 import ChatInterface from './Components/Chat/ChatInterface';
+import Browseharvest from './Components/merchantDashboard/browseharvest/Browseharvest';
+import Merchorders from './Components/merchantDashboard/orders/Merchorders';
 
 
 
@@ -91,7 +93,7 @@ function App() {
           <Route path='ViewCrops' element={<ViewCrops/>}/>
          <Route path='HomeFarmer' element={<HomeFarmer/>}/>
           <Route path='PaymentF' element={<PaymentF/>}/>
-          <Route path='SeeDetails' element={<SeeDetails/>}/>
+<Route path="/SeeDetails/:cycleId" element={<SeeDetails />} /> 
           <Route path='Invnewupdates' element={<Invnewupdates/>}/>
           <Route path='Newpassword' element={<Newpassword/>}/>
           
@@ -106,6 +108,8 @@ function App() {
           <Route path='NewCycles' element={<Newcycles/>}/>
           <Route path='ProfileManegment' element={<ProfileManegment/>}/>
           <Route path='ChatInterface' element={<ChatInterface/>}/>
+          <Route path='Browseharvest' element={<Browseharvest/>}/>
+          <Route path='Merchorders' element={<Merchorders/>}/>
 
            </Routes>}
  

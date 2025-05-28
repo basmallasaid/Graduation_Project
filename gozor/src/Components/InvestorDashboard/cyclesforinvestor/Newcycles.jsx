@@ -246,9 +246,12 @@ const Newcycles = () => {
                     </div>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <Link to="/SeeDetails" style={{ border: "none", borderRadius: "10px", backgroundColor: "black", color: "#fff", padding: "0 30px" }}>
-                        عرض التفاصيل
-                    </Link>
+                  <Link 
+    to={`/SeeDetails/${cycle.cycleId}`} // Changed from to="/SeeDetails"
+    style={{ border: "none", borderRadius: "10px", backgroundColor: "black", color: "#fff", padding: "7px 30px", textDecoration:"none", fontSize:"1.2rem" }}
+>
+    عرض التفاصيل
+</Link>
                     <h4 style={{ background: "#6C4C94", color: "white", padding: "5px 30px", borderRadius: "7px" }}>
                         <i className="fa-solid fa-hourglass-end"></i>  {cycle.timeToStart}
                     </h4>

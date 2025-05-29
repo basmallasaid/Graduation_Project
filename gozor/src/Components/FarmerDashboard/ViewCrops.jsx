@@ -201,7 +201,7 @@ const handleCropDeleted = (deletedId) => {
             <div className="container my-5">
               <div className="row justify-content-center">
                 {filteredCrops.map((crop) => (
-                  <div className="col-lg-2 col-md-4 col-6 mb-4" key={crop.harvestId}>
+                  <div className="col-lg-2 col-md-4 col-12 mb-4" key={crop.harvestId}>
                     <div className="card text-center" style={{ width: "100%", padding: "15px" }}>
                       <div className="card-body">
                         <h5 className="card-title">{crop.name}</h5>

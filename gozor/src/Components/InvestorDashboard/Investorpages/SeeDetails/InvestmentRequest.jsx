@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import api from "../../../../API/axiosInstance";
 
 const InvestmentRequest = ({ setIsClicked }) => {
   const [amount, setAmount] = useState("");
@@ -26,8 +27,8 @@ const InvestmentRequest = ({ setIsClicked }) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.post(
-        "http://localhost:8000/investmentrequset",
+      const response = await api.post(
+        "InvestmentRequest",
         requestData
       );
       toast.success("تم إرسال الطلب بنجاح!", {

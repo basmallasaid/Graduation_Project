@@ -1,15 +1,18 @@
 import styles from "../../Styles/style.module.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import api from "../../API/axiosInstance";
 
 export default function Croprequests() {
   const [cyclesData, setCyclesData] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
+   const userData = JSON.parse(localStorage.getItem("user_data"));
 
+    const farmerId = userData?.LoggedId; 
   useEffect(() => {
     const fetchCyclesData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/viewyield");
+        const response = await api.get(`Cycle/GetAllCycleasOfFarmerId?farmerId=${farmerId}`);
         setCyclesData(Array.isArray(response.data) ? response.data : [response.data]);
       } catch (error) {
         console.error("Error fetching data:", error);

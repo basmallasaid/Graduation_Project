@@ -54,9 +54,7 @@ export default function SeeDetails() {
                     setIsFavorite(response.data.isFarmerInFav || false);
                     setIsClicked(response.data.requestReview || false);
 
-                    // Initialize investor's rating for this farmer if provided by the API
-                    // Replace 'investorRatingForThisFarmer' with the actual field name from your API response.
-                    // For example, if it's part of the 'farmer' object or directly in 'response.data'.
+                    
                     if (typeof response.data.investorRatingForThisFarmer === 'number') { // Check if the field exists and is a number
                         setRating(response.data.investorRatingForThisFarmer);
                     } else {
@@ -90,12 +88,10 @@ export default function SeeDetails() {
             await api.post("Rate", { // Endpoint for rating
                 farmerId: cycleDetails.farmer.farmerId.toString(),
                 rating: newRating,
-                // InvestorId is assumed to be handled by JWT token via api instance
             });
             setRating(newRating); // Update UI to show the new rating immediately
             toast.success("Rating submitted successfully!");
-            // Optionally, you might want to refetch cycleDetails or specifically the farmer's overall rate
-            // if the backend updates it and returns new data. For now, local 'rating' state is updated.
+ 
         } catch (error) {
             console.error("Error sending rating:", error);
             const errorMessage = error.response?.data?.message || "Failed to submit rating.";
@@ -375,7 +371,7 @@ export default function SeeDetails() {
                                 <img
                                     className="img-fluid w-100"
                                     style={{ height: "100%", objectFit: "cover" }}
-                                    src={landParcelImageUrl}
+                                     src={`https://cityroots.runasp.net/${landParcelImageUrl}`}
                                     alt="Land Parcel"
                                 />
                             </div>

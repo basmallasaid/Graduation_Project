@@ -78,7 +78,7 @@ export default function UpdateNewCycle({ selectedCardId, onupdateSuccess }) {
     }
 
 try {
-  const response = await api.post("https://cityroots.runasp.net/api/CycleUpdate", formData);
+  const response = await api.post("CycleUpdate", formData);
 
   if (response.status === 200 || response.status === 201) {
     toast.success("تم تحديث الدورة بنجاح!");

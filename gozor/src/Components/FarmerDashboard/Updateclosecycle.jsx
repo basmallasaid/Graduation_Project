@@ -43,7 +43,6 @@ const userData = JSON.parse(localStorage.getItem("user_data"));
         selectedProductType: selectedCardData.selectedProductType || "",
         cropId: selectedCardData.cropId || null,
         expectedYield: selectedCardData.expectedYield?.toString() || "",
-        roiUnit: selectedCardData.roiUnit || "",
         startDate: selectedCardData.startDate
           ? new Date(selectedCardData.startDate).toISOString().split("T")[0]
           : "",

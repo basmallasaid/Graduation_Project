@@ -5,7 +5,7 @@ import Modal from "react-modal";
 import axios from "axios";
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
-import Croprequests from "./Cardrequets";
+import Croprequests from "./croprequests";
 import Editcrop from "./editcrop";
 import api from "../../API/axiosInstance";
 
@@ -228,17 +228,17 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
 
                                 </div>
                                 {/* Show the button only if there are requests */}
-                                {currentCrop.reuestsCount > 0 && (
-                                    <button
-                                        className={styles.talabat}
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            setVisibletalabatCrop(true);
-                                        }}
-                                    >
-                                        عرض تفاصيل الطلبات
-                                    </button>
-                                )}
+                            {currentCrop.reuestsCount > 0 && (
+    <button
+        className={styles.talabat}
+        onClick={(e) => {
+            e.preventDefault();
+            setVisibletalabatCrop(true);
+        }}
+    >
+        عرض تفاصيل الطلبات
+    </button>
+)}
                                 <Modal
                                     isOpen={visibletalabatCrop}
                                     onRequestClose={() => setVisibletalabatCrop(false)}
@@ -260,7 +260,7 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
                                     >
                                         <i className="fa-solid fa-xmark"></i>
                                     </button>
-                                    <Croprequests purchaseRequests={currentCrop.purchases} />
+<Croprequests purchaseRequests={currentCrop.purchases}/>
                                 </Modal>
 
 

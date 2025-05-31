@@ -1,45 +1,81 @@
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import api from "../../../../API/axiosInstance"; // Your pre-configured Axios instance
 
-export default function Paypal({cycleId}) {
+export default function Paypal({ cycleId }) {
   const [amount, setAmount] = useState("");
-  const [email, setEmail] = useState("");
+  const [sellerEmail, setSellerEmail] = useState(""); // Renamed from 'email' to 'sellerEmail' for clarity
   const [loading, setLoading] = useState(false);
+
+  const userData = JSON.parse(localStorage.getItem("user_data"));
+  // console.log("User Data (from localStorage):", userData); // For debugging
+  const investorUserId = userData?.userId; // This is the string GUID for the user
 
   const handlePayment = async (e) => {
     e.preventDefault();
 
-    if (!amount || !email) {
+    if (!investorUserId) {
+      toast.warn("لم يتم التعرف على المستخدم. يرجى تسجيل الدخول مرة أخرى.", { position: "top-right" });
+      setLoading(false); // Ensure loading is false if we return early
+      return;
+    }
+
+    if (!amount || !sellerEmail) {
       toast.warn("يرجى ملء جميع الحقول", { position: "top-right" });
       return;
     }
 
+    const numericAmount = parseFloat(amount);
+    if (isNaN(numericAmount) || numericAmount <= 0) {
+        toast.warn("يرجى إدخال مبلغ دفع صالح.", { position: "top-right" });
+        return;
+    }
+
+    const numericCycleId = parseInt(cycleId, 10);
+    if (isNaN(numericCycleId)) {
+        toast.error("معرف الدورة غير صالح.", { position: "top-right" });
+        return;
+    }
+
     setLoading(true);
 
+    const paymentData = {
+      userId: investorUserId,
+      amount: numericAmount,
+      sellerEmail: sellerEmail, // The farmer's PayPal email
+      cycleId: numericCycleId,
+    };
+
     try {
-      // Send cycleId, amount, and email to the backend in the body
-      const response = await fetch("http://localhost:8000/paypallpayment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount, email, cycleId }), // cycleId is now included
+      // Use your 'api' instance which should have the base URL and auth headers configured
+      // The endpoint is relative to your api instance's baseURL
+      const response = await api.post("/PayPal/create-payment", paymentData);
+
+      // Axios responses usually have data in response.data
+      // You might want to check response.status or response.data for specific success indicators
+      // For example, if the backend returns a redirect URL for PayPal:
+      // if (response.data && response.data.approvalUrl) {
+      //   window.location.href = response.data.approvalUrl; // Redirect to PayPal
+      // } else {
+      //    toast.success("تم إنشاء طلب الدفع بنجاح. يرجى إكمال الدفع عبر PayPal.", {
+      //      position: "top-right", autoClose: 3000 });
+      // }
+      // For now, assuming a generic success message is fine if no redirect is immediately needed:
+      toast.success("تم إرسال طلب الدفع بنجاح.", {
+        position: "top-right",
+        autoClose: 2000,
       });
 
-      if (!response.ok) {
-        throw new Error("فشل الدفع، حاول مرة أخرى");
-      }
-      
-      toast.success("تم ارسال التحويل بنجاح", {
-        position: "top-right",
-        autoClose: 1000,
-      });
-      
       setAmount("");
-      setEmail("");
+      setSellerEmail("");
+      // Potentially close the modal or navigate away after successful payment submission
+      // if (onPaymentSuccess) onPaymentSuccess();
+
     } catch (error) {
-      toast.error("حدث خطأ أثناء الدفع، حاول مرة أخرى", {
+      console.error("Payment error:", error.response || error.message);
+      const errorMessage = error.response?.data?.message || error.response?.data || "حدث خطأ أثناء الدفع، حاول مرة أخرى";
+      toast.error(errorMessage, {
         position: "top-right",
       });
     } finally {
@@ -66,11 +102,13 @@ export default function Paypal({cycleId}) {
               </label>
               <input
                 type="number"
-                min={0}
+                min="0.01" // Minimum amount for payment
+                step="0.01" // Allow decimals
                 className="form-control"
                 style={{ backgroundColor: "rgb(231, 231, 231)", width: "65%", borderRadius: "10px", border: "none", padding: "10px" }}
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
+                placeholder="e.g., 50.00"
               />
             </div>
             <div className="mb-3 d-flex align-items-center">
@@ -81,8 +119,9 @@ export default function Paypal({cycleId}) {
                 type="email"
                 className="form-control"
                 style={{ backgroundColor: "rgb(231, 231, 231)", width: "65%", borderRadius: "10px", border: "none", padding: "10px" }}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={sellerEmail}
+                onChange={(e) => setSellerEmail(e.target.value)}
+                placeholder="farmer@example.com"
               />
             </div>
           </div>

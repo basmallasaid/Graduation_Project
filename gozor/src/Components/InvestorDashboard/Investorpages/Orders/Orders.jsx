@@ -5,41 +5,43 @@ import FooterInv from '../../Main/FooterInv';
 import styles from "../../../../Styles/style.module.css";
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
+import api from '../../../../API/axiosInstance';
 
 const Orders = () => {
     const [orders, setOrders] = useState([]);
     const [filteredOrders, setFilteredOrders] = useState([]);
     const [cycleNames, setCycleNames] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const investorId = 2;
+        const userData = JSON.parse(localStorage.getItem("user_data"));
 
-    useEffect(() => {
-        const fetchOrders = async () => {
-            try {
-                const response = await fetch(`https://cityroots.runasp.net/api/InvestmentRequest/GetAllForInvestor/${investorId}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                const data = await response.json();
-                setOrders(data);
-                setFilteredOrders(data); // Initialize filtered orders with all orders
-                // Extract cycle names for filtering
-                const uniqueCycleNames = [...new Set(data.map(order => order.cycleName))];
-                setCycleNames(uniqueCycleNames);
-            } catch (error) {
-                console.error("Could not fetch orders:", error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'خطأ!',
-                    text: 'فشل تحميل الطلبات. حاول مرة أخرى لاحقًا.',
-                    allowOutsideClick: false,
-                    showConfirmButton: true
-                });
-            }
-        };
+  console.log("User Data (from localStorage):", userData); 
+const InvestorId = userData?.loggedId;
+  useEffect(() => {
+    const fetchOrders = async () => {
+        try {
+            const response = await api.get(`InvestmentRequest/GetAllForInvestor/${InvestorId}`);
+            const data = response.data;
+            setOrders(data);
+            setFilteredOrders(data);
+            const uniqueCycleNames = [...new Set(data.map(order => order.cycleName))];
+            setCycleNames(uniqueCycleNames);
+        } catch (error) {
+            console.error("Could not fetch orders:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'خطأ!',
+                text: 'فشل تحميل الطلبات. حاول مرة أخرى لاحقًا.',
+                allowOutsideClick: false,
+                showConfirmButton: true
+            });
+        }
+    };
 
+    if (InvestorId) {
         fetchOrders();
-    }, [investorId]);
+    }
+}, [InvestorId]);
+
 
     useEffect(() => {
         const handleSearch = () => {

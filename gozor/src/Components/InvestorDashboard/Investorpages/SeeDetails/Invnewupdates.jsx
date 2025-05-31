@@ -200,7 +200,7 @@ export default function Invnewupdates({ cycleId, cycleUpdates }) {
                                         <div className="col-lg-4 col-md-12">
                                             {cycle.imageUrl && (
                                                 <img
-                                                    src={cycle.imageUrl}
+                                                    src={`https://cityroots.runasp.net/${cycle.imageUrl}`}
                                                     alt="صورة المحصول"
                                                     className="img-fluid rounded"
                                                     style={{

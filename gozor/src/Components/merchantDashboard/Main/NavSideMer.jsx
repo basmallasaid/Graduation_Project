@@ -26,11 +26,7 @@ const NavSideMer = () => {
                             <i class="fa-regular fa-heart" style={{fontSize:"1.3rem"}}></i>
                             {!isCollapsed && ' المفضله'}
                         </Link>
-                        <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/FavouritePage">
-                            {/* <img src="/assets/favorite.jpeg" alt='partly_cloudy_day' /> */}
-                            <i class="fa-regular fa-heart" style={{fontSize:"1.3rem"}}></i>
-                            {!isCollapsed && ' المفضله'}
-                        </Link>
+                      
                     </div>
                 </>
     );

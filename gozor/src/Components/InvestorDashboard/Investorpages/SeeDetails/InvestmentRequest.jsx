@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "../../../../API/axiosInstance";
 
-const InvestmentRequest = ({ setIsClicked }) => {
+const InvestmentRequest = ({ setIsClicked, cycleId }) => {
   const [amount, setAmount] = useState("");
   const [benefitType, setBenefitType] = useState("مالي");
   const [loading, setLoading] = useState(false);
@@ -19,29 +19,27 @@ const InvestmentRequest = ({ setIsClicked }) => {
       return;
     }
 
-    const requestData = {
-      amount: Number(amount),
-      benefitType,
-    };
+ const requestData = {
+  cycleId: Number(cycleId), // ensure it's a number
+  requestedProfitType: benefitType,
+  requestedAmount: parseFloat(amount), // ensure it's a float
+};
+
 
     try {
       setLoading(true);
       setError(null);
-      const response = await api.post(
-        "InvestmentRequest",
-        requestData
-      );
+      const response = await api.post("InvestmentRequest", requestData);
       toast.success("تم إرسال الطلب بنجاح!", {
         position: "top-right",
         rtl: true,
       });
       setIsClicked(true);
     } catch (err) {
-      setError("حدث خطأ أثناء إرسال الطلب.");
-      toast.error("حدث خطأ أثناء إرسال الطلب.", {
-        position: toast.POSITION.TOP_CENTER,
-        rtl: true,
-      });
+     toast.error("حدث خطأ أثناء إرسال الطلب.", {
+  position: "top-center",
+  rtl: true,
+});
     } finally {
       setLoading(false);
     }
@@ -99,20 +97,19 @@ const InvestmentRequest = ({ setIsClicked }) => {
           >
             <button
               className={`rounded-lg ${
-                benefitType === "مالي" ? "bg-black text-white" : ""
+                benefitType === "كاش" ? "bg-black text-white" : ""
               }`}
-              onClick={() => setBenefitType("مالي")}
+              onClick={() => setBenefitType("كاش")}
               style={{
                 padding: "5px 50px",
                 color: "#6C4C94",
-                border: "none",
-                background: "#fff",
+                background: benefitType === "كاش" ? "#000" : "#fff",
                 borderRadius: "10px",
                 fontSize: "1.5rem",
                 boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
               }}
             >
-              مالي
+              كاش
             </button>
             <button
               className={`rounded-lg ${
@@ -122,8 +119,7 @@ const InvestmentRequest = ({ setIsClicked }) => {
               style={{
                 padding: "5px 50px",
                 color: "#6C4C94",
-                border: "none",
-                background: "#fff",
+                background: benefitType === "محصول" ? "#000" : "#fff",
                 borderRadius: "10px",
                 fontSize: "1.5rem",
                 boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",

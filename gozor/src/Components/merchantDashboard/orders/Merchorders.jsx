@@ -5,42 +5,64 @@ import FooterMer from '../Main/FooterMer';
 import styles from "../../.././Styles/style.module.css";
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
+import api from '../../../API/axiosInstance';
 
 const Merchorders = () => {
     const [orders, setOrders] = useState([]);
     const [filteredOrders, setFilteredOrders] = useState([]);
     const [harvestNames, setHarvestNames] = useState([]); // For Harvest Name Filter
     const [searchTerm, setSearchTerm] = useState('');
-    const merchantId = 4; // Static merchant ID
+     const [loading, setLoading] = useState(true); // Added loading state for initial fetch
+
+    const userData = JSON.parse(localStorage.getItem("user_data"));
+    // console.log("User Data (from localStorage):", userData);
+    const merchantId = userData?.loggedId;
 
     useEffect(() => {
         const fetchOrders = async () => {
-            try {
-                const response = await fetch(`https://cityroots.runasp.net/api/PurchaseRequest/GetAllRequestsForMerchant/${merchantId}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                const data = await response.json();
-                setOrders(data);
-                setFilteredOrders(data);
-
-                // Extract harvest names for filtering
-                const uniqueHarvestNames = [...new Set(data.map(order => order.harvestName))];
-                setHarvestNames(uniqueHarvestNames);
-            } catch (error) {
-                console.error("Could not fetch orders:", error);
+            if (!merchantId) {
+                console.error("Merchant ID is missing.");
                 Swal.fire({
                     icon: 'error',
-                    title: 'خطأ!',
-                    text: 'فشل تحميل الطلبات. حاول مرة أخرى لاحقًا.',
+                    title: 'خطأ في المصادقة!',
+                    text: 'لم يتم العثور على معرف التاجر. يرجى تسجيل الدخول مرة أخرى.',
                     allowOutsideClick: false,
                     showConfirmButton: true
                 });
+                setLoading(false);
+                return;
+            }
+
+            setLoading(true);
+            try {
+                // Using axiosInstance (api) for the GET request
+                const response = await api.get(`PurchaseRequest/GetAllRequestsForMerchant/${merchantId}`);
+                // Axios automatically parses JSON, so response.data contains the payload
+                const data = response.data;
+
+                setOrders(data);
+                setFilteredOrders(data);
+
+                const uniqueHarvestNames = [...new Set(data.map(order => order.harvestName).filter(Boolean))]; // Filter out null/undefined harvest names
+                setHarvestNames(uniqueHarvestNames);
+
+            } catch (error) {
+                console.error("Could not fetch orders:", error.response || error.message);
+                const errorMessage = error.response?.data?.message || error.message || 'فشل تحميل الطلبات. حاول مرة أخرى لاحقًا.';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'خطأ!',
+                    text: errorMessage,
+                    allowOutsideClick: false,
+                    showConfirmButton: true
+                });
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchOrders();
-    }, [merchantId]);
+    }, [merchantId]); // Dependency array includes merchantId
 
     useEffect(() => {
         const handleSearch = () => {
@@ -81,60 +103,52 @@ const Merchorders = () => {
         }
     };
 
-    const handleDeleteOrder = async (purchaseRequestId, event) => {
-        event.preventDefault();
-        event.stopPropagation();
+   const handleDeleteOrder = async (purchaseRequestId, event) => {
+    event.preventDefault();
+    event.stopPropagation();
 
-        const result = await Swal.fire({
-            title: 'هل أنت متأكد؟',
-            text: 'هل تريد حقا إلغاء هذا الطلب؟',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'نعم ، الغي الطلب!',
-            cancelButtonText: 'لا ، ابقى الطلب',
-            allowOutsideClick: false,
-            showConfirmButton: true,
-            timer: null,
-            focusConfirm: false
-        });
+    const result = await Swal.fire({
+        title: 'هل أنت متأكد؟',
+        text: 'هل تريد حقا إلغاء هذا الطلب؟',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'نعم ، الغي الطلب!',
+        cancelButtonText: 'لا ، ابقى الطلب',
+        allowOutsideClick: false,
+        showConfirmButton: true,
+        focusConfirm: false
+    });
 
-        if (result.isConfirmed) {
-            try {
-                const response = await fetch(`https://cityroots.runasp.net/api/PurchaseRequest/${purchaseRequestId}`, {
-                    method: 'DELETE',
-                });
+    if (result.isConfirmed) {
+        try {
+            await api.delete(`PurchaseRequest/${purchaseRequestId}`);
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
+            setOrders(prevOrders => prevOrders.filter(order => order.purchaseRequestId !== purchaseRequestId));
+            setFilteredOrders(prevOrders => prevOrders.filter(order => order.purchaseRequestId !== purchaseRequestId));
 
-                setOrders(prevOrders => prevOrders.filter(order => order.purchaseRequestId !== purchaseRequestId));
-                setFilteredOrders(prevOrders => prevOrders.filter(order => order.purchaseRequestId !== purchaseRequestId));
-
-
-                await Swal.fire({
-                    title: 'تم الحذف!',
-                    text: 'تم إلغاء الطلب بنجاح.',
-                    icon: 'success',
-                    allowOutsideClick: false,
-                    timer: null,
-                    focusConfirm: false
-                });
-            } catch (error) {
-                console.error("Could not delete order:", error);
-                await Swal.fire({
-                    title: 'خطأ!',
-                    text: 'حدث خطأ أثناء إلغاء الطلب.',
-                    icon: 'error',
-                    allowOutsideClick: false,
-                    timer: null,
-                    focusConfirm: false
-                });
-            }
+            await Swal.fire({
+                title: 'تم الحذف!',
+                text: 'تم إلغاء الطلب بنجاح.',
+                icon: 'success',
+                allowOutsideClick: false,
+                focusConfirm: false
+            });
+        } catch (error) {
+            console.error("Could not delete order:", error);
+            const errorMsg = error.response?.data?.message || 'حدث خطأ أثناء إلغاء الطلب.';
+            await Swal.fire({
+                title: 'خطأ!',
+                text: errorMsg,
+                icon: 'error',
+                allowOutsideClick: false,
+                focusConfirm: false
+            });
         }
-    };
+    }
+};
+
 
     const filterByHarvestName = (harvestName) => {
         if (harvestName === 'الكل') {

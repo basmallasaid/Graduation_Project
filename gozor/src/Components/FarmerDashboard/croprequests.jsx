@@ -30,8 +30,6 @@ export default function Croprequests({ purchaseRequests, onRequestHandled }) {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [displayableRequests, setDisplayableRequests] = useState([]);
 
-  // Effect to update local displayableRequests when the purchaseRequests prop changes,
-  // filtering out any requests that have been marked as handled in localStorage.
   useEffect(() => {
     const allIncomingRequests = Array.isArray(purchaseRequests) ? purchaseRequests : [];
     const handledIds = getHandledIdsFromStorage();
@@ -41,7 +39,7 @@ export default function Croprequests({ purchaseRequests, onRequestHandled }) {
     );
     setDisplayableRequests(filteredRequests);
 
-  }, [purchaseRequests]); // Dependency array: re-run effect if purchaseRequests prop changes
+  }, [purchaseRequests]);
 
   const handleRequestSelect = (request) => {
     setSelectedRequest(request);
@@ -150,8 +148,7 @@ export default function Croprequests({ purchaseRequests, onRequestHandled }) {
           </div>
         </>
       )}
-      {/* For Debugging localStorage - You can remove this */}
-      {/* <button onClick={() => { localStorage.removeItem(HANDLED_REQUEST_IDS_KEY); window.location.reload(); }}>Clear Handled IDs & Reload</button> */}
+      
     </div>
   );
 }

@@ -26,10 +26,10 @@ const NavSideInv = () => {
                             <i class="fa-regular fa-heart" style={{fontSize:"1.3rem"}}></i>
                             {!isCollapsed && ' المفضله'}
                         </Link>
-                        <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/FavouritePage">
+                        <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/Orders">
                             {/* <img src="/assets/favorite.jpeg" alt='partly_cloudy_day' /> */}
-                            <i class="fa-regular fa-heart" style={{fontSize:"1.3rem"}}></i>
-                            {!isCollapsed && ' المفضله'}
+                            <i class="fa-solid fa-box" style={{fontSize:"1.3rem"}} > </i>
+                            {!isCollapsed && ' الطلبات'}
                         </Link>
                     </div>
                 </>

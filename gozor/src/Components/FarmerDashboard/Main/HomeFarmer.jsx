@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import NavSideF from './NavSideF';
 import FooterF from './FooterF';
 import NavbarF from './NavbarF';
+    const userData = JSON.parse(localStorage.getItem("user_data"));
+console.log(userData)
 const HomeFarmer = () => {
     const [info, setinfo] = useState(true);
     const showInfo = () => {

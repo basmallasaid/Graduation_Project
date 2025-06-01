@@ -3,6 +3,7 @@ import NavbarMer from '../Main/NavbarMer';
 import NavSideMer from '../Main/NavSideMer';
 import FooterMer from '../Main/FooterMer';
 import api from '../../../API/axiosInstance';
+import { Link } from 'react-router-dom';
 
 const Browseharvest = () => {
     const [harvests, setHarvests] = useState([]);
@@ -211,10 +212,20 @@ const fetchRecommendedCycles = async () => {
                         </div>
                     </div>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <button style={{ border: "none", borderRadius: "10px", backgroundColor: "black", color: "#fff", padding: "0 30px" }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}> {/* Added some margin-top for spacing */}
+                    <Link
+                        style={{
+                            border: "none",
+                            borderRadius: "10px",
+                            backgroundColor: "black",
+                            color: "#fff",
+                            padding: "10px 30px", // Added vertical padding
+                            textDecoration: "none" // Good practice for button-like links
+                        }}
+                        to={`/Seedetailsmerch/${harvest.harvestId}`} 
+                    >
                         عرض التفاصيل
-                    </button>
+                    </Link>
                 </div>
             </form>
         );
@@ -413,14 +424,14 @@ const fetchRecommendedCycles = async () => {
 
                      {loadingHarvests ? (
                         <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '200px' }}>
-                            Loading Harvests...
+                            جاري تحميل المحاصيل......
                         </div>
                      ) : (
                         <div className="d-flex flex-column align-items-center" style={{ width: '100%' }}>
                             {showRecommended ? (
                                 loadingRecommended ? (
                                     <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '200px' }}>
-                                        Loading Recommended Cycles...
+                                        جاري تحميل المحاصيل المقترحه.....
                                     </div>
                                 ) : (
                                     filteredRecommendedCycles.map(harvest => (

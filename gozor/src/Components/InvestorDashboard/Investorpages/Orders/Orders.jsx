@@ -78,60 +78,50 @@ const InvestorId = userData?.loggedId;
         }
     };
 
-    const handleDeleteOrder = async (investmentRequestId, event) => {
-        event.preventDefault();
-        event.stopPropagation();
+   const handleDeleteOrder = async (investmentRequestId, event) => {
+    event.preventDefault();
+    event.stopPropagation();
 
-        const result = await Swal.fire({
-            title: 'هل أنت متأكد؟',
-            text: 'هل تريد حقا إلغاء هذا الطلب؟',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'نعم ، الغي الطلب!',
-            cancelButtonText: 'لا ، ابقى الطلب',
-            allowOutsideClick: false,
-            showConfirmButton: true,
-            timer: null,
-            focusConfirm: false
-        });
+    const result = await Swal.fire({
+        title: 'هل أنت متأكد؟',
+        text: 'هل تريد حقا إلغاء هذا الطلب؟',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'نعم ، الغي الطلب!',
+        cancelButtonText: 'لا ، ابقى الطلب',
+        allowOutsideClick: false,
+        focusConfirm: false
+    });
 
-        if (result.isConfirmed) {
-            try {
-                const response = await fetch(`https://cityroots.runasp.net/api/InvestmentRequest/${investmentRequestId}`, {
-                    method: 'DELETE',
-                });
+    if (result.isConfirmed) {
+        try {
+            await api.delete(`InvestmentRequest/${investmentRequestId}`);
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
+            setOrders(prevOrders => prevOrders.filter(order => order.investmentRequestId !== investmentRequestId));
+            setFilteredOrders(prevOrders => prevOrders.filter(order => order.investmentRequestId !== investmentRequestId));
 
-                setOrders(prevOrders => prevOrders.filter(order => order.investmentRequestId !== investmentRequestId));
-                setFilteredOrders(prevOrders => prevOrders.filter(order => order.investmentRequestId !== investmentRequestId));
-
-
-                await Swal.fire({
-                    title: 'تم الحذف!',
-                    text: 'تم إلغاء الطلب بنجاح.',
-                    icon: 'success',
-                    allowOutsideClick: false,
-                    timer: null,
-                    focusConfirm: false
-                });
-            } catch (error) {
-                console.error("Could not delete order:", error);
-                await Swal.fire({
-                    title: 'خطأ!',
-                    text: 'حدث خطأ أثناء إلغاء الطلب.',
-                    icon: 'error',
-                    allowOutsideClick: false,
-                    timer: null,
-                    focusConfirm: false
-                });
-            }
+            await Swal.fire({
+                title: 'تم الحذف!',
+                text: 'تم إلغاء الطلب بنجاح.',
+                icon: 'success',
+                allowOutsideClick: false,
+                focusConfirm: false
+            });
+        } catch (error) {
+            console.error("Could not delete order:", error);
+            await Swal.fire({
+                title: 'خطأ!',
+                text: 'حدث خطأ أثناء إلغاء الطلب.',
+                icon: 'error',
+                allowOutsideClick: false,
+                focusConfirm: false
+            });
         }
-    };
+    }
+};
+
 
     const filterByCycleName = (cycleName) => {
         if (cycleName === 'الكل') {

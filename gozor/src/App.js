@@ -49,6 +49,7 @@ import Newcycles from './Components/InvestorDashboard/cyclesforinvestor/Newcycle
 import ProfileManegment from './Components/ProfileManagment/ProfileManagment';
 import ChatInterface from './Components/Chat/ChatInterface';
 import Browseharvest from './Components/merchantDashboard/browseharvest/Browseharvest';
+import Seedetailsmerch from './Components/merchantDashboard/Seedetails/Seedetailsmerch';
 import Merchorders from './Components/merchantDashboard/orders/Merchorders';
 import Orders from './Components/InvestorDashboard/Investorpages/Orders/Orders';
 
@@ -112,6 +113,7 @@ function App() {
           <Route path='Browseharvest' element={<Browseharvest/>}/>
           <Route path='Merchorders' element={<Merchorders/>}/>
           <Route path='Orders' element={<Orders/>}/>
+          <Route path='Seedetailsmerch/:harvestId' element={<Seedetailsmerch/>}/>
 
            </Routes>}
  

@@ -13,10 +13,10 @@ const NavSideF = () => {
                             <img style={{ width: "20px" }} src='/assets/account_circle.png' alt="account_circle" />
                             {!isCollapsed && ' الملف الشخصي'}
                         </Link>
-                        <p className={styles.iconNavSide}>
+                        <Link className={styles.iconNavSide} to="/ChatInterface">
                             <img src='/assets/chat.png' alt='chat' />
                             {!isCollapsed && ' الدردشة'}
-                        </p>
+                        </Link>
                         <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/Shopping">
                             <img src='/assets/add_business.png' alt='add_business' />
                             {!isCollapsed && ' السوق'}

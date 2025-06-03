@@ -2774,6 +2774,7 @@ font-size: 20px;
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
+  height: 400px;
 }
 
 /* Base Message Container Flex settings */

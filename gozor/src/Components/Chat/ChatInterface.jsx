@@ -1,9 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
-// import { jwtDecode } from 'jwt-decode'; // Recommended for production
+import React, { useState, useRef, useEffect, useCallback ,useLayoutEffect} from 'react';
 import styles from '../../Styles/style.module.css';
 import api from '../../API/axiosInstance';
-import * as signalR from "@microsoft/signalr";
-
+import { useSignalR } from '../../contexts/SignalRContext'; // Adjust path
 
 // --- Helper Function for Date Formatting (same as before) ---
 const formatDate = (dateString) => {
@@ -23,7 +21,7 @@ const formatDate = (dateString) => {
     return date.toLocaleDateString('ar-EG', { day: 'numeric', month: 'short' });
 };
 
-// --- Basic JWT Payload Decoder (for demonstration, use jwt-decode in production) ---
+// --- Basic JWT Payload Decoder (same as before) ---
 const decodeJwtPayload = (token) => {
   try {
     const base64Url = token.split('.')[1];
@@ -39,9 +37,8 @@ const decodeJwtPayload = (token) => {
   }
 };
 
-
 const IMAGE_BASE_URL = 'https://cityroots.runasp.net/';
-const DEFAULT_AVATAR = 'assets/default-avatar.png'; // Make sure this path is correct relative to your public folder
+const DEFAULT_AVATAR = '/assets/default-avatar.png';
 
 function ChatInterface() {
   const [contacts, setContacts] = useState([]);
@@ -60,11 +57,11 @@ function ChatInterface() {
 
   const [authToken, setAuthToken] = useState(null);
   const [loggedInUserId, setLoggedInUserId] = useState(null);
-const signalRConnectionRef = useRef(null);
+  const [loggedInUserAvatar, setLoggedInUserAvatar] = useState(DEFAULT_AVATAR);
 
+  const { connection, isConnected } = useSignalR();
   const storedUserData = localStorage.getItem("user_data");
 
-  // Effect to initialize token and loggedInUserId from localStorage
   useEffect(() => {
     if (storedUserData) {
       try {
@@ -76,6 +73,7 @@ const signalRConnectionRef = useRef(null);
           const userIdClaim = decodedPayload?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
           if (userIdClaim) {
             setLoggedInUserId(userIdClaim);
+            setLoggedInUserAvatar(parsedUserData.avatarUrl || DEFAULT_AVATAR);
           } else {
             console.error("User ID claim not found in token payload.");
             setContactsError("فشل في تحديد المستخدم الحالي من التوكن.");
@@ -92,83 +90,160 @@ const signalRConnectionRef = useRef(null);
     }
   }, [storedUserData]);
 
-  // --- Fetch Contacts (Conversations List) ---
- useEffect(() => {
-  if (!authToken || !loggedInUserId) return;
+  useEffect(() => {
+    if (!authToken || !loggedInUserId) {
+      setIsLoadingContacts(false);
+      return;
+    }
+    const fetchContactsList = async () => {
+      setIsLoadingContacts(true);
+      setContactsError(null);
+      try {
+        const response = await api.get('Chat/users', {
+          headers: { 'Authorization': `Bearer ${authToken}` },
+        });
+        if (!Array.isArray(response.data)) {
+          throw new Error("تنسيق بيانات قائمة المحادثات غير صالح.");
+        }
+        const fetchedContacts = response.data
+          .map(contact => ({
+            id: contact.userId,
+            name: contact.userName || 'مستخدم',
+            avatar: contact.userImageUrl ? `${IMAGE_BASE_URL}${contact.userImageUrl}` : DEFAULT_AVATAR,
+            preview: contact.lastMessage || '',
+            time: contact.dateTimeOfLastMessage ? formatDate(contact.dateTimeOfLastMessage) : '',
+            unreadMessages: contact.unreadMessages || 0,
+            status: contact.isOnline ? 'متصل' : 'غير متصل',
+            isOnline: contact.isOnline,
+            _originalTimestamp: contact.dateTimeOfLastMessage,
+          }))
+          .sort((a, b) => {
+            if (!a._originalTimestamp && !b._originalTimestamp) return 0;
+            if (!a._originalTimestamp) return 1;
+            if (!b._originalTimestamp) return -1;
+            return new Date(b._originalTimestamp) - new Date(a._originalTimestamp);
+          });
+        setContacts(fetchedContacts);
+      } catch (e) {
+        console.error("Failed to fetch contacts list:", e);
+        let msg = "فشل في تحميل قائمة المحادثات.";
+        if (e.response?.status === 401) msg = "غير مصرح به لجلب المحادثات.";
+        else if (e.message?.includes("تنسيق بيانات")) msg = e.message;
+        setContactsError(msg);
+        setContacts([]);
+      } finally {
+        setIsLoadingContacts(false);
+      }
+    };
+    fetchContactsList();
+  }, [authToken, loggedInUserId]);
 
-  const connectToSignalR = async () => {
-    try {
-      const connection = new signalR.HubConnectionBuilder()
-        .withUrl("https://cityroots.runasp.net/chathub", {
-          accessTokenFactory: () => authToken
-        })
-        .withAutomaticReconnect()
-        .configureLogging(signalR.LogLevel.Information)
-        .build();
+  useEffect(() => {
+    if (!connection || !isConnected || !loggedInUserId) {
+        if (connection && !isConnected) {
+            console.log("ChatInterface: SignalR connection available but not connected. Waiting...");
+        } else if (!connection) {
+            console.log("ChatInterface: SignalR connection not yet available from context.");
+        } else if (!loggedInUserId) {
+            console.log("ChatInterface: User not logged in, not registering SignalR handlers.");
+        }
+        return;
+    }
 
-      connection.on("ReceiveMessage", (message) => {
-        const {
-          chatId,
-          senderId,
-          messageContent,
-          timestamp
-        } = message;
+    console.log("ChatInterface: Connection active, registering SignalR event handlers.");
 
-        const sender = senderId === loggedInUserId ? "me" : "other";
+    const receiveMessageHandler = (messagePayload) => {
+        console.log("ChatInterface: SignalR ReceiveMessage Payload:", messagePayload);
+        if (!messagePayload || typeof messagePayload !== 'object') {
+            console.warn("ChatInterface: Invalid message payload received.", messagePayload);
+            return;
+        }
+        const { chatId, senderId, receiverId, messageContent, timestamp } = messagePayload;
+        if (!senderId || !messageContent || !timestamp || !receiverId) {
+            console.warn("ChatInterface: Incomplete message data in payload.", messagePayload);
+            return;
+        }
+
+        const contactIdForUpdate = senderId === loggedInUserId ? receiverId : senderId;
+        const uiSenderType = senderId === loggedInUserId ? "me" : "other";
+
+        let resolvedSenderAvatar;
+        if (uiSenderType === "me") {
+            resolvedSenderAvatar = loggedInUserAvatar;
+        } else {
+            const contactInfo = contacts.find(c => c.id === senderId);
+            resolvedSenderAvatar = contactInfo?.avatar || DEFAULT_AVATAR;
+        }
 
         const formattedMessage = {
-          id: chatId || `signalr-${Date.now()}`,
-          sender,
-          text: messageContent,
-          timestamp,
-          avatar: sender === "me" ? DEFAULT_AVATAR : (contacts.find(c => c.id === senderId)?.avatar || DEFAULT_AVATAR),
+            id: chatId || `signalr-${Date.now()}`,
+            sender: uiSenderType,
+            text: messageContent,
+            timestamp,
+            avatar: resolvedSenderAvatar,
         };
 
-        const contactId = sender === "me" ? message.receiverId : senderId;
-
         setAllConversations(prev => ({
-          ...prev,
-          [contactId]: [...(prev[contactId] || []), formattedMessage],
+            ...prev,
+            [contactIdForUpdate]: [...(prev[contactIdForUpdate] || []), formattedMessage],
         }));
 
-        // Update contact preview and time if not the current active chat
-        setContacts(prev =>
-          prev.map(c =>
-            c.id === contactId
-              ? {
-                  ...c,
-                  preview: messageContent,
-                  time: "الآن",
-                  unreadMessages: selectedContactId === contactId ? 0 : (c.unreadMessages || 0) + 1,
+        setContacts(prevContacts => {
+            let updatedContact = null;
+            const otherContacts = prevContacts.filter(c => {
+                if (c.id === contactIdForUpdate) {
+                    updatedContact = {
+                        ...c,
+                        preview: messageContent,
+                        time: formatDate(timestamp),
+                        unreadMessages: (selectedContactId === contactIdForUpdate || uiSenderType === "me") ? 0 : (c.unreadMessages || 0) + 1,
+                        _originalTimestamp: timestamp,
+                    };
+                    return false;
                 }
-              : c
-          )
-        );
-      });
+                return true;
+            });
+            const newContactsList = updatedContact ? [updatedContact, ...otherContacts] : [...prevContacts];
+            return newContactsList.sort((a, b) => {
+                const tsA = a._originalTimestamp ? new Date(a._originalTimestamp).getTime() : 0;
+                const tsB = b._originalTimestamp ? new Date(b._originalTimestamp).getTime() : 0;
+                return tsB - tsA;
+            });
+        });
+    };
 
-      await connection.start();
-      console.log("SignalR connected.");
+    const userStatusChangedHandler = (userId, isOnline) => {
+        console.log("ChatInterface: SignalR UserStatusChanged - UserID:", userId, "IsOnline:", isOnline);
+        if (userId && typeof isOnline === 'boolean') {
+            setContacts(prevContacts =>
+                prevContacts.map(contact =>
+                    contact.id === userId ? { ...contact, status: isOnline ? 'متصل' : 'غير متصل', isOnline } : contact
+                )
+            );
+        } else {
+            console.warn("ChatInterface: UserStatusChanged received invalid data - UserID:", userId, "IsOnline:", isOnline);
+        }
+    };
 
-      signalRConnectionRef.current = connection;
-    } catch (err) {
-      console.error("SignalR connection failed:", err);
-    }
-  };
+    connection.on("ReceiveMessage", receiveMessageHandler);
+    connection.on("userstatuschanged", userStatusChangedHandler);
+    console.log("ChatInterface: 'ReceiveMessage' and 'userstatuschanged' handlers registered.");
 
-  connectToSignalR();
+    return () => {
+        console.log("ChatInterface: Cleaning up SignalR event handlers.");
+        if (connection) {
+            connection.off("ReceiveMessage", receiveMessageHandler);
+            connection.off("userstatuschanged", userStatusChangedHandler);
+            console.log("ChatInterface: 'ReceiveMessage' and 'userstatuschanged' handlers unregistered.");
+        }
+    };
+  }, [connection, isConnected, loggedInUserId, loggedInUserAvatar, selectedContactId, contacts]);
 
-  return () => {
-    signalRConnectionRef.current?.stop();
-  };
-}, [authToken, loggedInUserId]);
 
-
-  // --- Fetch Messages for Selected Contact ---
   useEffect(() => {
     if (!selectedContactId || !authToken || !loggedInUserId) {
       return;
     }
-
     const fetchMessages = async () => {
       setIsMessagesLoading(true);
       setMessagesError(null);
@@ -182,83 +257,132 @@ const signalRConnectionRef = useRef(null);
         const contactForAvatar = contacts.find(c => c.id === selectedContactId);
 
         const formattedMessages = messagesData.map(msg => ({
-          // --- CORRECTED HERE ---
-          id: msg.chatId || `msg-api-${Math.random()}`, // Use chatId from API
+          id: msg.chatId,
           sender: msg.senderId === loggedInUserId ? 'me' : 'other',
-          text: msg.messageContent, // Use messageContent from API
-          // --- END CORRECTION ---
+          text: msg.messageContent,
           avatar: msg.senderId === loggedInUserId
-            ? DEFAULT_AVATAR // Consider using loggedInUser's avatar if available
+            ? loggedInUserAvatar
             : contactForAvatar?.avatar || DEFAULT_AVATAR,
-          timestamp: msg.timestamp, // Store the original timestamp
-        })).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); // Sort by timestamp
+          timestamp: msg.timestamp,
+        })).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
         setAllConversations(prevConvos => ({
           ...prevConvos,
           [selectedContactId]: formattedMessages,
         }));
-
       } catch (e) {
         console.error(`Failed to fetch messages for ${selectedContactId}:`, e);
-        if (e.response?.status === 401) setMessagesError("غير مصرح به لجلب الرسائل.");
-        else setMessagesError(e.message || "فشل في تحميل الرسائل لهذه المحادثة.");
+        let msg = "فشل في تحميل الرسائل لهذه المحادثة.";
+        if (e.response?.status === 401) msg = "غير مصرح به لجلب الرسائل.";
+        setMessagesError(msg);
       } finally {
         setIsMessagesLoading(false);
       }
     };
-
     fetchMessages();
-  }, [selectedContactId, authToken, loggedInUserId, contacts]);
+  }, [selectedContactId, authToken, loggedInUserId, contacts, loggedInUserAvatar]);
 
-  const activeContact = contacts.find(c => c.id === selectedContactId);
-  const currentMessages = activeContact ? allConversations[activeContact.id] || [] : [];
+  // Scroll to bottom effect - REFINED for "stay at bottom" behavior
+useLayoutEffect(() => { // <<<< CHANGED from useEffect
+    if (selectedContactId && messagesEndRef.current) {
+        const messagesForSelectedContact = allConversations[selectedContactId];
+        if (messagesForSelectedContact?.length) {
+            // No setTimeout needed here, useLayoutEffect ensures DOM is updated
+            messagesEndRef.current.scrollIntoView({
+                behavior: "auto", // Instant scroll
+                block: "end"
+            });
+        }
+    }
+}, [allConversations[selectedContactId], selectedContactId]);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [currentMessages]);
 
-  const handleContactClick = (contactId) => {
-    if (selectedContactId === contactId) return;
+  const handleContactClick = async (contactId) => {
+    if (selectedContactId === contactId && contacts.find(c => c.id === contactId)?.unreadMessages === 0) {
+        return;
+    }
     setSelectedContactId(contactId);
     setMessagesError(null);
     setSendingError(null);
+
+    const clickedContact = contacts.find(c => c.id === contactId);
+    if (clickedContact && clickedContact.unreadMessages > 0) {
+        setContacts(prevContacts =>
+            prevContacts.map(contact =>
+                contact.id === contactId ? { ...contact, unreadMessages: 0 } : contact
+            )
+        );
+        try {
+            if (!authToken) {
+                console.error("Cannot mark messages as read: auth token not available.");
+                return;
+            }
+            await api.post(`Chat/mark-as-read/${contactId}`, {}, {
+                headers: { 'Authorization': `Bearer ${authToken}` },
+            });
+            console.log(`Messages for ${contactId} marked as read on server.`);
+        } catch (error) {
+            console.error(`Failed to mark messages as read for ${contactId}:`, error);
+        }
+    }
   };
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !activeContact || !authToken || isSendingMessage) return;
+    const currentActiveContact = contacts.find(c => c.id === selectedContactId);
+    if (!newMessage.trim() || !currentActiveContact || !authToken || isSendingMessage || !loggedInUserId) {
+        if (!currentActiveContact) console.warn("Send message: No active contact selected or found.");
+        return;
+    }
 
     setIsSendingMessage(true);
     setSendingError(null);
-
     const messageText = newMessage.trim();
     const tempMessageId = `msg-me-${Date.now()}`;
 
-    // Optimistic UI update
     const messageToSendForUI = {
       id: tempMessageId,
       sender: 'me',
       text: messageText,
-      avatar: DEFAULT_AVATAR, // Consider using loggedInUser's avatar
-      timestamp: new Date().toISOString(), // Add a temporary timestamp
+      avatar: loggedInUserAvatar,
+      timestamp: new Date().toISOString(),
     };
-
-    const previousContactPreview = activeContact.preview;
-    const previousContactTime = activeContact.time;
 
     setAllConversations(prev => ({
       ...prev,
-      [activeContact.id]: [...(prev[activeContact.id] || []), messageToSendForUI],
+      [currentActiveContact.id]: [...(prev[currentActiveContact.id] || []), messageToSendForUI],
     }));
-    setContacts(prev => prev.map(c =>
-      c.id === activeContact.id ? { ...c, preview: messageText, time: 'الآن' } : c
-    ));
+
+    const previousContactPreview = currentActiveContact.preview;
+    const previousContactTime = currentActiveContact.time;
+    const previousContactTimestamp = currentActiveContact._originalTimestamp;
+
+    setContacts(prevContacts => {
+        let updatedContact = null;
+        const otherContacts = prevContacts.filter(c => {
+            if (c.id === currentActiveContact.id) {
+                updatedContact = {
+                    ...c,
+                    preview: messageText,
+                    time: 'الآن',
+                    _originalTimestamp: new Date().toISOString(),
+                };
+                return false;
+            }
+            return true;
+        });
+        const newContactsList = updatedContact ? [updatedContact, ...otherContacts] : prevContacts;
+        return newContactsList.sort((a, b) => {
+            const tsA = a._originalTimestamp ? new Date(a._originalTimestamp).getTime() : 0;
+            const tsB = b._originalTimestamp ? new Date(b._originalTimestamp).getTime() : 0;
+            return tsB - tsA;
+        });
+    });
     setNewMessage('');
 
     try {
-      // API call to send message
       const response = await api.post("Chat/send", {
-        receiverId: activeContact.id,
-        message: messageText, // API expects 'message' for sending
+        receiverId: currentActiveContact.id,
+        message: messageText,
       }, {
         headers: {
           'Authorization': `Bearer ${authToken}`,
@@ -266,40 +390,59 @@ const signalRConnectionRef = useRef(null);
         },
       });
 
-      // Optional: If API returns the saved message, update the temp message with real ID and timestamp
-      if (response.data && response.data.chatId) {
+      if (response.data && (response.data.chatId || response.data.id || response.data.messageId)) {
           const savedMessage = response.data;
           setAllConversations(prev => ({
               ...prev,
-              [activeContact.id]: (prev[activeContact.id] || []).map(msg =>
+              [currentActiveContact.id]: (prev[currentActiveContact.id] || []).map(msg =>
                   msg.id === tempMessageId
                       ? {
                           ...msg,
-                          id: savedMessage.chatId, // Update with real ID from API
-                          timestamp: savedMessage.timestamp, // Update with real timestamp
-                          // Potentially update other fields if API returns them
+                          id: savedMessage.chatId || savedMessage.id || savedMessage.messageId,
+                          timestamp: savedMessage.timestamp || new Date().toISOString(),
                         }
                       : msg
               ),
           }));
+      } else {
+          console.log("Message sent, but API response did not contain expected message ID/timestamp.");
       }
-
     } catch (e) {
       console.error("Failed to send message:", e);
       let userErrorMessage = "فشل إرسال الرسالة. حاول مرة أخرى.";
       if (e.response) {
         userErrorMessage = e.response.status === 401
           ? "فشل إرسال الرسالة: غير مصرح به."
-          : `فشل إرسال الرسالة: خطأ (${e.response.status}).`;
+          : `فشل إرسال الرسالة: خطأ (${e.response.status} ${e.response.data?.message || e.response.data?.title || ''}).`;
       }
       setSendingError(userErrorMessage);
-      // Revert optimistic UI update on error
+
       setAllConversations(prev => ({
         ...prev,
-        [activeContact.id]: (prev[activeContact.id] || []).filter(msg => msg.id !== tempMessageId)
+        [currentActiveContact.id]: (prev[currentActiveContact.id] || []).filter(msg => msg.id !== tempMessageId)
       }));
-      setContacts(prevC => prevC.map(c => c.id === activeContact.id ? {...c, preview: previousContactPreview, time: previousContactTime} : c));
-      setNewMessage(messageText); // Put the unsent message back in the input
+      setContacts(prevContacts => {
+        let revertedContact = null;
+        const otherContacts = prevContacts.filter(c => {
+            if (c.id === currentActiveContact.id) {
+                revertedContact = {
+                    ...c,
+                    preview: previousContactPreview,
+                    time: previousContactTime,
+                    _originalTimestamp: previousContactTimestamp,
+                };
+                return false;
+            }
+            return true;
+        });
+        const revertedContactsList = revertedContact ? [revertedContact, ...otherContacts] : prevContacts;
+        return revertedContactsList.sort((a, b) => {
+            const tsA = a._originalTimestamp ? new Date(a._originalTimestamp).getTime() : 0;
+            const tsB = b._originalTimestamp ? new Date(b._originalTimestamp).getTime() : 0;
+            return tsB - tsA;
+        });
+      });
+      setNewMessage(messageText);
     } finally {
         setIsSendingMessage(false);
     }
@@ -312,43 +455,46 @@ const signalRConnectionRef = useRef(null);
     }
   };
 
-  // --- Render Logic ---
+  const activeContact = contacts.find(c => c.id === selectedContactId);
+  const currentMessages = activeContact ? allConversations[activeContact.id] || [] : [];
+
+
   if (!authToken && !contactsError && !storedUserData) {
     return <div className="container-fluid d-flex justify-content-center align-items-center vh-100">جاري تهيئة بيانات المستخدم...</div>;
   }
-
-  if (contactsError && !loggedInUserId) { // Critical error like token invalid or user ID not found
-    return <div className="container-fluid d-flex justify-content-center align-items-center vh-100 text-danger p-3 text-center">{contactsError} يرجى محاولة تسجيل الدخول مرة أخرى.</div>;
+  if (contactsError && !loggedInUserId) {
+    return (
+        <div className="container-fluid d-flex justify-content-center align-items-center vh-100 text-danger p-3 text-center">
+            {contactsError} يرجى محاولة <a href="/login">تسجيل الدخول</a> مرة أخرى.
+        </div>
+    );
   }
-
-
-  if (isLoadingContacts && contacts.length === 0) {
+   if (!loggedInUserId && !isLoadingContacts && !contactsError) {
+    return (
+        <div className="container-fluid d-flex justify-content-center align-items-center vh-100 text-warning p-3 text-center">
+            بيانات المستخدم غير متوفرة. قد تحتاج إلى <a href="/login">تسجيل الدخول</a>.
+        </div>
+    );
+  }
+  if (isLoadingContacts && loggedInUserId) {
     return <div className="container-fluid d-flex justify-content-center align-items-center vh-100">جاري تحميل قائمة المحادثات...</div>;
   }
-
-  // Error fetching contacts but we might have had a token error before (loggedInUserId is null)
-  if (contactsError && contacts.length === 0 && loggedInUserId) {
+  if (contactsError && loggedInUserId) {
     return <div className="container-fluid d-flex justify-content-center align-items-center vh-100 text-danger p-3 text-center">{contactsError}</div>;
   }
-
-  if (contacts.length === 0 && !isLoadingContacts && loggedInUserId) { // Logged in, but no contacts
+  if (contacts.length === 0 && !isLoadingContacts && loggedInUserId) {
     return <div className="container-fluid d-flex justify-content-center align-items-center vh-100">لا توجد محادثات لعرضها.</div>;
-  }
-  if (!loggedInUserId && !isLoadingContacts && !contactsError) { // User data not found, not loading, no specific error yet
-    return <div className="container-fluid d-flex justify-content-center align-items-center vh-100 text-warning p-3 text-center">بيانات المستخدم غير متوفرة. قد تحتاج إلى تسجيل الدخول.</div>;
   }
 
 
   return (
     <div className={`container-fluid ${styles.chatContainer}`} dir="rtl">
       <div className="row h-100">
-        {/* Contact List Column */}
         <div className={`col-md-4 p-0 order-2 order-md-1 ${styles.contactListContainer}`}>
           <div className={`d-flex justify-content-between align-items-center ${styles.contactListHeader}`}>
             <h5 className="mb-0 fw-bold" style={{ fontSize: "2rem" }}>الرسائل</h5>
             <div><span className={`badge bg-success rounded-pill me-2 ${styles.messageCountBadge}`}>{contacts.length}</span></div>
           </div>
-          {contactsError && loggedInUserId && <div className="p-2 text-danger small text-center">{contactsError}</div>} {/* Show contacts error only if user was identified */}
           <div className={styles.contactsScrollable}>
             {contacts.map(contact => (
               <div
@@ -356,7 +502,12 @@ const signalRConnectionRef = useRef(null);
                 onClick={() => handleContactClick(contact.id)}
                 className={`d-flex align-items-center ${styles.contactItem} ${contact.id === selectedContactId ? styles.activeContact : ''}`}
               >
-                <img src={contact.avatar} alt="Avatar" className={`rounded-circle me-3 ${styles.contactAvatar}`} onError={(e) => { e.target.src = DEFAULT_AVATAR; }} />
+                <img
+                    src={contact.avatar}
+                    alt={contact.name}
+                    className={`rounded-circle me-3 ${styles.contactAvatar}`}
+                    onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_AVATAR; }}
+                />
                 <div className="flex-grow-1">
                   <div className="d-flex justify-content-between">
                     <span className={styles.contactName}>{contact.name}</span>
@@ -372,50 +523,51 @@ const signalRConnectionRef = useRef(null);
           </div>
         </div>
 
-        {/* Chat Window Column */}
         <div className={`col-md-8 p-0 order-1 order-md-2 ${styles.chatWindow}`}>
           {activeContact ? (
             <>
               <div className={`d-flex align-items-center ${styles.chatHeader}`}>
-                <img src={activeContact.avatar} alt="Avatar" className={`rounded-circle me-3 ${styles.chatHeaderAvatar}`} onError={(e) => { e.target.src = DEFAULT_AVATAR; }}/>
+                <img
+                    src={activeContact.avatar}
+                    alt={activeContact.name}
+                    className={`rounded-circle me-3 ${styles.chatHeaderAvatar}`}
+                    onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_AVATAR; }}
+                />
                 <div>
                   <h6 className="mb-0">{activeContact.name}</h6>
                   <small className="text-muted d-flex align-items-center">
                     {activeContact.status}
-                    {activeContact.status === 'متصل' && <span className={styles.statusDot}></span>}
+                    {activeContact.isOnline && <span className={styles.statusDot}></span>}
                   </small>
                 </div>
               </div>
-
               <div className={styles.chatMessages}>
                 {isMessagesLoading && (
-                  <div className="d-flex justify-content-center align-items-center h-100 text-muted">
-                    جاري تحميل الرسائل...
-                  </div>
+                  <div className="d-flex justify-content-center align-items-center h-100 text-muted">جاري تحميل الرسائل...</div>
                 )}
                 {messagesError && !isMessagesLoading && (
-                  <div className="d-flex justify-content-center align-items-center h-100 text-danger p-3 text-center">
-                    {messagesError}
-                  </div>
+                  <div className="d-flex justify-content-center align-items_center h-100 text-danger p-3 text-center">{messagesError}</div>
                 )}
                 {!isMessagesLoading && !messagesError && currentMessages.map((msg) => (
                   <div
-                    key={msg.id} // This uses the corrected 'id: msg.chatId' or tempId
+                    key={msg.id}
                     className={`d-flex mb-3 ${styles.messageContainer} ${msg.sender === 'me' ? styles.sent : styles.received}`}
                   >
                     {msg.sender === 'other' && (
-                      <img src={msg.avatar} alt="Avatar" className={`rounded-circle ${styles.chatAvatar}`} onError={(e) => { e.target.src = DEFAULT_AVATAR; }} />
+                      <img
+                        src={msg.avatar}
+                        alt="Avatar"
+                        className={`rounded-circle ${styles.chatAvatar}`}
+                        onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_AVATAR; }}
+                      />
                     )}
                     <div className={`p-2 px-3 ${styles.messageBubble} ${msg.sender === 'me' ? styles.sentBubble : styles.receivedBubble}`}>
-                      {msg.text} {/* This uses the corrected 'text: msg.messageContent' */}
+                      {msg.text}
                     </div>
-                    {/* Optional: Display individual message timestamp */}
-                    {/* <small className={styles.messageTimestamp}>{formatDate(msg.timestamp)}</small> */}
                   </div>
                 ))}
                 <div ref={messagesEndRef} />
               </div>
-
               {sendingError && <div className="p-2 text-center text-danger small">{sendingError}</div>}
               <div className={`d-flex align-items-center ${styles.chatInputArea}`}>
                 <input
@@ -425,24 +577,26 @@ const signalRConnectionRef = useRef(null);
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  disabled={isSendingMessage || isMessagesLoading || !activeContact}
+                  disabled={isSendingMessage || isMessagesLoading || !activeContact || !isConnected}
                 />
-                <button className={styles.sendButton} onClick={handleSendMessage} disabled={isSendingMessage || isMessagesLoading || !activeContact || !newMessage.trim()}>
-                  {isSendingMessage ? '...' : '➤'}
+                <button
+                    className={styles.sendButton}
+                    onClick={handleSendMessage}
+                    disabled={isSendingMessage || isMessagesLoading || !activeContact || !newMessage.trim() || !isConnected}
+                >
+                  {isSendingMessage ? '...' : <span style={{transform: 'rotate(180deg)', display: 'inline-block'}}>➤</span>}
                 </button>
               </div>
             </>
           ) : (
-             !isLoadingContacts && contacts.length > 0 && loggedInUserId && (
+             loggedInUserId && contacts.length > 0 && (
               <div className={`d-flex justify-content-center align-items-center h-100 ${styles.noChatSelected}`}>
                 <p className="text-muted">حدد محادثة لبدء الدردشة</p>
               </div>
             )
           )}
-          {/* Fallback for when no contacts and not loading contacts, or initial state before selection or if user is not identified */}
-           {!activeContact && !isLoadingContacts && (contacts.length === 0 || !loggedInUserId) && !contactsError && (
+           {!activeContact && !isLoadingContacts && (!loggedInUserId || contacts.length === 0) && !contactsError && (
              <div className={`d-flex justify-content-center align-items-center h-100 ${styles.noChatSelected}`}>
-                <p className="text-muted">لا توجد محادثات متاحة أو أنك بحاجة لتسجيل الدخول.</p>
             </div>
            )}
         </div>

@@ -1,3 +1,4 @@
+// Login.jsx
 import React, { useState, useEffect } from 'react';
 import styles from '../Styles/style.module.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -6,6 +7,7 @@ import Forget from '../Authentication/Forget';
 import toast, { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
 import api from '../API/axiosInstance';
+import { useSignalR } from '../contexts/SignalRContext'; // Adjust path to SignalRContext.js
 
 export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegister }) {
     const [email, setEmail] = useState('');
@@ -14,7 +16,9 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
     const [visibleForget, setVisibleForget] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const { startConnection } = useSignalR(); // Get startConnection from context
 
+    // ... (forgetStyles, useEffect for rememberMe, validate function are the same)
     const forgetStyles = {
         content: {
             maxWidth: '600px',
@@ -45,6 +49,7 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
         return true;
     };
 
+
     const proceedLogin = async (e) => {
         e.preventDefault();
         if (!validate()) return;
@@ -64,14 +69,14 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
             }
 
             const cookieOptions = {
-                secure: true,
+                secure: process.env.NODE_ENV === 'production', // More secure for production
                 sameSite: 'Strict',
                 expires: rememberMe ? 7 : 1
             };
 
             Cookies.set("access_token", token, cookieOptions);
             localStorage.setItem("user_data", JSON.stringify(response.data));
-            localStorage.setItem("name", email); // ✅ لحفظ الإيميل في localStorage
+            localStorage.setItem("name", email);
 
             if (rememberMe) {
                 Cookies.set("email", email, cookieOptions);
@@ -81,8 +86,21 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
                 Cookies.remove("rememberMe");
             }
 
+            // START SIGNALR CONNECTION
+            if (token) {
+                console.log("Login successful, attempting to start SignalR connection with token...");
+                await startConnection(token); // Pass the token
+            } else {
+                console.error("Login successful, but no token found to start SignalR.");
+            }
+
             toast.success("تم تسجيل الدخول بنجاح!", { duration: 1000 });
 
+            // Call onLoginSuccess which might update App's state
+            if (onLoginSuccess) onLoginSuccess();
+
+
+            // Delay navigation slightly to allow toast and potential state updates
             setTimeout(() => {
                 if (role === "Farmer") {
                     navigate("/HomeFarmer");
@@ -91,13 +109,15 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
                 } else if (role === "Merchant") {
                     navigate("/MerchentHome");
                 } else {
-                    navigate("/");
+                    navigate("/"); // Fallback, or a dashboard
                 }
+                // setVisibleLogin is likely for a modal, ensure it's handled if this isn't a page
+                if (setVisibleLogin) setVisibleLogin(false);
 
-                onLoginSuccess();
-                setVisibleLogin(false);
-                window.location.reload(); // ✅ لإعادة تحميل Navbar وقراءة الاسم
-            }, 2000);
+                // Consider removing window.location.reload() if state management handles updates correctly
+                // If Navbar and other components correctly re-render based on login state, reload is often not needed.
+                // window.location.reload();
+            }, 1500); // Increased delay slightly
 
         } catch (error) {
             console.error("Login error:", error);
@@ -105,10 +125,13 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
                 if (error.response.status === 401) {
                     toast.error("البريد الإلكتروني أو كلمة المرور غير صحيحة", { duration: 3000 });
                 } else {
-                    toast.error("حدث خطأ في الخادم", { duration: 3000 });
+                    toast.error(`حدث خطأ في الخادم: ${error.response.data?.message || error.response.statusText || 'Unknown server error'}`, { duration: 3000 });
                 }
-            } else {
-                toast.error("فشل الاتصال بالخادم", { duration: 3000 });
+            } else if (error.message === "لم يتم استلام بيانات الدخول بشكل صحيح") {
+                 toast.error(error.message, { duration: 3000 });
+            }
+            else {
+                toast.error("فشل الاتصال بالخادم أو خطأ في إعداد الطلب", { duration: 3000 });
             }
         } finally {
             setIsLoading(false);
@@ -117,8 +140,12 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
 
     const handleCreateAccountClick = (e) => {
         e.preventDefault();
-        setVisibleLogin(false);
-        setVisibleRegister(true);
+        if (setVisibleLogin && setVisibleRegister) {
+            setVisibleLogin(false);
+            setVisibleRegister(true);
+        } else {
+            navigate('/register'); // Fallback if modal props not passed
+        }
     };
 
     return (
@@ -142,6 +169,7 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
                                 placeholder="البريد الإلكتروني"
                                 className={styles.loginput}
                                 disabled={isLoading}
+                                autoComplete="email"
                             />
                         </div>
 
@@ -157,22 +185,24 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
                                 placeholder="كلمة المرور"
                                 className={styles.loginput}
                                 disabled={isLoading}
+                                autoComplete="current-password"
                             />
                         </div>
 
-                        <div className="loginput" style={{ marginRight: "50px" }}>
+                        <div className="loginput" style={{ marginRight: "50px", display: 'flex', alignItems: 'center' }}>
                             <input
                                 type="checkbox"
                                 id="rememberMe"
                                 checked={rememberMe}
                                 onChange={() => setRememberMe(prev => !prev)}
                                 disabled={isLoading}
+                                style={{ marginLeft: '5px' }}
                             />
-                            <label htmlFor="rememberMe" style={{ marginRight: "10px" }}>تذكرني</label>
+                            <label htmlFor="rememberMe" style={{ marginRight: "10px", cursor: 'pointer' }}>تذكرني</label>
                         </div>
 
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             className={styles.logButton}
                             disabled={isLoading}
                         >
@@ -183,34 +213,32 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
                     <div className={styles.forget}>
                         <div style={{ display: "flex", gap: "5px" }}>
                             <p>ليس لديك حساب؟ </p>
-                            <Link 
-                                className={styles.linkforget} 
+                            <Link
+                                className={styles.linkforget}
                                 onClick={handleCreateAccountClick}
                                 style={isLoading ? { pointerEvents: 'none', opacity: 0.7 } : {}}
                             >
                                 إنشاء حساب
                             </Link>
                         </div>
-                        <Link 
-                            className={styles.linkforget} 
+                        <Link
+                            className={styles.linkforget}
                             onClick={() => !isLoading && setVisibleForget(true)}
                             style={isLoading ? { pointerEvents: 'none', opacity: 0.7 } : {}}
                         >
                             هل نسيت كلمة المرور؟
                         </Link>
 
-                        <Modal 
-                            isOpen={visibleForget} 
-                            onRequestClose={() => setVisibleForget(false)} 
+                        <Modal
+                            isOpen={visibleForget}
+                            onRequestClose={() => setVisibleForget(false)}
                             style={forgetStyles}
                             ariaHideApp={false}
                         >
-                            <button 
+                            <button
                                 onClick={() => setVisibleForget(false)}
-                                disabled={isLoading}
-                            >
-                                <i className="fa-solid fa-xmark" style={{
-                                    backgroundColor: 'transparent',
+                                style={{ // Basic styling for close button
+                                    background: 'transparent',
                                     border: 'none',
                                     fontSize: '24px',
                                     color: '#333',
@@ -218,16 +246,19 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
                                     position: 'absolute',
                                     top: '10px',
                                     right: '10px'
-                                }}></i>
+                                }}
+                                disabled={isLoading} // Disable if main form is loading
+                            >
+                                <i className="fa-solid fa-xmark"></i>
                             </button>
                             <Forget />
                         </Modal>
                     </div>
                 </form>
-                <img 
-                    className={styles.logimg} 
-                    src="/assets/Rectangle (2).png" 
-                    alt="Login" 
+                <img
+                    className={styles.logimg}
+                    src="/assets/Rectangle (2).png"
+                    alt="Login"
                 />
             </div>
         </div>

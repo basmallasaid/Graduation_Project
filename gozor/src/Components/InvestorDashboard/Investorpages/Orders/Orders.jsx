@@ -21,6 +21,7 @@ const InvestorId = userData?.loggedId;
         try {
             const response = await api.get(`InvestmentRequest/GetAllForInvestor/${InvestorId}`);
             const data = response.data;
+            console.log(data);
             setOrders(data);
             setFilteredOrders(data);
             const uniqueCycleNames = [...new Set(data.map(order => order.cycleName))];
@@ -360,12 +361,12 @@ const InvestorId = userData?.loggedId;
                                                     style={{ backgroundColor: "#cacac6", maxWidth: '270px', textAlign: "center" }}
                                                 />
                                             </div>
-                                            <div className="d-flex " style={{ marginLeft: "30px", marginTop: "10px", alignItems: "center", justifyContent: "center" }}>
+                                            {/* <div className="d-flex " style={{ marginLeft: "30px", marginTop: "10px", alignItems: "center", justifyContent: "center" }}>
                                                 <button className="btn fs-5">
                                                     <span style={{ color: "#6C4C94", marginLeft: "5px" }}>تواصل مع المزارع</span>
                                                     <i className="fa-solid fa-message"></i>
                                                 </button>
-                                            </div>
+                                            </div> */}
                                             {order.requestStatus === "قيد_الانتظار" && (
                                                 <div className="d-flex " style={{ marginTop: "10px", justifyContent: "end" }}>
                                                     <button

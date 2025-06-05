@@ -1,9 +1,10 @@
-import React, { useState, useRef, useEffect, useCallback ,useLayoutEffect} from 'react';
+import React, { useState, useRef, useEffect, useCallback, useLayoutEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styles from '../../Styles/style.module.css';
 import api from '../../API/axiosInstance';
 import { useSignalR } from '../../contexts/SignalRContext'; // Adjust path
 
-// --- Helper Function for Date Formatting (same as before) ---
+// --- Helper Function for Date Formatting ---
 const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -21,7 +22,7 @@ const formatDate = (dateString) => {
     return date.toLocaleDateString('ar-EG', { day: 'numeric', month: 'short' });
 };
 
-// --- Basic JWT Payload Decoder (same as before) ---
+// --- Basic JWT Payload Decoder ---
 const decodeJwtPayload = (token) => {
   try {
     const base64Url = token.split('.')[1];
@@ -38,7 +39,7 @@ const decodeJwtPayload = (token) => {
 };
 
 const IMAGE_BASE_URL = 'https://cityroots.runasp.net/';
-const DEFAULT_AVATAR = '/assets/default-avatar.png';
+const DEFAULT_AVATAR = '/assets/users.png';
 
 function ChatInterface() {
   const [contacts, setContacts] = useState([]);
@@ -62,7 +63,13 @@ function ChatInterface() {
   const { connection, isConnected } = useSignalR();
   const storedUserData = localStorage.getItem("user_data");
 
+  const location = useLocation();
+  const navigate = useNavigate();
+  const initialFarmerToChatWithRef = useRef(location.state?.farmerToChatWith);
+
+
   useEffect(() => {
+    // console.log("ChatInterface: Auth Effect Running"); // Reduced logging for brevity
     if (storedUserData) {
       try {
         const parsedUserData = JSON.parse(storedUserData);
@@ -74,6 +81,10 @@ function ChatInterface() {
           if (userIdClaim) {
             setLoggedInUserId(userIdClaim);
             setLoggedInUserAvatar(parsedUserData.avatarUrl || DEFAULT_AVATAR);
+            // console.log("ChatInterface: LoggedInUserId set:", userIdClaim);
+            // if (initialFarmerToChatWithRef.current) {
+            //     console.log("ChatInterface: Auth ready, initial farmer to chat with from ref:", initialFarmerToChatWithRef.current);
+            // }
           } else {
             console.error("User ID claim not found in token payload.");
             setContactsError("فشل في تحديد المستخدم الحالي من التوكن.");
@@ -90,11 +101,13 @@ function ChatInterface() {
     }
   }, [storedUserData]);
 
+
   useEffect(() => {
     if (!authToken || !loggedInUserId) {
       setIsLoadingContacts(false);
       return;
     }
+    // console.log("ChatInterface: Fetching contacts list...");
     const fetchContactsList = async () => {
       setIsLoadingContacts(true);
       setContactsError(null);
@@ -124,6 +137,7 @@ function ChatInterface() {
             return new Date(b._originalTimestamp) - new Date(a._originalTimestamp);
           });
         setContacts(fetchedContacts);
+        // console.log("ChatInterface: Contacts list fetched and set:", fetchedContacts.length);
       } catch (e) {
         console.error("Failed to fetch contacts list:", e);
         let msg = "فشل في تحميل قائمة المحادثات.";
@@ -133,27 +147,128 @@ function ChatInterface() {
         setContacts([]);
       } finally {
         setIsLoadingContacts(false);
+        // console.log("ChatInterface: Finished fetching contacts, isLoadingContacts: false");
       }
     };
     fetchContactsList();
   }, [authToken, loggedInUserId]);
 
-  useEffect(() => {
-    if (!connection || !isConnected || !loggedInUserId) {
-        if (connection && !isConnected) {
-            console.log("ChatInterface: SignalR connection available but not connected. Waiting...");
-        } else if (!connection) {
-            console.log("ChatInterface: SignalR connection not yet available from context.");
-        } else if (!loggedInUserId) {
-            console.log("ChatInterface: User not logged in, not registering SignalR handlers.");
-        }
+
+  const handleContactClick = useCallback(async (contactId) => {
+    // console.log("handleContactClick: Called with ID:", contactId, "Current selected:", selectedContactId);
+    if (selectedContactId === contactId && !(contacts.find(c => c.id === contactId)?.unreadMessages > 0)) {
+        // console.log("handleContactClick: Contact already selected and no unread. Doing nothing.");
         return;
     }
 
-    console.log("ChatInterface: Connection active, registering SignalR event handlers.");
+    setSelectedContactId(contactId);
+    // console.log("handleContactClick: setSelectedContactId to", contactId);
+    setMessagesError(null);
+    setSendingError(null);
+
+    const clickedContact = contacts.find(c => c.id === contactId);
+    if (clickedContact && clickedContact.unreadMessages > 0) {
+        setContacts(prevContacts =>
+            prevContacts.map(contact =>
+                contact.id === contactId ? { ...contact, unreadMessages: 0 } : contact
+            )
+        );
+        try {
+            if (!authToken) {
+                console.error("Cannot mark messages as read: auth token not available.");
+                return;
+            }
+            await api.post(`Chat/mark-as-read/${contactId}`, {}, {
+                headers: { 'Authorization': `Bearer ${authToken}` },
+            });
+            // console.log(`Messages for ${contactId} marked as read on server.`);
+        } catch (error) {
+            console.error(`Failed to mark messages as read for ${contactId}:`, error);
+        }
+    }
+  }, [selectedContactId, contacts, authToken]);
+
+  useEffect(() => {
+    const farmerDataFromState = initialFarmerToChatWithRef.current;
+
+    if (!farmerDataFromState || !authToken || !loggedInUserId || isLoadingContacts) {
+    //   if (farmerDataFromState) console.log("Add Farmer Effect: Waiting for auth/contacts load.", { hasFarmer: !!farmerDataFromState, authToken: !!authToken, loggedInUserId: !!loggedInUserId, isLoadingContacts });
+      return;
+    }
+
+    // console.log("Add Farmer Effect: Processing farmer from navigation state:", farmerDataFromState);
+    const { userId: farmerId, name: farmerName, imageUrl: farmerPhoto } = farmerDataFromState;
+    const contactExistsInList = contacts.find(c => c.id === farmerId);
+
+    if (!contactExistsInList) {
+    //   console.log(`Add Farmer Effect: Farmer ${farmerName} (${farmerId}) not in existing contacts. Preparing to add.`);
+      const newContactData = {
+        id: farmerId,
+        name: farmerName || "مستخدم جديد",
+        avatar: farmerPhoto ? `${IMAGE_BASE_URL}${farmerPhoto}` : DEFAULT_AVATAR,
+        preview: "ابدأ محادثة جديدة...",
+        time: formatDate(new Date().toISOString()),
+        unreadMessages: 0,
+        status: "متصل",
+        isOnline: true,
+        _originalTimestamp: new Date().toISOString(),
+      };
+
+      setContacts(prevContacts => {
+        if (prevContacts.some(c => c.id === farmerId)) {
+        //   console.log("Add Farmer Effect (setContacts): Farmer already added, skipping duplicate.");
+          return prevContacts;
+        }
+        // console.log("Add Farmer Effect (setContacts): Adding new contact to state:", newContactData);
+        const updatedContacts = [newContactData, ...prevContacts];
+        return updatedContacts.sort((a, b) => new Date(b._originalTimestamp) - new Date(a._originalTimestamp));
+      });
+    } else {
+    //   console.log(`Add Farmer Effect: Farmer ${farmerName} (${farmerId}) already in contacts. Will be handled by Auto-Select if needed.`);
+    }
+  }, [authToken, loggedInUserId, isLoadingContacts, contacts]);
+
+
+  useEffect(() => {
+    const farmerDataFromState = initialFarmerToChatWithRef.current;
+
+    if (!farmerDataFromState || !authToken || !loggedInUserId || isLoadingContacts) {
+        // if (farmerDataFromState) console.log("Auto-Select Effect: Waiting for conditions.", { farmerDataFromState:!!farmerDataFromState, auth:!!authToken, user:!!loggedInUserId, loadingContacts:isLoadingContacts});
+        return;
+    }
+    
+    const { userId: farmerIdToSelect } = farmerDataFromState;
+    const contactIsNowInList = contacts.find(c => c.id === farmerIdToSelect);
+
+    if (contactIsNowInList) {
+        if (selectedContactId !== farmerIdToSelect) {
+            // console.log(`Auto-Select Effect: Farmer ${farmerIdToSelect} is in contacts. Selecting.`);
+            handleContactClick(farmerIdToSelect);
+        } else {
+            // console.log(`Auto-Select Effect: Farmer ${farmerIdToSelect} is in contacts AND already selected.`);
+        }
+        
+        if (initialFarmerToChatWithRef.current) {
+            // console.log("Auto-Select Effect: Clearing farmer data from navigation state and ref.");
+            initialFarmerToChatWithRef.current = null;
+            navigate(location.pathname, { replace: true, state: { ...location.state, farmerToChatWith: null } });
+        }
+    } else {
+        // console.log(`Auto-Select Effect: Farmer ${farmerIdToSelect} not yet in contacts list. Waiting. Contacts count: ${contacts.length}`);
+    }
+  }, [contacts, selectedContactId, authToken, loggedInUserId, isLoadingContacts, handleContactClick, navigate, location]);
+
+  useEffect(() => {
+    if (!connection || !isConnected || !loggedInUserId) {
+        // if (connection && !isConnected) console.log("ChatInterface: SignalR connection available but not connected. Waiting...");
+        // else if (!connection) console.log("ChatInterface: SignalR connection not yet available from context.");
+        // else if (!loggedInUserId) console.log("ChatInterface: User not logged in, not registering SignalR handlers.");
+        return;
+    }
+    // console.log("ChatInterface: (Re)Registering SignalR event handlers.");
 
     const receiveMessageHandler = (messagePayload) => {
-        console.log("ChatInterface: SignalR ReceiveMessage Payload:", messagePayload);
+        // console.log("ChatInterface: SignalR ReceiveMessage Payload:", messagePayload);
         if (!messagePayload || typeof messagePayload !== 'object') {
             console.warn("ChatInterface: Invalid message payload received.", messagePayload);
             return;
@@ -190,8 +305,10 @@ function ChatInterface() {
 
         setContacts(prevContacts => {
             let updatedContact = null;
+            let contactExists = false;
             const otherContacts = prevContacts.filter(c => {
                 if (c.id === contactIdForUpdate) {
+                    contactExists = true;
                     updatedContact = {
                         ...c,
                         preview: messageContent,
@@ -203,6 +320,22 @@ function ChatInterface() {
                 }
                 return true;
             });
+            
+            if (!contactExists && uiSenderType === "other") {
+                // console.log(`SignalR: Received message from new contact ${senderId}. Adding to contacts.`);
+                updatedContact = {
+                    id: senderId,
+                    name: `المستخدم ${senderId.substring(0, 8)}...`,
+                    avatar: DEFAULT_AVATAR,
+                    preview: messageContent,
+                    time: formatDate(timestamp),
+                    unreadMessages: (selectedContactId === senderId) ? 0 : 1,
+                    status: 'متصل',
+                    isOnline: true,
+                    _originalTimestamp: timestamp,
+                };
+            }
+
             const newContactsList = updatedContact ? [updatedContact, ...otherContacts] : [...prevContacts];
             return newContactsList.sort((a, b) => {
                 const tsA = a._originalTimestamp ? new Date(a._originalTimestamp).getTime() : 0;
@@ -213,7 +346,7 @@ function ChatInterface() {
     };
 
     const userStatusChangedHandler = (userId, isOnline) => {
-        console.log("ChatInterface: SignalR UserStatusChanged - UserID:", userId, "IsOnline:", isOnline);
+        // console.log("ChatInterface: SignalR UserStatusChanged - UserID:", userId, "IsOnline:", isOnline);
         if (userId && typeof isOnline === 'boolean') {
             setContacts(prevContacts =>
                 prevContacts.map(contact =>
@@ -227,14 +360,14 @@ function ChatInterface() {
 
     connection.on("ReceiveMessage", receiveMessageHandler);
     connection.on("userstatuschanged", userStatusChangedHandler);
-    console.log("ChatInterface: 'ReceiveMessage' and 'userstatuschanged' handlers registered.");
+    // console.log("ChatInterface: 'ReceiveMessage' and 'userstatuschanged' handlers registered.");
 
     return () => {
-        console.log("ChatInterface: Cleaning up SignalR event handlers.");
+        // console.log("ChatInterface: Cleaning up SignalR event handlers.");
         if (connection) {
             connection.off("ReceiveMessage", receiveMessageHandler);
             connection.off("userstatuschanged", userStatusChangedHandler);
-            console.log("ChatInterface: 'ReceiveMessage' and 'userstatuschanged' handlers unregistered.");
+            // console.log("ChatInterface: 'ReceiveMessage' and 'userstatuschanged' handlers unregistered.");
         }
     };
   }, [connection, isConnected, loggedInUserId, loggedInUserAvatar, selectedContactId, contacts]);
@@ -242,90 +375,75 @@ function ChatInterface() {
 
   useEffect(() => {
     if (!selectedContactId || !authToken || !loggedInUserId) {
+    //   if(selectedContactId) console.log("Fetch Messages: Skipping, missing auth/user", { selectedContactId, hasAuth: !!authToken, hasUser: !!loggedInUserId });
       return;
     }
+
     const fetchMessages = async () => {
       setIsMessagesLoading(true);
       setMessagesError(null);
+    //   console.log(`Fetch Messages: Attempting for ${selectedContactId}`);
+      let msg = null; // Define msg here to be accessible in finally
       try {
         const response = await api.get(`Chat/messages/${selectedContactId}`, {
           headers: { 'Authorization': `Bearer ${authToken}` },
         });
+        // console.log(`Fetch Messages: API response for ${selectedContactId}`, {status: response.status, dataLength: response.data?.length });
         const messagesData = response.data;
         if (!Array.isArray(messagesData)) throw new Error("Invalid data format for messages.");
 
         const contactForAvatar = contacts.find(c => c.id === selectedContactId);
 
-        const formattedMessages = messagesData.map(msg => ({
-          id: msg.chatId,
-          sender: msg.senderId === loggedInUserId ? 'me' : 'other',
-          text: msg.messageContent,
-          avatar: msg.senderId === loggedInUserId
+        const formattedMessages = messagesData.map(m => ({ // Renamed msg to m to avoid conflict
+          id: m.chatId,
+          sender: m.senderId === loggedInUserId ? 'me' : 'other',
+          text: m.messageContent,
+          avatar: m.senderId === loggedInUserId
             ? loggedInUserAvatar
             : contactForAvatar?.avatar || DEFAULT_AVATAR,
-          timestamp: msg.timestamp,
+          timestamp: m.timestamp,
         })).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
         setAllConversations(prevConvos => ({
           ...prevConvos,
           [selectedContactId]: formattedMessages,
         }));
+        // console.log(`Fetch Messages: Successfully set ${formattedMessages.length} messages for ${selectedContactId}.`);
+
       } catch (e) {
-        console.error(`Failed to fetch messages for ${selectedContactId}:`, e);
-        let msg = "فشل في تحميل الرسائل لهذه المحادثة.";
+        console.error(`Fetch Messages: Failed for ${selectedContactId}:`, e.response?.status, e.response?.data || e.message);
+        msg = "فشل في تحميل الرسائل لهذه المحادثة."; // Assign to outer scope msg
         if (e.response?.status === 401) msg = "غير مصرح به لجلب الرسائل.";
+        else if (e.response?.status === 404) {
+            // console.log(`Fetch Messages: 404 for ${selectedContactId} - new chat.`);
+            msg = null; 
+            setAllConversations(prevConvos => ({
+                ...prevConvos,
+                [selectedContactId]: [], 
+            }));
+        }
         setMessagesError(msg);
       } finally {
         setIsMessagesLoading(false);
+        // console.log(`Fetch Messages: Finished for ${selectedContactId}, isLoading: false, intended messagesError: ${msg}`); // ESLINT FIX: Use outer scope msg
       }
     };
     fetchMessages();
   }, [selectedContactId, authToken, loggedInUserId, contacts, loggedInUserAvatar]);
 
-  // Scroll to bottom effect - REFINED for "stay at bottom" behavior
-useLayoutEffect(() => { // <<<< CHANGED from useEffect
+
+  useLayoutEffect(() => {
     if (selectedContactId && messagesEndRef.current) {
         const messagesForSelectedContact = allConversations[selectedContactId];
         if (messagesForSelectedContact?.length) {
-            // No setTimeout needed here, useLayoutEffect ensures DOM is updated
             messagesEndRef.current.scrollIntoView({
-                behavior: "auto", // Instant scroll
+                behavior: "auto",
                 block: "end"
             });
         }
     }
-}, [allConversations[selectedContactId], selectedContactId]);
+  }, [allConversations, selectedContactId]);
 
-
-  const handleContactClick = async (contactId) => {
-    if (selectedContactId === contactId && contacts.find(c => c.id === contactId)?.unreadMessages === 0) {
-        return;
-    }
-    setSelectedContactId(contactId);
-    setMessagesError(null);
-    setSendingError(null);
-
-    const clickedContact = contacts.find(c => c.id === contactId);
-    if (clickedContact && clickedContact.unreadMessages > 0) {
-        setContacts(prevContacts =>
-            prevContacts.map(contact =>
-                contact.id === contactId ? { ...contact, unreadMessages: 0 } : contact
-            )
-        );
-        try {
-            if (!authToken) {
-                console.error("Cannot mark messages as read: auth token not available.");
-                return;
-            }
-            await api.post(`Chat/mark-as-read/${contactId}`, {}, {
-                headers: { 'Authorization': `Bearer ${authToken}` },
-            });
-            console.log(`Messages for ${contactId} marked as read on server.`);
-        } catch (error) {
-            console.error(`Failed to mark messages as read for ${contactId}:`, error);
-        }
-    }
-  };
 
   const handleSendMessage = async () => {
     const currentActiveContact = contacts.find(c => c.id === selectedContactId);
@@ -458,6 +576,19 @@ useLayoutEffect(() => { // <<<< CHANGED from useEffect
   const activeContact = contacts.find(c => c.id === selectedContactId);
   const currentMessages = activeContact ? allConversations[activeContact.id] || [] : [];
 
+  // console.log("RENDER CYCLE:", {
+  //   loggedInUserId,
+  //   authToken: !!authToken,
+  //   isLoadingContacts,
+  //   contactsCount: contacts.length,
+  //   initialFarmerRef: initialFarmerToChatWithRef.current,
+  //   selectedContactId,
+  //   activeContactId: activeContact?.id,
+  //   isMessagesLoading,
+  //   messagesError,
+  //   currentMessagesCount: currentMessages.length,
+  //   allConversationsKeys: Object.keys(allConversations)
+  // });
 
   if (!authToken && !contactsError && !storedUserData) {
     return <div className="container-fluid d-flex justify-content-center align-items-center vh-100">جاري تهيئة بيانات المستخدم...</div>;
@@ -476,16 +607,15 @@ useLayoutEffect(() => { // <<<< CHANGED from useEffect
         </div>
     );
   }
-  if (isLoadingContacts && loggedInUserId) {
+  if (isLoadingContacts && loggedInUserId && contacts.length === 0 && !initialFarmerToChatWithRef.current) {
     return <div className="container-fluid d-flex justify-content-center align-items-center vh-100">جاري تحميل قائمة المحادثات...</div>;
   }
   if (contactsError && loggedInUserId) {
     return <div className="container-fluid d-flex justify-content-center align-items-center vh-100 text-danger p-3 text-center">{contactsError}</div>;
   }
-  if (contacts.length === 0 && !isLoadingContacts && loggedInUserId) {
+  if (contacts.length === 0 && !isLoadingContacts && loggedInUserId && !initialFarmerToChatWithRef.current && !activeContact) {
     return <div className="container-fluid d-flex justify-content-center align-items-center vh-100">لا توجد محادثات لعرضها.</div>;
   }
-
 
   return (
     <div className={`container-fluid ${styles.chatContainer}`} dir="rtl">
@@ -496,6 +626,9 @@ useLayoutEffect(() => { // <<<< CHANGED from useEffect
             <div><span className={`badge bg-success rounded-pill me-2 ${styles.messageCountBadge}`}>{contacts.length}</span></div>
           </div>
           <div className={styles.contactsScrollable}>
+            {isLoadingContacts && contacts.length === 0 && (
+                <div className="p-3 text-center text-muted">جاري تحميل المحادثات...</div>
+            )}
             {contacts.map(contact => (
               <div
                 key={contact.id}
@@ -546,9 +679,9 @@ useLayoutEffect(() => { // <<<< CHANGED from useEffect
                   <div className="d-flex justify-content-center align-items-center h-100 text-muted">جاري تحميل الرسائل...</div>
                 )}
                 {messagesError && !isMessagesLoading && (
-                  <div className="d-flex justify-content-center align-items_center h-100 text-danger p-3 text-center">{messagesError}</div>
+                  <div className="d-flex justify-content-center align-items-center h-100 text-danger p-3 text-center">{messagesError}</div>
                 )}
-                {!isMessagesLoading && !messagesError && currentMessages.map((msg) => (
+                {!isMessagesLoading && !messagesError && currentMessages.map((msg) => ( // Renamed inner `msg` variable
                   <div
                     key={msg.id}
                     className={`d-flex mb-3 ${styles.messageContainer} ${msg.sender === 'me' ? styles.sent : styles.received}`}
@@ -589,14 +722,17 @@ useLayoutEffect(() => { // <<<< CHANGED from useEffect
               </div>
             </>
           ) : (
-             loggedInUserId && contacts.length > 0 && (
+             loggedInUserId && (contacts.length > 0 || initialFarmerToChatWithRef.current) && !isLoadingContacts && (
               <div className={`d-flex justify-content-center align-items-center h-100 ${styles.noChatSelected}`}>
-                <p className="text-muted">حدد محادثة لبدء الدردشة</p>
+                <p className="text-muted">
+                    {initialFarmerToChatWithRef.current && (isLoadingContacts || isMessagesLoading) ? "جاري تجهيز المحادثة..." : "حدد محادثة لبدء الدردشة"}
+                </p>
               </div>
             )
           )}
-           {!activeContact && !isLoadingContacts && (!loggedInUserId || contacts.length === 0) && !contactsError && (
+           {!activeContact && !isLoadingContacts && (!loggedInUserId || (contacts.length === 0 && !initialFarmerToChatWithRef.current)) && !contactsError && (
              <div className={`d-flex justify-content-center align-items-center h-100 ${styles.noChatSelected}`}>
+                {/* This space can be intentionally blank or show a generic message if conditions for "no chats" or "select chat" aren't met */}
             </div>
            )}
         </div>

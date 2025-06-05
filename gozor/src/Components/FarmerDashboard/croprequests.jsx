@@ -2,6 +2,7 @@ import styles from "../../Styles/style.module.css";
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import api from "../../API/axiosInstance";
+import { Link } from "react-router-dom";
 
 // Key for localStorage
 const HANDLED_REQUEST_IDS_KEY = 'cropHandledRequestIds';
@@ -130,10 +131,25 @@ export default function Croprequests({ purchaseRequests, onRequestHandled }) {
 
       {selectedRequest && (
         <>
-          <div style={{ display: "flex" }}>
-            <label className={styles.labelreq}>اسم التاجر:</label>
-            <p className={styles.preq}>{selectedRequest.merchantName}</p>
-          </div>
+          <div style={{display:"flex",gap:"20px"}}>
+            <div style={{ display: "flex" }}>
+              <label className={styles.labelreq}>اسم التاجر:</label>
+              <p className={styles.preq}>{selectedRequest.merchantName}</p>
+            </div>
+            <div>
+              <Link to="/Chatinterface"
+                state={{ 
+                                        farmerToChatWith: {
+                                            userId: selectedRequest.userId, // farmer is from harvestDetails
+                                            name: selectedRequest.fullName,
+                                            imageUrl: selectedRequest.userimageUrl 
+                                        }
+                                    }}
+              >
+                 <i class="fa-solid fa-message" style={{color:"black",fontSize:"1.5rem"}}></i></Link>
+           
+            </div>
+            </div>
           <div style={{ display: "flex" }}>
             <label className={styles.labelreq}>السعر المطلوب:</label>
             <p className={styles.preq}>{selectedRequest.requestedPrice}</p>

@@ -9,11 +9,11 @@ import Paypal from "./paypal";
 import Modal from 'react-modal';
 import InvestmentRequest from "./InvestmentRequest";
 import api from "../../../../API/axiosInstance"; // Axios instance for cityroots API
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify'; // Import toastify
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
 
-export default function SeeDetails() {
+export default function SeeDetails({ farmer: initialFarmerProp }) {
     const [isClicked, setIsClicked] = useState(false);
     const [visible, setVisible] = useState(false);
     const [visibleInvestment, setvisibleInvestment] = useState(false);
@@ -319,8 +319,23 @@ export default function SeeDetails() {
                                     {isFavorite ? <i className="fa-solid fa-heart text-danger"></i> : <i className="fa-regular fa-heart"></i>}
                                 </button>
                             </div>
-                            <div className="d-flex justify-content-end " style={{ marginLeft: "30px", marginTop: "10px" }}><button type="button" className="btn fs-5" >  <span style={{ color: "#6C4C94" }}>تواصل مع المزارع</span>  <i className="fa-solid fa-message"></i></button></div>
-                        </form>
+<div className="d-flex justify-content-end " style={{ marginLeft: "30px", marginTop: "10px" }}>
+                                <Link
+                                    to="/Chatinterface"
+                                    state={{ 
+                                        farmerToChatWith: {
+                                            userId: farmer?.userId, // farmer is from harvestDetails
+                                            name: farmer?.name,
+                                            imageUrl: farmer?.imageUrl 
+                                        }
+                                    }}
+                                    type="button"
+                                    className="btn fs-5"
+                                >
+                                    <span style={{ color: "#6C4C94" }}>تواصل مع المزارع</span>
+                                    <i className="fa-solid fa-message"></i>
+                                </Link>
+                            </div>                        </form>
                     </div>
 
                     <div className="container mt-4" style={{ marginBottom: "20px" }}>

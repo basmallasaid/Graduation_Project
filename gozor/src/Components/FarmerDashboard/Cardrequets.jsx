@@ -4,6 +4,7 @@ import axios from "axios";
 import api from "../../API/axiosInstance";
 import { toast } from "react-toastify";
 import Swal from 'sweetalert2';
+import { Link } from "react-router-dom";
 
 export default function Croprequests() {
   const [cyclesData, setCyclesData] = useState([]);
@@ -155,9 +156,24 @@ const handleDecline = async () => {
       {selectedRequest && (
         <div style={{ backgroundColor: "#fff", marginTop: "5px", width: "100%" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px", flexWrap: "wrap" }}>
+            <div style={{display:"flex",gap:"20px"}}>
             <div style={{ display: "flex" }}>
               <label className={styles.labelreq}>اسم المستثمر:</label>
               <p className={styles.preq}>{selectedRequest.fullName}</p>
+            </div>
+            <div>
+              <Link to="/Chatinterface"
+                state={{ 
+                                        farmerToChatWith: {
+                                            userId: selectedRequest.userId, // farmer is from harvestDetails
+                                            name: selectedRequest.fullName,
+                                            imageUrl: selectedRequest.imageUrl 
+                                        }
+                                    }}
+              >
+                 <i class="fa-solid fa-message" style={{color:"black",fontSize:"1.5rem"}}></i></Link>
+           
+            </div>
             </div>
             <div style={{ display: "flex" }}>
               <label className={styles.labelreq}>مبلغ الاستثمار:</label>

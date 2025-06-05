@@ -88,12 +88,12 @@ const NavbarF = () => {
   };
 
   return (
-    <nav className={`navbar navbar-expand-lg ${styles.NavF}`} style={{ backgroundColor: "#0f2c2c" }}>
+    <nav className={`navbar navbar-expand-lg ${styles.NavF}`} >
       <div className="container-fluid">
         <Link className="navbar-brand text-white" to="/MerchentHome"> {/* Make logo link to a relevant page */}
           <img
             style={{ width: "250px", height: "100px", margin: "0" }}
-            src="/assets/MarchentLogo.jpg" // Ensure this path is correct relative to public folder
+            src="/assets/Nav.png" // Ensure this path is correct relative to public folder
             alt="Logo"
           />
         </Link>

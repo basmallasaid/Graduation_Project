@@ -8,11 +8,11 @@ import Paypal from "./Paypal";
 import Modal from 'react-modal';
 import BuyRequest from "./Buyrequest";
 import api from "../../../API/axiosInstance";
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function Seedetailsmerch() {
+export default function Seedetailsmerch({ farmer: initialFarmerProp }) { // MODIFIED LINE
     const [isClicked, setIsClicked] = useState(false); // True if a buy request is pending (derived from requestReview)
     const [visiblePaypalModal, setVisiblePaypalModal] = useState(false);
     const [visibleBuyRequestModal, setVisibleBuyRequestModal] = useState(false);
@@ -165,8 +165,8 @@ export default function Seedetailsmerch() {
             // Assuming endpoint for deleting a buy request uses the purchaseRequestId
             await api.delete(`PurchaseRequest/${purchaseReqId}`); // ADJUST ENDPOINT IF NEEDED
             toast.success("تم إلغاء طلب الشراء بنجاح!");
-            setIsClicked(false);
-            await fetchHarvestDetails();
+            setIsClicked(false); // This should be equivalent to requestReview becoming false
+            await fetchHarvestDetails(); // Re-fetch to update requestReview and other states
         } catch (error) {
             console.error("Error canceling buy request:", error);
             const errorMessage = error.response?.data?.message || "فشل إلغاء طلب الشراء.";
@@ -179,7 +179,7 @@ export default function Seedetailsmerch() {
         overlay: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
     };
     const BuyRequestStyles = {
-        content: { maxWidth: '550px', margin: 'auto', padding: '10px', borderRadius: '10px', backgroundColor: "#fff", height: 'auto', minHeight: '350px' },
+        content: { maxWidth: '550px', margin: 'auto', padding: '10px', borderRadius: '10px', backgroundColor: "#fff", height: '350px' },
         overlay: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
     };
 
@@ -209,6 +209,7 @@ export default function Seedetailsmerch() {
     }
 
     // Destructure based on the provided API response
+    // 'farmer' here will be from harvestDetails.farmer due to the fix above
     const { farmer, harvestDetails: apiHarvestData, isMerchantBuyer, requestReview, cycleUpdates, purchaseRequestId } = harvestDetails;
 
     const farmerName = farmer?.name || "N/A";
@@ -275,7 +276,7 @@ export default function Seedetailsmerch() {
                                         setIsClicked={setIsClicked} // This will be set to true if request is successful
                                         setvisibleBuyRequestModal={setVisibleBuyRequestModal}
                                         harvestId={currentHarvestId}
-                                        onSuccessRequest={fetchHarvestDetails}
+                                        onSuccessRequest={fetchHarvestDetails} // To update requestReview
                                     />
                                 </Modal>
                             </>
@@ -319,7 +320,24 @@ export default function Seedetailsmerch() {
                                     {isFavorite ? <i className="fa-solid fa-heart text-danger"></i> : <i className="fa-regular fa-heart"></i>}
                                 </button>
                             </div>
-                            <div className="d-flex justify-content-end " style={{ marginLeft: "30px", marginTop: "10px" }}><button type="button" className="btn fs-5" >  <span style={{ color: "#6C4C94" }}>تواصل مع المزارع</span>  <i className="fa-solid fa-message"></i></button></div>
+                            {/* Ensure 'farmer' in the Link below refers to harvestDetails.farmer */}
+                            <div className="d-flex justify-content-end " style={{ marginLeft: "30px", marginTop: "10px" }}>
+                                <Link
+                                    to="/Chatinterface"
+                                    state={{ 
+                                        farmerToChatWith: {
+                                            userId: farmer?.userId, // farmer is from harvestDetails
+                                            name: farmer?.name,
+                                            imageUrl: farmer?.imageUrl 
+                                        }
+                                    }}
+                                    type="button"
+                                    className="btn fs-5"
+                                >
+                                    <span style={{ color: "#6C4C94" }}>تواصل مع المزارع</span>
+                                    <i className="fa-solid fa-message"></i>
+                                </Link>
+                            </div>
                         </form>
                     </div>
 
@@ -361,7 +379,8 @@ export default function Seedetailsmerch() {
                         <div className="container mt-4" style={{ marginBottom: "20px" }}>
                             <h2 className={styles.Invtitledetails}>تحديثات عن هذا الحصاد</h2>
                             <form className="p-4 rounded" style={{ boxShadow: "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px", fontSize: "1.5rem", backgroundImage: "url('/assets/landinv.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
-<Merchnewupdates cycleId={currentHarvestId} cycleUpdates={cycleUpdates} />                            </form>
+                                <Merchnewupdates cycleId={currentHarvestId} cycleUpdates={cycleUpdates} />
+                            </form>
                         </div>
                     )}
                 </main>

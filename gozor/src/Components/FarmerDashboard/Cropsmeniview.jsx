@@ -52,6 +52,7 @@ export default function Cropmenuview() {
       try {
       const [cyclesResponse, landsResponse , vegetablesRes, fruitsRes, seedsRes] = await Promise.all([
   api.get(`Cycle/GetAllCycleasOfFarmerId?farmerId=${farmerId}`).then(res => res.data),
+  
   api.get(`LandParcel/GetAllLandsOfFarmerId?farmerId=${farmerId}`).then(res => res.data),
   api.get("Crop/CropsOfType?CropTypeId=3"), // res.data will be used directly below
   api.get("Crop/CropsOfType?CropTypeId=2"),

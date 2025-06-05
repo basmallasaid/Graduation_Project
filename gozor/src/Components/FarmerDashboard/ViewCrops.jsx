@@ -24,6 +24,7 @@ export default function ViewCrops() {
         api .post(`Harvest/GetAllHarvestsForFarmer`)
         .then((response)=>{
           setCrops(response.data);
+          console.log(response.data);
 
         })
        .catch ((error)=> {

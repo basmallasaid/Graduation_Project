@@ -13,7 +13,7 @@ const NavSideF = () => {
                             <img style={{ width: "20px" }} src='/assets/account_circle.png' alt="account_circle" />
                             {!isCollapsed && ' الملف الشخصي'}
                         </Link>
-                        <Link className={styles.iconNavSide} to="/ChatInterface">
+                        <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/ChatInterface">
                             <img src='/assets/chat.png' alt='chat' />
                             {!isCollapsed && ' الدردشة'}
                         </Link>

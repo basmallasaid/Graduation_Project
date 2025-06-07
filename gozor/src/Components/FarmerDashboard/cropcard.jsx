@@ -6,7 +6,7 @@ import axios from "axios";
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import Croprequests from "./croprequests";
-import Editcrop from "./editcrop";
+import Editcrop from "./Editcrop";
 import api from "../../API/axiosInstance";
 
 export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {

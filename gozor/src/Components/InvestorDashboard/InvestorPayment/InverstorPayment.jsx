@@ -9,16 +9,28 @@ import stylesInv from "../StylesInv/stylesInv.module.css";
 import axios from 'axios';
 import api from '../../../API/axiosInstance';
 
+// --- دالة مساعد لترجمة أنواع المعاملات ---
+const translateType = (type) => {
+    const translations = {
+        'Investment': 'استثمار',
+        'Profit': 'أرباح',
+        'Withdrawal': 'سحب',
+        'Capital Return': 'إرجاع رأس مال',
+        // أضف أي ترجمات أخرى محتملة هنا
+    };
+    // إذا لم يتم العثور على ترجمة، قم بإرجاع النوع الأصلي
+    return translations[type] || type;
+};
+
 const InverstorPayment = () => {
     // --- State Declarations (Keep EXACTLY as provided) ---
     const [transactionsInv, settransactionsInv] = useState({
         payments: [],
         paymentsSummary: [],
-        // Add paymentDetails key to store the transformed data
         paymentDetails: [],
     });
     const [filteredtransactionsInv, setFilteredtransactionsInv] = useState({
-        paymentDetails: [], // This is the key the rest of the code uses
+        paymentDetails: [],
         paymentsSummary: [],
     });
     const [showTypeDropdown, setShowTypeDropdown] = useState(false);
@@ -39,7 +51,7 @@ const InverstorPayment = () => {
     const userData = JSON.parse(localStorage.getItem("user_data"));
     const userId = userData?.userId;
 
-    // --- useEffect Hook (MODIFIED to handle new API structure and adapt for existing code) ---
+    // --- useEffect Hook (MODIFIED to handle new API structure and translate the 'type' property) ---
     useEffect(() => {
         if (!userId) {
             setError("معرف المستخدم غير متوفر.");
@@ -51,66 +63,59 @@ const InverstorPayment = () => {
         api
         .get(`Payments/GetInvestorPayments?Id=${userId}`)
             .then((res) => {
-                // MODIFIED: Check based on the NEW SAMPLE API structure
                 if (res.data && Array.isArray(res.data.payments) && Array.isArray(res.data.paymentsSummary)) {
 
-                    // **ADAPTATION STEP**: Transform API 'payments' to include top-level 'CycleName'
-                    // This makes the data compatible with the rest of the component (filters, table)
+                    // **ADAPTATION & TRANSLATION STEP**: Transform API 'payments'
+                    // This makes the data compatible with the rest of the component
                     const transformedPaymentDetails = res.data.payments.map(payment => ({
-                        ...payment, // Copy all original payment properties
-                        // Add the CycleName property, handling null associatedCycle
-                        CycleName: payment.associatedCycle?.cycleName ?? null // Use null or empty string if needed
+                        ...payment, // نسخ جميع خصائص الدفع الأصلية
+                        type: translateType(payment.type), // **MODIFIED**: ترجمة نوع المعاملة إلى العربية
+                        CycleName: payment.associatedCycle?.cycleName ?? null // إضافة اسم الدورة
                     }));
 
-                    // Store the transformed data in the main state under the expected key
+                    // تخزين البيانات المحولة في الحالة الرئيسية تحت المفتاح المتوقع
                     settransactionsInv({
-                        payments: res.data.payments, // Store original API payments if needed elsewhere
+                        payments: res.data.payments, // تخزين البيانات الأصلية إذا لزم الأمر
                         paymentsSummary: res.data.paymentsSummary,
-                        paymentDetails: transformedPaymentDetails // Store the adapted data
+                        paymentDetails: transformedPaymentDetails // تخزين البيانات المعدلة
                     });
 
-                    // Set the filtered state using the TRANSFORMED data under the 'paymentDetails' key
+                    // تعيين الحالة المصفاة باستخدام البيانات المحولة
                     setFilteredtransactionsInv({
                         paymentDetails: transformedPaymentDetails,
                         paymentsSummary: res.data.paymentsSummary
                     });
 
-                    // Extract unique cycles from the TRANSFORMED data's 'CycleName' property
+                    // استخراج الدورات الفريدة من البيانات المحولة
                     const uniqueCycles = [...new Set(
                         transformedPaymentDetails
-                            .map(transaction => transaction.CycleName) // Use the added CycleName
-                            .filter(name => name != null && name !== '') // Filter out nulls/empties
+                            .map(transaction => transaction.CycleName)
+                            .filter(name => name != null && name !== '')
                     )];
                     setCycles(uniqueCycles);
 
-                    // Calculate initial total using the TRANSFORMED data and keep the original type filter 'استثمار'
-                    const totalInvestmentValue = transformedPaymentDetails // Use transformed data
-                        .filter(transaction => transaction.type === 'استثمار') // Keep original filter string 'استثمار'
+                    // حساب الإجمالي الأولي باستخدام البيانات المحولة. الآن سيعمل فلتر 'استثمار' بشكل صحيح
+                    const totalInvestmentValue = transformedPaymentDetails
+                        .filter(transaction => transaction.type === 'استثمار') // هذا الفلتر يعتمد على النوع المترجم
                         .reduce((sum, transaction) => sum + (transaction.amount || 0), 0);
                     setTotalInvestment(totalInvestmentValue);
 
                 } else {
-                    // Keep original error handling for unexpected format
                     console.error("Unexpected data format:", res.data);
                     setError("تنسيق البيانات المستلمة من الخادم غير متوقع.");
-                    // Reset state consistently
                     settransactionsInv({ payments: [], paymentsSummary: [], paymentDetails: [] });
                     setFilteredtransactionsInv({ paymentDetails: [], paymentsSummary: [] });
                 }
             })
             .catch((err) => {
-                // Keep original error handling for fetch errors
                 console.error("Error fetching data:", err);
                 setError(`حدث خطأ أثناء جلب البيانات: ${err.message || ''}`);
-                 // Reset state consistently
                  settransactionsInv({ payments: [], paymentsSummary: [], paymentDetails: [] });
                  setFilteredtransactionsInv({ paymentDetails: [], paymentsSummary: [] });
             })
             .finally(() => {
-                // Keep original finally block
                 setLoading(false);
             });
-    // Keep original empty dependency array []
     }, []);
 
 
@@ -119,16 +124,15 @@ const InverstorPayment = () => {
     const applyFilters = (type, dateRange, minPrice, maxPrice, cycle) => {
         // This function reads from transactionsInv.paymentDetails
         // It should now work correctly because useEffect populated this key
-        // with the transformed data (including CycleName).
-        let filtered = transactionsInv.paymentDetails || []; // Read from the correct state key
+        // with the transformed and translated data.
+        let filtered = transactionsInv.paymentDetails || [];
 
-        // Filter logic remains exactly as provided by the user previously
-        // (Including potential mismatches like type filter and CycleName access)
+        // Filter logic remains exactly as provided
+        // The type filter will now correctly match the Arabic types.
         if (type !== 'الغاء' && type !== 'all') {
             filtered = filtered.filter(transaction => transaction.type === type);
         }
         if (cycle !== 'all' && cycle) {
-            // This filter now works because 'CycleName' was added in useEffect
             filtered = filtered.filter(transaction => transaction.CycleName === cycle);
         }
         if (dateRange && dateRange.from && dateRange.to) {
@@ -154,12 +158,10 @@ const InverstorPayment = () => {
              (transaction.amount ?? 0) <= effectiveMax
         );
 
-        // Update the filtered state object using the key 'paymentDetails'
         setFilteredtransactionsInv(prevState => ({
              ...prevState,
              paymentDetails: filtered
             }));
-        // Calculate totals based on this newly filtered list
         calculateTotals(filtered);
     };
 
@@ -167,18 +169,13 @@ const InverstorPayment = () => {
         setActiveTypeFilter('all');
         setActiveCycleFilter('all');
         setDateRange({ from: '', to: '' });
-        // Reset price state based on original function (using 0)
-        // Changed to undefined to match initial state better for placeholders
         setMinPrice(undefined);
         setMaxPrice(undefined);
-        // Reset filtered data using the transformed data from main state
         setFilteredtransactionsInv({
-            paymentDetails: transactionsInv.paymentDetails || [], // Use original *transformed* paymentDetails
+            paymentDetails: transactionsInv.paymentDetails || [],
             paymentsSummary: transactionsInv.paymentsSummary || []
         });
-        // Recalculate totals based on the original *transformed* full list
         calculateTotals(transactionsInv.paymentDetails || []);
-        // Close dropdowns
         setShowDateDropdown(false);
         setShowPriceDropdown(false);
         setShowTypeDropdown(false);
@@ -186,14 +183,12 @@ const InverstorPayment = () => {
 
     const handleCycleFilter = (cycle) => {
         setActiveCycleFilter(cycle);
-        // Directly calls applyFilters (as provided)
         applyFilters(activeTypeFilter, dateRange, minPrice, maxPrice, cycle);
     };
 
     const handleDateRangeChange = (field, value) => {
         const newDateRange = { ...dateRange, [field]: value };
         setDateRange(newDateRange);
-        // Directly calls applyFilters if both dates set (as provided)
         if (newDateRange.from && newDateRange.to) {
             if (new Date(newDateRange.to) < new Date(newDateRange.from)) {
                  console.warn("Invalid date range selected.");
@@ -226,42 +221,37 @@ const InverstorPayment = () => {
             case 'custom':
                 if (!dateRange.from || !dateRange.to) {
                      console.warn("Apply custom clicked without setting both dates.");
-                     // Maybe reset dateRange here? Keeping original behavior implicitly doing nothing
                 }
-                 // No dateRange update needed, applyFilters below uses current state
                 break;
             default:
                 newDateRange = { from: '', to: '' };
         }
 
-        // Update state only if not 'custom' case
         if (filterType !== 'custom') {
              setDateRange(newDateRange);
         }
 
-        // Directly calls applyFilters (as provided) using the relevant date range
         applyFilters(activeTypeFilter, filterType === 'custom' ? dateRange : newDateRange, minPrice, maxPrice, activeCycleFilter);
-        setShowDateDropdown(false); // Close dropdown
+        setShowDateDropdown(false);
     };
 
     const calculateTotals = (filteredData) => {
-        // This function still uses the Arabic 'استثمار' as provided
+        // This function correctly filters by the translated Arabic 'استثمار'
         const dataToProcess = Array.isArray(filteredData) ? filteredData : [];
         const totalInvestmentValue = dataToProcess
-            .filter(transaction => transaction.type === 'استثمار') // Uses 'استثمار'
+            .filter(transaction => transaction.type === 'استثمار')
             .reduce((sum, transaction) => sum + (transaction.amount || 0), 0);
 
         setTotalInvestment(totalInvestmentValue);
     };
 
-    // --- Helper to format currency --- (Keep as provided)
     const formatCurrency = (amount) => {
         const number = Number(amount);
         if (isNaN(number)) return amount;
         return number.toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' });
     };
 
-    // --- Render Logic (Keep EXACTLY as provided in the previous full version) ---
+    // --- Render Logic (Keep EXACTLY as provided) ---
     return (
         <div className="d-flex flex-column min-vh-100">
             <NavbarInv />
@@ -291,7 +281,6 @@ const InverstorPayment = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {/* Map from filteredtransactionsInv.paymentDetails */}
                                         {Array.isArray(filteredtransactionsInv.paymentDetails) && filteredtransactionsInv.paymentDetails.length > 0 ? (
                                             filteredtransactionsInv.paymentDetails.map((transaction) => (
                                                 <tr
@@ -303,8 +292,8 @@ const InverstorPayment = () => {
                                                     <td>{transaction.paymentId}</td>
                                                     <td>{new Date(transaction.paymentDate).toLocaleDateString('ar-EG')}</td>
                                                     <td>{formatCurrency(transaction.amount)}</td>
-                                                    <td>{transaction.type}</td> {/* Display raw API type */}
-                                                     {/* Display the transformed CycleName property */}
+                                                    {/* الآن سيتم عرض النوع المترجم باللغة العربية */}
+                                                    <td>{transaction.type}</td>
                                                     <td>{transaction.CycleName ?? 'N/A'}</td>
                                                     <td>{transaction.payeeName}</td>
                                                     <td>{transaction.paymentMethod}</td>
@@ -417,9 +406,7 @@ const InverstorPayment = () => {
                         {/* Modal */}
                         {selectedTransaction && (
                             <TransactionModalInv
-                                // Pass the selected transaction *after* transformation if modal needs CycleName
-                                // Or pass the original payment object if modal can handle associatedCycle
-                                transaction={selectedTransaction} // Assumes modal can handle the object structure
+                                transaction={selectedTransaction}
                                 onClose={() => setSelectedTransaction(null)}
                             />
                         )}
@@ -428,7 +415,6 @@ const InverstorPayment = () => {
 
                     {/* Yearly Charts */}
                      {!loading && !error && transactionsInv.paymentsSummary?.length > 0 && (
-                        // Pass the original summary data from main state
                         <YearlyChartsInv summaryData={transactionsInv.paymentsSummary}/>
                      )}
                 </main>

@@ -4,6 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
+import { ToastContainer } from 'react-toastify';
+
 // Context and Error Boundary
 import { SignalRProvider } from './contexts/SignalRContext'; // Adjust path if necessary
 import StanderErrorBoundary from './Components/Error/StanderErorrBoundary';
@@ -112,7 +114,10 @@ function App() {
     );
 
     return (
+        <>
+        
         <SignalRProvider> {/* SignalR context available to the whole app */}
+        <ToastContainer />
             <StanderErrorBoundary>
                 <BrowserRouter>
                     <Routes>
@@ -188,6 +193,7 @@ function App() {
                 </BrowserRouter>
             </StanderErrorBoundary>
         </SignalRProvider>
+        </>
     );
 }
 

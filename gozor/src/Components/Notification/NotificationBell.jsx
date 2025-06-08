@@ -142,7 +142,13 @@ const NotificationBell = ({ token }) => {
                   className={`notification-item ${animatedId === n.notificationId ? "new-notification" : ""} ${n.isRead ? "read" : "unread"}`}
                 >
                   <span className="notification-icon">
-                    {n.type === "Chat" ? "💬" : n.type === "Cycle" ? "🔄" : "🔔"}
+                    {n.type === "المحادثات" ? <img src="/assets/chats.png" alt="chats" />
+                    : n.type === "الدوره الزراعيه" || n.type==="تحديث الدورة الزراعية" ?<img src="/assets/plant.png" alt="plant" /> 
+                    :n.type==="المهام" || n.type==="التقييم"?<img src="/assets/task.png"alt="task" /> 
+                    :n.type==="طلب الشراء" || n.type==="طلب استثمار"?<img src="/assets/order.png"alt="order" /> 
+                    :n.type==="حصاد"?<img src="/assets/sickle.jpg"alt="sickle" /> 
+                    :n.type==="مزارع مفضل"?<img src="/assets/favourite.png"alt="favourite" /> 
+                    : "🔔"}
                   </span>
                   <div style={{ flex: 1 }}>
                     <div className="notification-title">{n.type}</div>

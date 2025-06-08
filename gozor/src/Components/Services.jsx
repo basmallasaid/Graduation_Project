@@ -5,7 +5,7 @@ import styles from "../Styles/style.module.css";
 const Services= () => {
     return (
         <>
-        <Navbar/>
+        {/* <Navbar/> */}
          <img  className={styles.instimg} src='assets/instruction.png'/>
          <div className={styles.divtitle}>
          <p> تمنح منصة"<span className={styles.yellow_text}>جذور</span>"المزارع تجربة متكاملة لإدارة جميع جوانب العملية الزراعية والاستثمارية، بدءًا من إعداد الدورات الزراعية وجدولة</p>

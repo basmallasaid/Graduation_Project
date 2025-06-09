@@ -38,28 +38,30 @@ export default function Viewnew({ selectedCardId }) {
     // Fetch cycle data
    const fetchCycles = async () => {
     setLoading(true);
-    setError(null); // Good practice to clear previous errors
+    setError(null);
     try {
         const response = await api.get(`CycleUpdate/cycle/${selectedCardId}`);
-
-        // With axios, data is directly in response.data for successful requests.
-        // Axios throws an error for HTTP error codes, so no need for response.ok check here.
         const data = response.data;
-
         setCycles(Array.isArray(data) ? data : data.cyclestatues || []);
-
     } catch (err) {
         // Handle errors, including HTTP errors thrown by axios
         if (err.response) {
-         
             const status = err.response.status;
-            const errorDataMessage = err.response.data?.message || err.response.data || "Server error"; // Try to get a message
-            const errorMessage = `HTTP error! Status: ${status}. Message: ${errorDataMessage}`;
-            setError(errorMessage);
-           
+            // If the error is 404 (Not Found), it means there are no cycles for this ID.
+            // We treat this as a valid "no data" state, not an application error.
+            if (status === 404) {
+                setCycles([]); // Set cycles to an empty array to show the "no updates" message
+            } else {
+                // For other server-side errors, display an error message.
+                const errorDataMessage = err.response.data?.message || err.response.data || "Server error";
+                const errorMessage = `HTTP error! Status: ${status}. Message: ${errorDataMessage}`;
+                setError(errorMessage);
+            }
         } else if (err.request) {
+            // Handle network errors (e.g., no connection)
             setError("Network error: No response received from server.");
         } else {
+            // Handle other errors (e.g., issues in setting up the request)
             setError(`Error: ${err.message}`);
         }
     } finally {
@@ -71,7 +73,7 @@ useEffect(() => {
     if (selectedCardId) {
         fetchCycles();
     }
-}, [selectedCardId]); 
+}, [selectedCardId]);
 
     const handleDelete = async (updateId) => {
         try {
@@ -87,8 +89,8 @@ useEffect(() => {
             });
 
             if (result.isConfirmed) {
-                await api.delete(`CycleUpdate/${updateId}`); // Changed API URL
-                setCycles(cycles.filter(cycle => cycle.updateId !== updateId)); // Changed to updateId
+                await api.delete(`CycleUpdate/${updateId}`);
+                setCycles(cycles.filter(cycle => cycle.updateId !== updateId));
                 Swal.fire({
                     title: "تم!",
                     text: "تم حذف التحديث بنجاح",
@@ -117,17 +119,18 @@ useEffect(() => {
     const handleUpdateSuccess = (updatedCycle) => {
         setCycles((prevCycles) => {
             return prevCycles.map((cycle) =>
-                cycle.updateId === updatedCycle.updateId ? updatedCycle : cycle // Changed to updateId
+                cycle.updateId === updatedCycle.updateId ? updatedCycle : cycle
             );
         });
         setIsModalOpen(false);
         toast.success("تم تحديث التحديث بنجاح");
     };
+
     const getImageUrl = (imageUrl) => {
-        
         if (!imageUrl) return "";
         return `https://cityroots.runasp.net/${imageUrl.replace(/^\/+/, "")}`;
     };
+
     const ProgressBar = ({ progress }) => (
         <div style={{ position: "relative", height: "20px" }}>
             <div
@@ -198,7 +201,7 @@ useEffect(() => {
             <div className="row ">
                 {cycles.length > 0 ? (
                     cycles.map((cycle) => (
-                        <div key={cycle.updateId} className="col-12 "> {/* Changed to updateId */}
+                        <div key={cycle.updateId} className="col-12 ">
                             <div className="card shadow-sm" style={{marginBottom:"10px"}}>
                                 <div className="card-body " >
                                     <div className="row">
@@ -213,7 +216,7 @@ useEffect(() => {
                                                 </button>
                                                 <button
                                                     className="btn"
-                                                    onClick={() => handleDelete(cycle.updateId)} // Changed to updateId
+                                                    onClick={() => handleDelete(cycle.updateId)}
                                                 >
                                                     <i className="fa-solid fa-trash"></i>
                                                 </button>
@@ -225,7 +228,7 @@ useEffect(() => {
                                                 <input
                                                     type="text"
                                                     className="form-control"
-                                                    value={cycle.title} // Changed to title
+                                                    value={cycle.title}
                                                     readOnly
                                                 />
                                             </div>
@@ -236,7 +239,7 @@ useEffect(() => {
                                                     <input
                                                         type="text"
                                                         className="form-control"
-                                                        value={cycle.qualityCheck} // Changed to qualityCheck
+                                                        value={cycle.qualityCheck}
                                                         readOnly
                                                     />
                                                 </div>
@@ -245,7 +248,7 @@ useEffect(() => {
                                                     <input
                                                         type="date"
                                                         className="form-control"
-                                                        value={cycle.updateDate ? new Date(cycle.updateDate).toISOString().split('T')[0] : ''} // Changed to updateDate and formatted
+                                                        value={cycle.updateDate ? new Date(cycle.updateDate).toISOString().split('T')[0] : ''}
                                                         readOnly
                                                     />
                                                 </div>
@@ -256,7 +259,7 @@ useEffect(() => {
                                                 <input
                                                     type="text"
                                                     className="form-control"
-                                                    value={cycle.description} // Changed to description
+                                                    value={cycle.description}
                                                     readOnly
                                                 />
                                             </div>
@@ -266,7 +269,7 @@ useEffect(() => {
                                                 <textarea
                                                     className="form-control"
                                                     rows="4"
-                                                    value={cycle.additionalNotes} // Changed to additionalNotes
+                                                    value={cycle.additionalNotes}
                                                     readOnly
                                                 />
                                             </div>
@@ -290,7 +293,7 @@ useEffect(() => {
                     ))
                 ) : (
                     <div className="col-12 text-center">
-                        <p className="h5">لا توجد بيانات للدورات لعرضها</p>
+                        <p className="h5">لا يوجد تحديثات لهذه الدوره</p>
                     </div>
                 )}
             </div>

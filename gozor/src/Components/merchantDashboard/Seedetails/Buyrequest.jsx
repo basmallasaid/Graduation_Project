@@ -1,22 +1,22 @@
 // BuyRequest.js
 import React, { useState } from "react";
-// import axios from "axios"; // Using api instance
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import api from "../../../API/axiosInstance"; // Assuming this path is correct
+import api from "../../../API/axiosInstance";
 
 const BuyRequest = ({
   setIsClicked,
-  setvisibleBuyRequestModal, // To close the modal on success/error
-  harvestId, // Passed from the parent component (Seedetailsmerch)
-  onSuccessRequest, // Callback to refresh parent data
+  setvisibleBuyRequestModal,
+  harvestId,
+  onSuccessRequest,
 }) => {
-  const [requestedAmount, setRequestedAmount] = useState(""); // Corresponds to "requestedAmount" in API
-  const [requestedPrice, setRequestedPrice] = useState(""); // Corresponds to "requestedPrice" in API
+  const [requestedAmount, setRequestedAmount] = useState("");
+  const [requestedPrice, setRequestedPrice] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const handleSubmit = async () => {
+    // Front-end validation for empty fields
     if (!requestedAmount) {
       toast.error("يرجى إدخال الكمية المطلوبة", {
         position: "top-right",
@@ -40,7 +40,7 @@ const BuyRequest = ({
     }
 
     const requestData = {
-      harvestId: Number(harvestId), // Ensure it's a number
+      harvestId: Number(harvestId),
       requestedAmount: Number(requestedAmount),
       requestedPrice: Number(requestedPrice),
     };
@@ -48,32 +48,41 @@ const BuyRequest = ({
     try {
       setLoading(true);
       setError(null);
-      // Endpoint from your curl example
       const response = await api.post("PurchaseRequest", requestData);
 
       toast.success("تم إرسال طلب الشراء بنجاح!", {
         position: "top-right",
         rtl: true,
       });
-      setIsClicked(true); // Update parent state to indicate a request is pending
+      setIsClicked(true);
       if (onSuccessRequest) {
-        onSuccessRequest(); // Call the callback to refresh parent data
+        onSuccessRequest();
       }
-      setvisibleBuyRequestModal(false); // Close the modal on success
+      setvisibleBuyRequestModal(false);
     } catch (err) {
       let errorMessage = "حدث خطأ أثناء إرسال طلب الشراء.";
-      if (err.response && err.response.data && err.response.data.message) {
-        errorMessage = err.response.data.message;
+
+      if (err.response) {
+        // If the server responds with 400, it means the input was invalid (e.g., quantity too high)
+        if (err.response.status === 400) {
+          // --- MODIFICATION 1: Set the specific user-friendly message ---
+          errorMessage = "أدخل الكمية أو المبلغ بشكل صحيح.";
+        } else {
+          // For other server errors (like 500), show a more general server error message
+          errorMessage =
+            err.response.data?.message || `حدث خطأ في الخادم: ${err.response.status}`;
+        }
       } else if (err.message) {
+        // For network errors etc.
         errorMessage = err.message;
       }
+      
       setError(errorMessage);
       toast.error(errorMessage, {
-        position: toast.POSITION.TOP_CENTER, // Or TOP_RIGHT
+        // --- MODIFICATION 2: Fix the position syntax ---
+        position: "top-center", // Use the string 'top-center' instead of toast.POSITION.TOP_CENTER
         rtl: true,
       });
-      // Optionally, don't close modal on error so user can see the error
-      // setvisibleBuyRequestModal(false);
     } finally {
       setLoading(false);
     }
@@ -92,13 +101,13 @@ const BuyRequest = ({
           className="mb-4 text-right"
           style={{
             display: "flex",
-            justifyContent: "space-between", // Adjusted for better label alignment
+            justifyContent: "space-between",
             alignItems: "center",
-            gap: "10px", // Reduced gap
-            padding: "0 10px", // Added some padding
+            gap: "10px",
+            padding: "0 10px",
           }}
         >
-          <label className="block mb-1" style={{ fontSize: "1.5rem", flexShrink: 0 }}> {/* Adjusted font size */}
+          <label className="block mb-1" style={{ fontSize: "1.5rem", flexShrink: 0 }}>
             الكمية المطلوبة
           </label>
           <input
@@ -112,7 +121,7 @@ const BuyRequest = ({
               borderRadius: "10px",
               border: "none",
               boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-              textAlign: "right", // Align text to right
+              textAlign: "right",
             }}
           />
         </div>
@@ -120,13 +129,13 @@ const BuyRequest = ({
           className="mb-4 text-right"
           style={{
             display: "flex",
-            justifyContent: "space-between", // Adjusted for better label alignment
+            justifyContent: "space-between",
             alignItems: "center",
-            gap: "10px", // Reduced gap
-            padding: "0 10px", // Added some padding
+            gap: "10px",
+            padding: "0 10px",
           }}
         >
-          <label className="block mb-1" style={{ fontSize: "1.5rem", flexShrink: 0 }}> {/* Adjusted font size */}
+          <label className="block mb-1" style={{ fontSize: "1.5rem", flexShrink: 0 }}>
             السعر المقترح (الإجمالي)
           </label>
           <input
@@ -140,28 +149,26 @@ const BuyRequest = ({
               borderRadius: "10px",
               border: "none",
               boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-              textAlign: "right", // Align text to right
+              textAlign: "right",
             }}
           />
         </div>
-        {/* "Benefit Type" section is removed as it's not in the PurchaseRequest API */}
         <div
           style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            // marginRight: "50px", // Removed, let centering handle it
           }}
         >
           <button
             className="w-full bg-black text-white rounded-lg"
             style={{
               borderRadius: "15px",
-              padding: "10px 0", // Adjusted padding for full width button
+              padding: "10px 0",
               marginTop: "20px",
-              width: "80%", // Adjusted width
+              width: "80%",
               fontSize: "1.2rem",
-              backgroundColor: "#6C4C94", // Matching title color
+              backgroundColor: "#6C4C94",
             }}
             onClick={handleSubmit}
             disabled={loading}
@@ -175,12 +182,6 @@ const BuyRequest = ({
           </p>
         )}
       </div>
-      {/* ToastContainer should ideally be at the root of your app,
-          but if it's specific to this modal, it can stay.
-          However, messages might appear behind the modal if not configured correctly.
-          For global toasts, one ToastContainer in App.js is preferred.
-      */}
-      {/* <ToastContainer /> */}
     </div>
   );
 };

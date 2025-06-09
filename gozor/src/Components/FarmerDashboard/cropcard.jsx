@@ -6,7 +6,7 @@ import axios from "axios";
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import Croprequests from "./croprequests";
-import Editcrop from "./Editcrop";
+import Editcrop from "./editcrop";
 import api from "../../API/axiosInstance";
 
 export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
@@ -97,11 +97,11 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
     };
     const talabatStyles = {
         content: {
-            maxWidth: "40%",
+            maxWidth: "60%",
             margin: "auto",
             padding: "10px",
             borderRadius: "30px",
-            maxHeight: "320px",
+            maxHeight: "50%",
         },
         overlay: {
             backgroundColor: "rgba(0, 0, 0, 0.5)",

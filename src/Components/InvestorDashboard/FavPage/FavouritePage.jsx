@@ -5,6 +5,7 @@ import NavSideInv from '../Main/NavSideInv';
 import FooterInv from '../Main/FooterInv';
 import stylesInv from "../StylesInv/stylesInv.module.css";
 import api from '../../../API/axiosInstance';
+import { Link } from 'react-router-dom';
 
 const FavouritePage = () => {
     const [farmers, setFarmers] = useState([]);
@@ -17,6 +18,7 @@ const FavouritePage = () => {
             try {
                 const response = await api.get('FavouriteFarmer/Favourites');
                 setFarmers(response.data);
+                console.log(response);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -132,7 +134,23 @@ const FavouritePage = () => {
                                         >
                                             🗑
                                         </span>
+                                        
                                     </div>
+                                         <Link
+                                    to="/Chatinterface"
+                                    state={{ 
+                                        farmerToChatWith: {
+                                            userId: farmer?.farmerId, // farmer is from harvestDetails
+                                            name: farmer?.name,
+                                            imageUrl: farmer?.imageUrl 
+                                        }
+                                    }}
+                                    type="button"
+                                    className="btn fs-5"
+                                >
+                                    <span style={{ color: "#6C4C94" }}>تواصل مع المزارع</span>
+                                    <i className="fa-solid fa-message"></i>
+                                </Link>
                                 </div>
                             </div>
                         ))}

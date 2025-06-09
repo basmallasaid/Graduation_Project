@@ -93,12 +93,12 @@ export default function SeeDetails({ farmer: initialFarmerProp }) {
                 await api.delete("Rate", { // Sends a DELETE request
                     data: { farmerId: farmerIdToRate } // With farmerId in the body, as per your cURL
                 });
-                toast.success("Rating removed successfully!");
+                toast.success("تم ازاله التقييم بنجاح");
                 setRating(0); // Reset the investor's specific rating to 0 in the UI
                 setHoverRating(0); // Reset hover effect
                 await fetchCycleDetails(); // Re-fetch all details to update overall farmer rate etc.
             } catch (error) {
-                console.error("Error removing rating:", error);
+                console.error("خطا في ازاله التقييم  :", error);
                 const errorMessage = error.response?.data?.message || "Failed to remove rating.";
                 toast.error(errorMessage);
             }
@@ -109,7 +109,7 @@ export default function SeeDetails({ farmer: initialFarmerProp }) {
                     farmerId: farmerIdToRate,
                     rating: clickedRating,
                 });
-                toast.success("Rating submitted successfully!");
+                toast.success("تم تقييم المزارع بنجاح");
                 setRating(clickedRating); // Set the investor's specific rating in the UI
                 await fetchCycleDetails(); // Re-fetch all details
             } catch (error) {
@@ -132,10 +132,10 @@ export default function SeeDetails({ farmer: initialFarmerProp }) {
         try {
             if (newFavoriteStatus) {
                 await api.post("FavouriteFarmer", { farmerId: farmerIdToToggle });
-                toast.success("Farmer added to favorites!");
+                toast.success("تم اضافه المزارع للمفضله");
             } else {
                 await api.delete("FavouriteFarmer", { data: { farmerId: farmerIdToToggle } });
-                toast.success("Farmer removed from favorites!");
+                toast.success("تم ازاله المزارع من المفضله");
             }
             setIsFavorite(newFavoriteStatus); 
         } catch (error) {

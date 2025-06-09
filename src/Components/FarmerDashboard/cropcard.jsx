@@ -97,7 +97,7 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
     };
     const talabatStyles = {
         content: {
-            maxWidth: "40%",
+            maxWidth: "60%",
             margin: "auto",
             padding: "10px",
             borderRadius: "30px",

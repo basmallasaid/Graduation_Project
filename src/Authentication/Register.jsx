@@ -31,45 +31,50 @@ const CreateAccountForm = ({ onRegistrationSuccess, setVisibleRegister, setVisib
         });
     };
 
-    const validateForm = () => {
-        if (!name.trim() || name.split(" ").length < 2) {
-            showError("يرجى إدخال الاسم بالكامل (اسم أول واسم عائلة).");
-            return false;
-        }
-        if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
-            showError("يرجى إدخال بريد إلكتروني صحيح.");
-            return false;
-        }
-        if (!phone.trim() || !/^\d{11}$/.test(phone)) {
-            showError("يرجى إدخال رقم هاتف مكون من 11 رقمًا.");
-            return false;
-        }
-        if (!password.trim() || password.length < 8) {
-            showError("يجب أن تكون كلمة المرور مكونة من 8 أحرف على الأقل.");
-            return false;
-        }
-        if (password !== repPassword) {
-            showError("كلمتا المرور غير متطابقتين.");
-            return false;
-        }
-        if (!category) {
-            showError("يرجى اختيار فئة واحدة.");
-            return false;
-        }
-        if (!username.trim()) {
-            showError("يرجى إدخال اسم المستخدم.");
-            return false;
-        }
-        if (!bio.trim()) {
-            showError("يرجى كتابة السيرة الذاتية.");
-            return false;
-        }
-        return true;
-    };
+   const validateForm = () => {
+    if (!name.trim() || name.split(" ").length < 3) {
+    showError("يرجى إدخال الاسم بالكامل (اسم ثلاثي على الأقل).");
+    return false;
+}
+
+    if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
+        showError("يرجى إدخال بريد إلكتروني صحيح.");
+        return false;
+    }
+    if (!phone.trim() || !/^\d{11}$/.test(phone)) {
+        showError("يرجى إدخال رقم هاتف مكون من 11 رقمًا.");
+        return false;
+    }
+
+    // ✅ شرط كلمة المرور الجديدة
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!password.trim() || !passwordRegex.test(password)) {
+        showError("يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل، وتتضمن حروفًا وأرقامًا.");
+        return false;
+    }
+
+    if (password !== repPassword) {
+        showError("كلمتا المرور غير متطابقتين.");
+        return false;
+    }
+    if (!category) {
+        showError("يرجى اختيار فئة واحدة.");
+        return false;
+    }
+    if (!username.trim()) {
+        showError("يرجى إدخال اسم المستخدم.");
+        return false;
+    }
+    if (!bio.trim()) {
+        showError("يرجى كتابة السيرة الذاتية.");
+        return false;
+    }
+    return true;
+};
 
     const handleRegister = (e) => {
-        e.preventDefault();
-        if (!validateForm()) return;
+    e.preventDefault();
+    if (!validateForm()) return;
 
         const regObj = { name, email, phone, password, category, username, bio };
 
@@ -102,9 +107,24 @@ const CreateAccountForm = ({ onRegistrationSuccess, setVisibleRegister, setVisib
             })
             .catch((err) => {
                 console.error("Error during registration:", err);
-                showError("فشل التسجيل. حاول مرة أخرى.");
+
+                if (err.response) {
+                    const status = err.response.status;
+                    const message = err.response.data?.message || "";
+
+                    if (status === 409) {
+                        showError("هذا البريد الإلكتروني مستخدم بالفعل.");
+                    } else if (message.toLowerCase().includes("email") || message.includes("البريد")) {
+                        showError("البريد الإلكتروني غير متاح، استخدم بريدًا آخر.");
+                    } else {
+                        showError("فشل التسجيل. حاول مرة أخرى.");
+                    }
+                } else {
+                    showError("حدث خطأ غير متوقع. حاول لاحقًا.");
+                }
             });
     };
+
 
     return (
         <>

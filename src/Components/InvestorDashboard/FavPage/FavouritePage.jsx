@@ -111,7 +111,7 @@ const FavouritePage = () => {
                                         </div>
 
                                         {farmer.imageProfileUrl && (
-                                            <img src={farmer.imageProfileUrl} alt={farmer.name} className={stylesInv.imgfav} />
+                                            <img src={`https://cityroots.runasp.net/${farmer.imageProfileUrl}`} alt={farmer.name} className={stylesInv.imgfav} />
                                         )}
                                     </div>
                                     <h5><b>البايو</b></h5>

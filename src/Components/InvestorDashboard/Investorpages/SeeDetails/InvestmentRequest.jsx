@@ -36,7 +36,7 @@ const InvestmentRequest = ({ setIsClicked, cycleId }) => {
       });
       setIsClicked(true);
     } catch (err) {
-     toast.error("حدث خطأ أثناء إرسال الطلب.", {
+     toast.error(" تاكد من الحد الادني والاقصي للطلب ونوع العائد", {
   position: "top-center",
   rtl: true,
 });

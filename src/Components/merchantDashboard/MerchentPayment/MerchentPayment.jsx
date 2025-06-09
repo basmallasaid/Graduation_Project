@@ -329,14 +329,14 @@ const MerchentPayment = () => {
                                         </div>
                                     </div>
                                     <div className={styles.filter_dropdown}>
-                                        <button
+                                        {/* <button
                                             className={`${styles.filter_button} ${stylesmer.parentfilter}`}
                                             onClick={() => { setShowTypeDropdown(!showTypeDropdown); setShowDateDropdown(false);}}
                                             aria-label="Filter by return type"
                                         >
                                             <span>تصفية بنوع العائد</span>
                                             <span className={styles.calendar_icon}>📅</span>
-                                        </button>
+                                        </button> */}
                                         <button
                                             className={styles.filter_button}
                                             onClick={() => { setShowDateDropdown(!showDateDropdown); setShowTypeDropdown(false);}}

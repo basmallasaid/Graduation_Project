@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useSignalR } from "../../contexts/SignalRContext";
 import api from "../../API/axiosInstance";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./NotificationBell.css";
 
 const NotificationBell = ({ token }) => {
@@ -14,31 +16,43 @@ const NotificationBell = ({ token }) => {
 
   const playNotificationSound = useCallback(() => {
     const audio = new Audio("/sounds/notification.mp3");
-    audio.play().catch(e => console.error("Error playing sound:", e));
+    audio.play().catch((e) => console.error("Error playing sound:", e));
+  }, []);
+
+  const showToast = useCallback((type, content, toastId) => {
+    toast.info(`🔔 ${type}: ${content}`, {
+      toastId,
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "colored",
+    });
   }, []);
 
   const handleNewNotification = useCallback((notification) => {
-    setNotifications(prev => [{ ...notification, isRead: false }, ...prev]);
+    setNotifications((prev) => [{ ...notification, isRead: false }, ...prev]);
     setAnimatedId(notification.notificationId);
     playNotificationSound();
+    showToast(notification.type, notification.content, notification.notificationId);
     setTimeout(() => setAnimatedId(null), 3000);
-  }, [playNotificationSound]);
+  }, [playNotificationSound, showToast]);
 
-  // تحميل الإشعارات الأولية
   useEffect(() => {
-    api.get("Notification")
-      .then(res => setNotifications(res.data.reverse()))
-      .catch(err => console.error("Error fetching notifications:", err));
+    api
+      .get("Notification")
+      .then((res) => setNotifications(res.data.reverse()))
+      .catch((err) => console.error("Error fetching notifications:", err));
   }, []);
 
-  // بدء الاتصال عند توفر التوكن وعدم وجود اتصال
   useEffect(() => {
     if (token && !isConnected) {
       startConnection(token);
     }
   }, [token, isConnected, startConnection]);
 
-  // تسجيل مستمع الإشعارات (ReceiveNotification)
   useEffect(() => {
     if (!connection) return;
 
@@ -48,35 +62,37 @@ const NotificationBell = ({ token }) => {
     };
   }, [connection, handleNewNotification]);
 
-  // استقبال الرسائل الجديدة وتحديث التنبيهات مباشرة
   useEffect(() => {
     if (!connection) return;
 
-    const handleReceiveMessage = (message) => {
-      console.log("Received message:", message);
+    const userData = JSON.parse(localStorage.getItem("user_data"));
+    const userId = userData?.userId;
 
-      setNotifications(prev => [
-        {
-          notificationId: `msg-${message.chatId}-${Date.now()}`, // معرف فريد مؤقت
-          type: "Chat",
-          content: message.messageContent,
-          isRead: false,
-        },
-        ...prev
-      ]);
-      playNotificationSound();
-      setAnimatedId(`msg-${message.chatId}-${Date.now()}`);
-      setTimeout(() => setAnimatedId(null), 3000);
+    const handleReceiveMessage = (message) => {
+      if (message.senderId !== userId) {
+        const uniqueId = `msg-${message.chatId}-${Date.now()}`;
+        // setNotifications((prev) => [
+        //   {
+        //     notificationId: uniqueId,
+        //     type: "محادثات",
+        //     content: message.messageContent,
+        //     isRead: false,
+        //   },
+        //   ...prev,
+        // ]);
+        playNotificationSound();
+        showToast("محادثة جديدة", message.messageContent, uniqueId);
+        setAnimatedId(uniqueId);
+        setTimeout(() => setAnimatedId(null), 3000);
+      }
     };
 
     connection.on("receivemessage", handleReceiveMessage);
-
     return () => {
       connection.off("receivemessage", handleReceiveMessage);
     };
-  }, [connection, playNotificationSound]);
+  }, [connection, playNotificationSound, showToast]);
 
-  // إغلاق قائمة الإشعارات عند النقر خارجها
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (bellRef.current && !bellRef.current.contains(e.target)) {
@@ -88,28 +104,40 @@ const NotificationBell = ({ token }) => {
   }, []);
 
   const markAsRead = async (id) => {
-    setNotifications(prev => prev.map(n => n.notificationId === id ? { ...n, isRead: true } : n));
+    setNotifications((prev) =>
+      prev.map((n) => (n.notificationId === id ? { ...n, isRead: true } : n))
+    );
     try {
       await api.patch(`/Notification/${id}/mark-as-read`);
     } catch (err) {
       console.error("Failed to mark notification as read", err);
-      setNotifications(prev => prev.map(n => n.notificationId === id ? { ...n, isRead: false } : n));
+      setNotifications((prev) =>
+        prev.map((n) => (n.notificationId === id ? { ...n, isRead: false } : n))
+      );
     }
   };
 
   const markAllAsRead = async () => {
-    const unreadIds = notifications.filter(n => !n.isRead).map(n => n.notificationId);
+    const unreadIds = notifications.filter((n) => !n.isRead).map((n) => n.notificationId);
     if (unreadIds.length === 0) return;
-    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+
+    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+
     try {
-      await Promise.all(unreadIds.map(id => api.patch(`/Notification/${id}/mark-as-read`)));
+      await Promise.all(
+        unreadIds.map((id) => api.patch(`/Notification/${id}/mark-as-read`))
+      );
     } catch (err) {
       console.error("Failed to mark all as read", err);
-      setNotifications(prev => prev.map(n => unreadIds.includes(n.notificationId) ? { ...n, isRead: false } : n));
+      setNotifications((prev) =>
+        prev.map((n) =>
+          unreadIds.includes(n.notificationId) ? { ...n, isRead: false } : n
+        )
+      );
     }
   };
 
-  const unreadCount = notifications.filter(n => !n.isRead).length;
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
   const visibleNotifications = showAll ? notifications : notifications.slice(0, 5);
 
   return (
@@ -123,6 +151,7 @@ const NotificationBell = ({ token }) => {
       {unreadCount > 0 && (
         <span className="notification-count">{unreadCount}</span>
       )}
+
       {open && (
         <div className="notification-box">
           <div className="notification-header">
@@ -143,12 +172,12 @@ const NotificationBell = ({ token }) => {
                 >
                   <span className="notification-icon">
                     {n.type === "المحادثات" ? <img src="/assets/chats.png" alt="chats" />
-                    : n.type === "الدوره الزراعيه" || n.type==="تحديث الدورة الزراعية" ?<img src="/assets/plant.png" alt="plant" /> 
-                    :n.type==="المهام" || n.type==="التقييم"?<img src="/assets/task.png"alt="task" /> 
-                    :n.type==="طلب الشراء" || n.type==="طلب استثمار"?<img src="/assets/order.png"alt="order" /> 
-                    :n.type==="حصاد"?<img src="/assets/sickle.jpg"alt="sickle" /> 
-                    :n.type==="مزارع مفضل"?<img src="/assets/favourite.png"alt="favourite" /> 
-                    : "🔔"}
+                      : n.type === "الدوره الزراعيه" || n.type === "تحديث الدورة الزراعية" ? <img src="/assets/plant.png" alt="plant" />
+                      : n.type === "المهام" || n.type === "التقييم" ? <img src="/assets/task.png" alt="task" />
+                      : n.type === "طلب شراء" || n.type === "طلب استثمار" ? <img src="/assets/manifest.png" alt="manifest" />
+                      : n.type === "حصاد" ? <img src="/assets/sickle.jpg" alt="sickle" />
+                      : n.type === "مزارع مفضل" ? <img src="/assets/favourite.png" alt="favourite" />
+                      : "🔔"}
                   </span>
                   <div style={{ flex: 1 }}>
                     <div className="notification-title">{n.type}</div>
@@ -163,7 +192,7 @@ const NotificationBell = ({ token }) => {
                       className="mark-as-read-btn"
                       title="تمييز كمقروء"
                     >
-                    <img src="/assets/check-mark.png" alt="mark"  />
+                      <img src="/assets/check-mark.png" alt="mark" />
                     </button>
                   )}
                 </div>

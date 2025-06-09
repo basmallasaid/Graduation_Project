@@ -318,10 +318,39 @@ const Privatecyles = () => {
                                     </div>
 
                                     <div style={{ display: "flex", justifyContent: "space-around", alignItems: "start" }}>
-                                        <div >
-                                            <p style={{ fontSize: "1.5rem", marginBottom: "25px", fontWeight: "600" }}>حاله الدوره</p>
-                                            <button style={{ border: "none", borderRadius: "5px", padding: "2px 40px", backgroundColor: getStatusColor(cycle.statue), marginRight: "25px" }}>{cycle.statue}</button>
-                                        </div>
+                                 <div >
+    <p style={{ fontSize: "1.5rem", marginBottom: "15px", fontWeight: "600" }}>حاله الدوره</p>
+    
+    {/* This new div will act as a flex container for the buttons */}
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '15px' }}>
+        
+        {/* Status Button */}
+        <button style={{ 
+            border: "none", 
+            borderRadius: "5px", 
+            padding: "2px 40px", 
+            backgroundColor: getStatusColor(cycle.statue) 
+        }}>
+            {cycle.statue}
+        </button>
+        
+        {/* Details Link/Button */}
+        <Link 
+            to={`/SeeDetails/${cycle.cycleId}`}
+            style={{ 
+                border: "none", 
+                borderRadius: "10px", 
+                backgroundColor: "black", 
+                color: "#fff", 
+                padding: "7px 30px", 
+                textDecoration: "none", 
+                fontSize: "1.2rem" 
+            }}
+        >
+            عرض التفاصيل
+        </Link>
+    </div>
+</div>
                                         <div style={{ display: "flex", flexDirection: "column", width: "50%" }}>
                                             <div style={{ display: "flex", flexDirection: "column", marginBottom: "10px", width: "100%" }}>
                                                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>

@@ -1,0 +1,176 @@
+/*page InvestorHome*/
+.cycles{
+  
+  background: linear-gradient(to bottom, #459595, #0f2c2c);
+}
+.cycles img , .FSMer img , .Browsecrops img{
+    width: 25%;
+    margin: 15px;
+    
+}
+.bgMer{
+  background-image: url('../../../../public/assets/Merbg5.jpg');
+  height: 100vh;
+}
+.Home{
+  display: flex;
+  /* justify-content: center;
+  align-items: center; */
+  height: 100vh;
+  margin-top:50px ;
+}
+.div{
+  width:100%
+}
+
+.FSMer{
+  background: linear-gradient(to bottom, #44ae99, #102928);
+    
+}
+.Browsecrops{
+  background: linear-gradient(to bottom, #2a9d8f, #052f2e);
+}
+.ChartInv{
+    width: 50%;
+    display: flex;
+    justify-self: center;
+}
+/* .bgInv{
+    background-image: url("/public/assets/Invbg.png");
+   
+} */
+.whitecolor{
+    color: white;
+}
+.FSMer , .cycles ,.Browsecrops{
+  width: 30%;
+  height:240px;
+  margin: 50px ;
+  border-radius: 10px;
+  text-align: center;
+  padding: 25px;
+  color:white;
+  cursor: pointer;
+  box-Shadow:5px 5px 15px #5df2d436;
+    
+}
+.tooltip_textInv {
+    position: absolute;
+    color: white;
+    bottom:-140px; 
+    left: 50%;
+    transform: translateX(-50%);
+    /* padding: 8px 12px; */
+    font-size: 19px;
+    /* white-space: nowrap; */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+    z-index:1000;
+    
+  }
+  .FSMer:hover .tooltip_textInv,
+  .Browsecrops:hover .tooltip_textInv,
+  .cycles:hover .tooltip_textInv {
+    visibility: visible;
+    opacity: 1;
+  }
+ 
+  .FSMer,
+  .Browsecrops,
+  .cycles
+  {
+    position: relative;  
+  }
+  .down{
+    display: block; /* يجعل كل عنصر في سطر منفصل */
+      margin-bottom: 10px; /* إضافة مسافة بين العناصر */
+  }
+  .parentfilter{
+   margin-bottom: 15px;
+  }
+ /*Fav*/
+ .cardbg{
+background-image: url('../../../../public/assets/cardbg.jpg');
+ height: 500px;
+ width: 600px;
+ padding: 8px;
+ border-radius: 15px;
+ box-Shadow:5px 5px 15px rgba(50, 50, 50, 0.3);
+
+ }
+ .cardFav{
+  margin: 8px;
+ 
+ }
+ .datatitle{
+  background-color: #a5a49a3f;
+  width: 200px;
+  height: 30px;
+  text-align: center;
+  border-radius: 4px;
+  padding: 4px;
+  margin-right: 17px;
+  font-weight: bold;
+ }
+ .email{
+  background-color: #a5a49a3f;
+  height: 30px;
+  text-align: center;
+  border-radius: 4px;
+  padding: 4px;
+  margin-right: 10px;
+  width:300px;
+  font-weight: bold;
+ }
+ .titemail{
+  width: 150px;
+ }
+ .info{
+  background-color: #a5a49a72;
+ padding: 10px;
+ border-radius: 8px;
+ height: 130px;
+ margin: 10px 30px;
+ font-weight: bold;
+ }
+ .gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr)); 
+  gap: 35px;
+  justify-items: center; 
+}
+.datacard{
+  margin-bottom: 25px;
+}
+.delete{
+  position:absolute;
+  left: 20%;
+  font-weight: bold;
+  font-size:30px;
+}
+.imgfav{
+  width:150px;
+   height:100px;
+}
+.filter{
+  background-color: #e8f4f8;
+  border: 1px solid #cce7f3;
+}
+.ser{
+  background-color: #c9c5c6ad;
+}
+@media (max-width: 768px) {
+  .gridContainer {
+      grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); /* Stack cards on smaller screens */
+      justify-items: center; 
+  }
+  
+  .cardbg {
+      max-width: 70%; /* Allow cards to take more width on smaller screens */
+  }
+  .info ,.email,.datatitle,.titemail,.imgfav{
+    width: auto;
+  }
+ 
+}

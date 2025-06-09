@@ -91,7 +91,7 @@ const NavbarInv = () => {
   return (
     <nav className={`navbar navbar-expand-lg ${styles.NavF}`} style={{ backgroundColor: "#073B3A" }}>
       <div className="container-fluid">
-        <Link className="navbar-brand text-white" to="/MerchentHome"> {/* Make logo link to a relevant page */}
+        <Link className="navbar-brand text-white" to="/InvestorHome"> {/* Make logo link to a relevant page */}
           <img
             style={{ width: "250px", height: "100px", margin: "0" }}
             src="/assets/NavInv.png" // Ensure this path is correct relative to public folder

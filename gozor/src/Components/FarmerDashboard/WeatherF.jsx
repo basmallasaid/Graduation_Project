@@ -13,30 +13,10 @@ const WeatherF = () => {
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [city, setCity] = useState('');
-    const [country, setCountry] = useState('');
 
-    // استعلام موقع المستخدم بناءً على الـ IP باستخدام ip-api
-    useEffect(() => {
-        const fetchLocationData = async () => {
-            try {
-                const response = await fetch('http://ip-api.com/json/');
-                const data = await response.json();
-
-                if (data && data.city && data.country) {
-                    setCity(data.city);
-                    setCountry(data.country);
-                } else {
-                    setError('فشل في الحصول على الموقع بناءً على الـ IP');
-                }
-            } catch (err) {
-                console.error('حدث خطأ:', err);
-                setError('حدث خطأ أثناء تحديد الموقع بناءً على الـ IP');
-            }
-        };
-
-        fetchLocationData();
-    }, []);
+    // تثبيت المدينة والدولة
+    const [city, setCity] = useState('Cairo');
+    const [country, setCountry] = useState('Egypt');
 
     // استعلام بيانات الطقس بناءً على المدينة والدولة
     useEffect(() => {
@@ -58,77 +38,76 @@ const WeatherF = () => {
     if (loading) return <p>جاري تحميل البيانات...</p>;
     if (error) return <p>{error}</p>;
 
-    // دالة تحديد الأيقونة بناءً على الوصف
     const getWeatherIcon = (description) => {
         switch (description) {
             case 'غائم جزئي':
                 return (
                     <div className={styles.cloud}>
                         <img src='/assets/partlycloudy.png' alt='غائم جزئي' />
-                        <span style={{margin:"0px 4px"}}>{description}</span>
+                        <span style={{ margin: "0px 4px" }}>{description}</span>
                     </div>
                 );
             case 'غائم كليًا':
                 return (
                     <div className={styles.cloud}>
                         <img src='/assets/cloudy.png' alt='غائم كلي' />
-                        <span style={{margin:"0px 4px"}}>{description}</span>
+                        <span style={{ margin: "0px 4px" }}>{description}</span>
                     </div>
                 );
             case 'مغبر':
                 return (
                     <div className={styles.dust}>
                         <img src='/assets/dust.png' alt='مغبر' />
-                        <span style={{margin:"0px 4px"}}>{description}</span>
+                        <span style={{ margin: "0px 4px" }}>{description}</span>
                     </div>
                 );
             case 'ضباب':
                 return (
                     <div className={styles.dust}>
                         <img src='/assets/fog.png' alt='ضباب' />
-                        <span style={{margin:"0px 4px"}}>{description}</span>
+                        <span style={{ margin: "0px 4px" }}>{description}</span>
                     </div>
                 );
             case 'عاصفة رعدية':
                 return (
                     <div className={styles.dust}>
                         <img src='/assets/storm.png' alt='عاصفة رعدية' />
-                        <span style={{margin:"0px 4px"}}>{description}</span>
+                        <span style={{ margin: "0px 4px" }}>{description}</span>
                     </div>
                 );
             case 'مطر':
                 return (
                     <div className={styles.rain}>
                         <img src='/assets/rain.png' alt='مطر' />
-                        <span style={{margin:"0px 4px"}}>{description}</span>
+                        <span style={{ margin: "0px 4px" }}>{description}</span>
                     </div>
                 );
             case 'رياح قوية':
                 return (
                     <div className={styles.rain}>
                         <img src='/assets/windy.png' alt='رياح قوية' />
-                        <span style={{margin:"0px 4px"}}>{description}</span>
+                        <span style={{ margin: "0px 4px" }}>{description}</span>
                     </div>
                 );
             case 'ثلوج':
                 return (
                     <div className={styles.rain}>
                         <img src='/assets/snow.png' alt='ثلوج' />
-                        <span style={{margin:"0px 4px"}}>{description}</span>
+                        <span style={{ margin: "0px 4px" }}>{description}</span>
                     </div>
                 );
             case 'مشمس':
                 return (
                     <div className={styles.sunny}>
                         <img src='/assets/sunny.png' alt='مشمس' />
-                        <span style={{margin:"0px 4px"}}>{description}</span>
+                        <span style={{ margin: "0px 4px" }}>{description}</span>
                     </div>
                 );
             default:
                 return (
                     <div className={styles.cloud}>
                         <img src='/assets/cloud.png' alt='حالة الطقس الافتراضية' />
-                        <span style={{margin:"0px 4px"}}>{description}</span>
+                        <span style={{ margin: "0px 4px" }}>{description}</span>
                     </div>
                 );
         }

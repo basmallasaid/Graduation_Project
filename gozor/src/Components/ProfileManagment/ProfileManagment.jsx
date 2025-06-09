@@ -15,12 +15,14 @@ import NavSideF from '../FarmerDashboard/Main/NavSideF';
 import FooterMer from '../merchantDashboard/Main/FooterMer';
 import FooterInv from '../InvestorDashboard/Main/FooterInv';
 import FooterF from '../FarmerDashboard/Main/FooterF';
-
+ const userData = JSON.parse(localStorage.getItem("user_data"));
+const role = userData?.userId;
 // Define the path to your default image (relative to the public folder)
 const DEFAULT_PROFILE_PIC = 'assets/users.png'; // Make sure this file exists in public/assets
  
 
-const RenderNavbarByRole = ({ role }) => {
+
+const RenderNavbarByRole = ({ role}) => {
   switch (role) {
     case 'Merchant':
       return <NavbarMer />;
@@ -119,9 +121,14 @@ const ProfileManegment = () => {
   const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
+     const userData = JSON.parse(localStorage.getItem("user_data"));
+  if (userData?.role) {
+    setUserRole(userData.role); 
+  }
+
     api.get('Authentication/profile')
       .then((response) => {
-        const { userName, email, phone, bio, rate, imageProfileUrl ,role} = response.data;
+        const { userName, email, phone, bio, rate, imageProfileUrl} = response.data;
         setName(userName || '');
         setEmail(email || '');
         setPhone(phone || '');
@@ -130,7 +137,7 @@ const ProfileManegment = () => {
         setTitle(rateText); // For under the photo
         setRating(rateText); // For the "متوسط التقييم" field in details
         setProfilePic(imageProfileUrl || DEFAULT_PROFILE_PIC);
-        setUserRole(role);
+        
       })
       .catch(() => {
         Swal.fire('خطأ', 'فشل في تحميل بيانات الملف الشخصي', 'error');

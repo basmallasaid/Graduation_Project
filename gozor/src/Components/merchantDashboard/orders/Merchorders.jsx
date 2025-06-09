@@ -15,7 +15,6 @@ const Merchorders = () => {
      const [loading, setLoading] = useState(true); // Added loading state for initial fetch
 
     const userData = JSON.parse(localStorage.getItem("user_data"));
-    // console.log("User Data (from localStorage):", userData);
     const merchantId = userData?.loggedId;
 
     useEffect(() => {
@@ -35,20 +34,18 @@ const Merchorders = () => {
 
             setLoading(true);
             try {
-                // Using axiosInstance (api) for the GET request
                 const response = await api.get(`PurchaseRequest/GetAllRequestsForMerchant/${merchantId}`);
-                // Axios automatically parses JSON, so response.data contains the payload
                 const data = response.data;
-
+                console.log(data);
                 setOrders(data);
                 setFilteredOrders(data);
 
-                const uniqueHarvestNames = [...new Set(data.map(order => order.harvestName).filter(Boolean))]; // Filter out null/undefined harvest names
+                const uniqueHarvestNames = [...new Set(data.map(order => order.harvestName).filter(Boolean))];
                 setHarvestNames(uniqueHarvestNames);
 
             } catch (error) {
                 console.error("Could not fetch orders:", error.response || error.message);
-                const errorMessage = error.response?.data?.message || error.message || 'فشل تحميل الطلبات. حاول مرة أخرى لاحقًا.';
+                const errorMessage = error.response?.data?.message || 'فشل تحميل الطلبات. حاول مرة أخرى لاحقًا.';
                 Swal.fire({
                     icon: 'error',
                     title: 'خطأ!',
@@ -62,7 +59,7 @@ const Merchorders = () => {
         };
 
         fetchOrders();
-    }, [merchantId]); // Dependency array includes merchantId
+    }, [merchantId]);
 
     useEffect(() => {
         const handleSearch = () => {
@@ -79,7 +76,7 @@ const Merchorders = () => {
                     order.farmerName.toLowerCase().includes(searchTermLower) ||
                     order.harvestName.toLowerCase().includes(searchTermLower) ||
                     String(order.requestedAmount).includes(searchTerm) ||
-                    String(order.requestedPrice).includes(searchTerm) || // Search by requested price too
+                    String(order.requestedPrice).includes(searchTerm) ||
                     order.requestStatus.toLowerCase().includes(searchTermLower)
                 );
             });
@@ -335,7 +332,6 @@ const Merchorders = () => {
                                                 { label: " المبلغ المطلوب للشراء", value: order.requestedAmount },
                                                 { label: " السعر المطلوب", value: order.requestedPrice },
                                             ].map((item, index) => (
-                                                // Change the order of farmerName to last
                                                 <div key={index} className="mb-3 d-flex align-items-center"
                                                      style={{ justifyContent: "space-around" }}>
                                                     <label className="form-label" style={{ width: '30%', marginRight: "50px" }}>{item.label}</label>
@@ -360,6 +356,27 @@ const Merchorders = () => {
                                                 >
                                                     {order.requestStatus}
                                                 </button>
+                                                
+                                                {/* --- MODIFICATION START --- */}
+                                                {/* Conditionally render the "View Details" link only if status is 'مقبول' */}
+                                                {order.requestStatus === "مقبول" && (
+                                                     <Link
+                                                        style={{
+                                                            border: "none",
+                                                            borderRadius: "10px",
+                                                            backgroundColor: "black",
+                                                            color: "#fff",
+                                                            padding: "5px 30px",
+                                                            textDecoration: "none",
+                                                            marginRight:"5px"
+                                                        }}
+                                                        // Correctly pass the harvestId from the order object
+                                                        to={`/Seedetailsmerch/${order.harvestId}`} 
+                                                    >
+                                                        عرض التفاصيل
+                                                    </Link>
+                                                )}
+                                                {/* --- MODIFICATION END --- */}
                                             </div>
 
                                             <div className="align-items-center" style={{ display: "flex", gap: "10px", marginTop: "30px" }}>
@@ -386,7 +403,8 @@ const Merchorders = () => {
                                 </form>
                             ))
                         ) : (
-                            <p>No orders found.</p>
+                            // Show a more informative message while loading or if no orders are found
+                            loading ? <p>جاري تحميل الطلبات...</p> : <p>لم يتم العثور على طلبات.</p>
                         )}
                     </div>
                 </main>

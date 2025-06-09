@@ -297,7 +297,7 @@ setSeeds(seedsRes.data);
   };
   const cardreq = {
     content: {
-      maxWidth: "46%",
+      maxWidth: "60%",
       margin: "auto",
       padding: "20px 20px",
       borderRadius: "30px",

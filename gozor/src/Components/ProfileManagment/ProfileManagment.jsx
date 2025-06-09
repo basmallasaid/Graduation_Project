@@ -9,7 +9,8 @@ import api from '../../API/axiosInstance';
 
 // Define the path to your default image (relative to the public folder)
 const DEFAULT_PROFILE_PIC = 'assets/users.png'; // Make sure this file exists in public/assets
-
+    const userData = JSON.parse(localStorage.getItem("user_data"));
+console.log(userData)
 // Helper function to create a simple file input trigger button
 const FileInputButton = ({ onChange, isEditing }) => {
   if (!isEditing) return null;

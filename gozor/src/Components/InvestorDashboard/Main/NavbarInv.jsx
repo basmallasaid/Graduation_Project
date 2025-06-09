@@ -5,6 +5,7 @@ import styles from "../../../Styles/style.module.css";
 import api from "../../../API/axiosInstance";
 import { useSignalR } from "../../../contexts/SignalRContext"; // Adjust path as needed
 import Cookies from "js-cookie"; // Import Cookies if you're using it for access_token
+import NotificationBell from "../../Notification/NotificationBell";
 
 const NavbarInv = () => {
   const [username, setUsername] = useState("");
@@ -90,7 +91,7 @@ const NavbarInv = () => {
   return (
     <nav className={`navbar navbar-expand-lg ${styles.NavF}`} style={{ backgroundColor: "#073B3A" }}>
       <div className="container-fluid">
-        <Link className="navbar-brand text-white" to="/MerchentHome"> {/* Make logo link to a relevant page */}
+        <Link className="navbar-brand text-white" to="/InvestorHome"> {/* Make logo link to a relevant page */}
           <img
             style={{ width: "250px", height: "100px", margin: "0" }}
             src="/assets/NavInv.png" // Ensure this path is correct relative to public folder
@@ -100,7 +101,8 @@ const NavbarInv = () => {
         {/* Conditionally render user info and logout if username is not "ضيف" or similar */}
         {username && username !== "ضيف" && (
           <>
-            <img src="/assets/notifications.png" style={{ width: "30px", marginLeft: 'auto', marginRight: '15px' }} alt="Notifications" />
+            {/* <img src="/assets/notifications.png" style={{ width: "30px", marginLeft: 'auto', marginRight: '15px' }} alt="Notifications" /> */}
+            <NotificationBell/>
             <p className={styles.userF} style={{ margin: '0 15px 0 0', color: 'white' }}>مرحباً, {username}</p>
             <button
               className={`btn me-2 ${styles.outButton}`} // Ensure styles.outButton is defined

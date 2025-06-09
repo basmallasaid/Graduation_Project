@@ -21,7 +21,7 @@ const Instructions = () => {
   };
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div >
         <img src="assets/inst.png" className={styles.instimg} />
       </div>

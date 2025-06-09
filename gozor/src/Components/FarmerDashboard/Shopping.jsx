@@ -4,12 +4,42 @@ import styles from "../../Styles/style.module.css";
 import NavbarF from "./Main/NavbarF";
 import FooterF from "./Main/FooterF";
 import api from "../../API/axiosInstance";
+import NavbarMer from "../merchantDashboard/Main/NavbarMer";
+import NavbarInv from "../InvestorDashboard/Main/NavbarInv";
+import FooterMer from "../merchantDashboard/Main/FooterMer";
+import FooterInv from "../InvestorDashboard/Main/FooterInv";
 
+const RenderNavbarByRole = ({ role}) => {
+  switch (role) {
+    case 'Merchant':
+      return <NavbarMer />;
+    case 'Investor':
+      return <NavbarInv/>;
+    case 'Farmer':
+    default:
+      return <NavbarF/>;
+  }
+};
+const RenderFooterByRole = ({ role }) => {
+  switch (role) {
+    case 'Merchant':
+      return <FooterMer/>;
+    case 'Investor':
+      return <FooterInv />;
+    case 'Farmer':
+    default:
+      return <FooterF />;
+  }
+};
 const Shopping = () => {
     const [plants, setPlants] = useState([]);
     const [error, setError] = useState(null);
-
+  const [userRole, setUserRole] = useState(null);
     useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user_data"));
+     if (userData?.role) {
+     setUserRole(userData.role); 
+      }
         api
             .get("Crop/GEtCropsForMarket")
             .then((response) => {
@@ -23,7 +53,7 @@ const Shopping = () => {
 
     return (
         <>
-            <NavbarF />
+           <RenderNavbarByRole role={userRole} />
             <div className={styles.soppingpage}>
                 <div className="container">
                     <div className={styles.shopping_title}>
@@ -92,7 +122,7 @@ const Shopping = () => {
                     </div>
                 </div>
             </div>
-            <FooterF />
+            <RenderFooterByRole role={userRole} />
         </>
     );
 };

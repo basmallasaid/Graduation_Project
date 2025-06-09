@@ -6,7 +6,7 @@ import Footer from './Footer';
 const About = () => {
     return (
         <>
-            <Navbar />
+       {/* <Navbar /> */}
             <img className={styles.instimg} src='assets/about.png' />
             <div className={` text-center ${styles.grid}`}>
                 <div className="row" >

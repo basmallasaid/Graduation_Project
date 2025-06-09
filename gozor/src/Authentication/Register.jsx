@@ -4,6 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import Cookies from "js-cookie";
 import api from "../API/axiosInstance";
+
 const CreateAccountForm = ({ onRegistrationSuccess, setVisibleRegister, setVisibleLogin }) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -16,37 +17,51 @@ const CreateAccountForm = ({ onRegistrationSuccess, setVisibleRegister, setVisib
 
     const handleCategoryChange = (newCategory) => setCategory(newCategory);
 
+    const showError = (message) => {
+        toast.dismiss();
+        toast.error(message, {
+            duration: 5000,
+            position: "top-center",
+            style: {
+                background: "#fff0f0",
+                color: "#b00020",
+                fontWeight: "bold",
+                fontSize: "14px",
+            },
+        });
+    };
+
     const validateForm = () => {
         if (!name.trim() || name.split(" ").length < 2) {
-            toast.error("يرجى إدخال الاسم بالكامل (اسم أول واسم عائلة).", { duration: 3000 });
+            showError("يرجى إدخال الاسم بالكامل (اسم أول واسم عائلة).");
             return false;
         }
         if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
-            toast.error("يرجى إدخال بريد إلكتروني صحيح.", { duration: 3000 });
+            showError("يرجى إدخال بريد إلكتروني صحيح.");
             return false;
         }
         if (!phone.trim() || !/^\d{11}$/.test(phone)) {
-            toast.error("يرجى إدخال رقم هاتف مكون من 11 رقمًا.", { duration: 3000 });
+            showError("يرجى إدخال رقم هاتف مكون من 11 رقمًا.");
             return false;
         }
         if (!password.trim() || password.length < 8) {
-            toast.error("يجب أن تكون كلمة المرور مكونة من 8 أحرف على الأقل.", { duration: 3000 });
+            showError("يجب أن تكون كلمة المرور مكونة من 8 أحرف على الأقل.");
             return false;
         }
         if (password !== repPassword) {
-            toast.error("كلمتا المرور غير متطابقتين.", { duration: 3000 });
+            showError("كلمتا المرور غير متطابقتين.");
             return false;
         }
         if (!category) {
-            toast.error("يرجى اختيار فئة واحدة.", { duration: 3000 });
+            showError("يرجى اختيار فئة واحدة.");
             return false;
         }
         if (!username.trim()) {
-            toast.error("يرجى إدخال اسم المستخدم.", { duration: 3000 });
+            showError("يرجى إدخال اسم المستخدم.");
             return false;
         }
         if (!bio.trim()) {
-            toast.error("يرجى كتابة السيرة الذاتية.", { duration: 3000 });
+            showError("يرجى كتابة السيرة الذاتية.");
             return false;
         }
         return true;
@@ -58,34 +73,39 @@ const CreateAccountForm = ({ onRegistrationSuccess, setVisibleRegister, setVisib
 
         const regObj = { name, email, phone, password, category, username, bio };
 
-        // Use Axios for making POST request
         api
             .post("/Authentication/register", regObj, {
                 headers: { "Content-Type": "application/json" },
             })
             .then((response) => {
                 if (response.status === 201) {
-                    toast.success("تم انشاء حساب بنجاح ", { duration: 4000 });
+                    toast.success("تم إنشاء الحساب بنجاح!", {
+                        duration: 4000,
+                        position: "top-center",
+                        style: {
+                            background: "#e0ffe0",
+                            color: "#0f5132",
+                            fontWeight: "bold",
+                        },
+                    });
 
-                    // Save user data in cookies if needed
                     const user = response.data;
-                    Cookies.set("user", JSON.stringify(user), { expires: 1 }); // Store user data in cookies for 1 day
+                    Cookies.set("user", JSON.stringify(user), { expires: 1 });
 
                     setTimeout(() => {
-                        setVisibleRegister(false); // Close the register modal
-                        setVisibleLogin(true); // Open the login modal
-                    }, 2000); // Delay closing modal and opening login modal.
+                        setVisibleRegister(false);
+                        setVisibleLogin(true);
+                    }, 2000);
 
-                    
-                    onRegistrationSuccess(); // call parent success function
-
+                    onRegistrationSuccess();
                 }
             })
             .catch((err) => {
                 console.error("Error during registration:", err);
-                toast.error("فشل التسجيل. حاول مرة أخرى.", { duration: 3000 });
+                showError("فشل التسجيل. حاول مرة أخرى.");
             });
     };
+
     return (
         <>
             <Toaster position="top-center" reverseOrder={false} />

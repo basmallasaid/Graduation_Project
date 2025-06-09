@@ -6,11 +6,59 @@ import Footer from '../Footer';
 import Modal from 'react-modal';
 import ForgetPassword from './ForgetPassword';
 import api from '../../API/axiosInstance';
-
+import NavbarMer from '../merchantDashboard/Main/NavbarMer';
+import NavbarInv from '../InvestorDashboard/Main/NavbarInv';
+import NavbarF from '../FarmerDashboard/Main/NavbarF';
+import NavSideMer from '../merchantDashboard/Main/NavSideMer';
+import NavSideInv from '../InvestorDashboard/Main/NavSideInv';
+import NavSideF from '../FarmerDashboard/Main/NavSideF';
+import FooterMer from '../merchantDashboard/Main/FooterMer';
+import FooterInv from '../InvestorDashboard/Main/FooterInv';
+import FooterF from '../FarmerDashboard/Main/FooterF';
+ const userData = JSON.parse(localStorage.getItem("user_data"));
+const role = userData?.userId;
 // Define the path to your default image (relative to the public folder)
 const DEFAULT_PROFILE_PIC = 'assets/users.png'; // Make sure this file exists in public/assets
-    const userData = JSON.parse(localStorage.getItem("user_data"));
-console.log(userData)
+ 
+
+
+const RenderNavbarByRole = ({ role}) => {
+  switch (role) {
+    case 'Merchant':
+      return <NavbarMer />;
+    case 'Investor':
+      return <NavbarInv/>;
+    case 'Farmer':
+    default:
+      return <NavbarF/>;
+  }
+};
+
+const RenderNavSideByRole = ({ role }) => {
+  switch (role) {
+    case 'Merchant':
+      return <NavSideMer/>;
+    case 'Investor':
+      return <NavSideInv/>;
+    case 'Farmer':
+    default:
+      return <NavSideF/>;
+  }
+};
+
+const RenderFooterByRole = ({ role }) => {
+  switch (role) {
+    case 'Merchant':
+      return <FooterMer/>;
+    case 'Investor':
+      return <FooterInv />;
+    case 'Farmer':
+    default:
+      return <FooterF />;
+  }
+};
+
+
 // Helper function to create a simple file input trigger button
 const FileInputButton = ({ onChange, isEditing }) => {
   if (!isEditing) return null;
@@ -70,11 +118,17 @@ const ProfileManegment = () => {
   const [title, setTitle] = useState(''); // This is the rate string e.g. "4 / 5" or "لا توجد تقييمات"
   const [rating, setRating] = useState(''); // This is also the rate string for the details section
   const [visibleForget, setVisibleForget] = useState(false);
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
+     const userData = JSON.parse(localStorage.getItem("user_data"));
+  if (userData?.role) {
+    setUserRole(userData.role); 
+  }
+
     api.get('Authentication/profile')
       .then((response) => {
-        const { userName, email, phone, bio, rate, imageProfileUrl } = response.data;
+        const { userName, email, phone, bio, rate, imageProfileUrl} = response.data;
         setName(userName || '');
         setEmail(email || '');
         setPhone(phone || '');
@@ -83,6 +137,7 @@ const ProfileManegment = () => {
         setTitle(rateText); // For under the photo
         setRating(rateText); // For the "متوسط التقييم" field in details
         setProfilePic(imageProfileUrl || DEFAULT_PROFILE_PIC);
+        
       })
       .catch(() => {
         Swal.fire('خطأ', 'فشل في تحميل بيانات الملف الشخصي', 'error');
@@ -222,9 +277,9 @@ const ProfileManegment = () => {
 
   return (
     <>
-      <Navbar />
+      <RenderNavbarByRole role={userRole} />
       <div className="d-flex" style={{  overflow: 'hidden' }}>
-        <NavSide />
+        <RenderNavSideByRole role={userRole} />
         <div> {/* This empty div was present in the original code */}
         </div>
         <main className="flex-grow-1">
@@ -345,7 +400,7 @@ const ProfileManegment = () => {
           </div> {/* End .container */}
         </main>
       </div>
-      <Footer />
+       <RenderFooterByRole role={userRole} />
     </>
   )
 };

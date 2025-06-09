@@ -44,7 +44,7 @@ const Contact = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <section className={styles.contact}>
         <div className={styles.contact_container}>
           <h3>

@@ -76,7 +76,7 @@ const Opinion = () => {
 
     return (
         <>
-            <Navbar />
+            {/* <Navbar /> */}
             <div>
                 <img src="assets/opinon.png" className={styles.opinon} alt="Opinion" />
             </div>

@@ -11,7 +11,6 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "homepage": "https://basmallasaid.github.io/Graduation_Project",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.7",
@@ -37,8 +36,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "DB": "json-server --watch data/db.json --port 3100"
+    "deploy": "gh-pages -d build"
+    
     
   },
   "eslintConfig": {

@@ -2,7 +2,16 @@ import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2'; // استيراد SweetAlert2
 import stylesInv from "../StylesInv/stylesInv.module.css";
 import api from '../../../API/axiosInstance';
-
+import FooterF from '../../FarmerDashboard/Main/FooterF';
+import FooterInv from '../Main/FooterInv';
+import FooterMer from '../../merchantDashboard/Main/FooterMer';
+import NavSideF from '../../FarmerDashboard/Main/NavSideF';
+import NavSideInv from '../Main/NavSideInv';
+import NavSideMer from '../../merchantDashboard/Main/NavSideMer';
+import NavbarF from '../../FarmerDashboard/Main/NavbarF';
+import NavbarInv from '../Main/NavbarInv';
+import NavbarMer from '../../merchantDashboard/Main/NavbarMer';
+import { Link } from 'react-router-dom';
 const FavouritePage = () => {
     const [farmers, setFarmers] = useState([]);
     const [sortOrder, setSortOrder] = useState('asc');

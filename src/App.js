@@ -1,32 +1,31 @@
 import './App.css';
-import React, { useState } from 'react'; // Use useState for isLoggedIn
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import "@fortawesome/fontawesome-free/css/all.min.css";
-
 import { ToastContainer } from 'react-toastify';
+import Cookies from 'js-cookie'; // Needed for the isAuthenticated helper
 
-// Context and Error Boundary
-import { SignalRProvider } from './contexts/SignalRContext'; // Adjust path if necessary
+// Context, Error Boundary, and Auth Logic
+import { SignalRProvider } from './contexts/SignalRContext';
 import StanderErrorBoundary from './Components/Error/StanderErorrBoundary';
+import AuthRedirect from './Authentication/AuthRedirect'; // The new component for redirection logic
 
 // Routing
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 
 // Page Components & Layout
 import Notfound from './Components/Notfound';
-import Navbar from './Components/Navbar'; // Main public Navbar
+import Navbar from './Components/Navbar';
 import Contact from './Components/Contact';
-import Home from './Components/Home'; // Assume Home handles login/register modals
+import Home from './Components/Home';
 import Services from './Components/Services';
 import About from './Components/About';
 import Instructions from './Components/Instructions';
 import Opinon from './Components/Opinon';
 
 // Authentication Components
-// import Register from './Authentication/Register'; // If Home handles register modal, this might not be directly routed
 import Newpassword from './Authentication/Newpassword';
-// Login component will be implicitly handled by Home/Navbar or a direct route if needed
 
 // Farmer Dashboard Components
 import WeatherF from './Components/FarmerDashboard/WeatherF';
@@ -59,7 +58,6 @@ import Privatecyles from './Components/InvestorDashboard/cyclesforinvestor/Priva
 import Newcycles from './Components/InvestorDashboard/cyclesforinvestor/Newcycles';
 import Orders from './Components/InvestorDashboard/Investorpages/Orders/Orders';
 
-
 // Merchant Dashboard Components
 import MerchentHome from './Components/merchantDashboard/MerchentHome/MerchentHome';
 import MerchentPayment from './Components/merchantDashboard/MerchentPayment/MerchentPayment';
@@ -73,77 +71,70 @@ import ChatInterface from './Components/Chat/ChatInterface';
 
 
 // --- Authentication Helper ---
-const isAuthenticated = () => !!localStorage.getItem("user_data");
+// A reliable function to check if the user is authenticated.
+const isAuthenticated = () => {
+    const token = Cookies.get("access_token");
+    const userData = localStorage.getItem("user_data");
+    return !!token && !!userData;
+};
 
 // --- Protected Route Component ---
+// This component guards routes that require a logged-in user.
 const ProtectedRoute = ({ children }) => {
     if (!isAuthenticated()) {
-        // User not authenticated, redirect to login page.
-        // Pass the current location to redirect back after login.
+        // If the user is not authenticated, redirect them to the /login path.
+        // The Home component will then be rendered and can show the login modal.
         return <Navigate to="/login" replace />;
     }
+    // If authenticated, render the child component (the protected page).
     return children;
 };
 
+// --- Layout Component for Public Pages ---
+// This wrapper adds the main public-facing Navbar to a page.
+const PublicPageLayout = ({ children }) => (
+    <>
+        <Navbar /> {/* Navbar is now self-sufficient, no props needed */}
+        {children}
+    </>
+);
+
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
-
-    // This function is called by the Login component upon successful login
+    // The `onLoginSuccess` callback is passed to the Home component
+    // to let it know when the Login modal has successfully finished its job.
+    // It doesn't need to do anything here, but it's good practice for component communication.
     const handleLoginSuccess = () => {
-        setIsLoggedIn(true);
-        // SignalR connection is now expected to be started within Login.jsx using useSignalR()
+        console.log("Login successful. Redirection is handled by Login.js and AuthRedirect.js.");
     };
-
-    // This function is passed to the main Navbar to update App's state on logout
-    const handleLogout = () => {
-        setIsLoggedIn(false);
-        // SignalR connection stop is expected to be handled in Navbar.jsx (or other navbars) using useSignalR()
-        // This App-level function mainly updates the isLoggedIn state.
-    };
-
-    // Component to render public pages with the main Navbar
-    const PublicPageLayout = ({ children }) => (
-        <>
-            <Navbar
-                isLoggedIn={isLoggedIn}
-                onLogout={handleLogout} /* For Navbar to tell App to update state */
-                onLoginSuccess={handleLoginSuccess} /* For Navbar to pass to Login modal */
-            />
-            {children}
-        </>
-    );
 
     return (
-        <>
-        
-        <SignalRProvider> {/* SignalR context available to the whole app */}
-        <ToastContainer />
+        <SignalRProvider>
+            <ToastContainer />
             <StanderErrorBoundary>
                 <BrowserRouter>
-                    <Routes>
-                        {/* Public Routes with Main Navbar */}
-                        <Route path="/" element={<PublicPageLayout><Home onLoginSuccess={handleLoginSuccess} /></PublicPageLayout>} />
-                        <Route path="/Home" element={<PublicPageLayout><Home onLoginSuccess={handleLoginSuccess} /></PublicPageLayout>} />
+                    {/* AuthRedirect runs on every route change to handle session logic */}
+                    <AuthRedirect />
 
-                        {/*
-                          If Login/Register are modals triggered from Home/Navbar:
-                          The ProtectedRoute will redirect to "/login".
-                          The Home component (when at /login path or triggered) should show the Login modal.
-                        */}
+                    <Routes>
+                        {/* --- PUBLIC ROUTES --- */}
+                        {/* These routes are accessible to everyone and use the PublicPageLayout. */}
+                        <Route path="/" element={<PublicPageLayout><Home onLoginSuccess={handleLoginSuccess} /></PublicPageLayout>} />
+                        <Route path="/Home" element={<Navigate to="/" replace />} /> {/* Redirect alias to the main route */}
+                        
+                        {/* Specific routes to trigger modals within the Home component */}
                         <Route path="/login" element={<PublicPageLayout><Home isLoginPage={true} onLoginSuccess={handleLoginSuccess} /></PublicPageLayout>} />
                         <Route path="/register" element={<PublicPageLayout><Home isRegisterPage={true} /></PublicPageLayout>} />
-
-
+                        
                         <Route path="/Services" element={<PublicPageLayout><Services /></PublicPageLayout>} />
                         <Route path="/Contact" element={<Contact />} />
                         <Route path="/About" element={<PublicPageLayout><About /></PublicPageLayout>} />
                         <Route path="/Instructions" element={<PublicPageLayout><Instructions /></PublicPageLayout>} />
                         <Route path="/Opinon" element={<Opinon />} />
-
-                        {/* Standalone Authentication Pages (if any, Newpassword might be one) */}
                         <Route path="/Newpassword" element={<Newpassword />} />
 
-                        {/* Protected Routes - These typically have their own internal layout/navbar */}
+                        {/* --- PROTECTED ROUTES --- */}
+                        {/* All routes below are wrapped in the ProtectedRoute component. */}
+
                         {/* Farmer Routes */}
                         <Route path="/HomeFarmer" element={<ProtectedRoute><HomeFarmer /></ProtectedRoute>} />
                         <Route path="/WeatherF" element={<ProtectedRoute><WeatherF /></ProtectedRoute>} />
@@ -175,7 +166,6 @@ function App() {
                         <Route path="/NewCycles" element={<ProtectedRoute><Newcycles /></ProtectedRoute>} />
                         <Route path="/Orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
 
-
                         {/* Merchant Routes */}
                         <Route path="/MerchentHome" element={<ProtectedRoute><MerchentHome /></ProtectedRoute>} />
                         <Route path="/MerchentPayment" element={<ProtectedRoute><MerchentPayment /></ProtectedRoute>} />
@@ -193,7 +183,6 @@ function App() {
                 </BrowserRouter>
             </StanderErrorBoundary>
         </SignalRProvider>
-        </>
     );
 }
 

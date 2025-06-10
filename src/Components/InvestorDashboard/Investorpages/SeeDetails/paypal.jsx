@@ -48,20 +48,10 @@ export default function Paypal({ cycleId }) {
     };
 
     try {
-      // Use your 'api' instance which should have the base URL and auth headers configured
-      // The endpoint is relative to your api instance's baseURL
+    
       const response = await api.post("/PayPal/create-payment", paymentData);
 
-      // Axios responses usually have data in response.data
-      // You might want to check response.status or response.data for specific success indicators
-      // For example, if the backend returns a redirect URL for PayPal:
-      // if (response.data && response.data.approvalUrl) {
-      //   window.location.href = response.data.approvalUrl; // Redirect to PayPal
-      // } else {
-      //    toast.success("تم إنشاء طلب الدفع بنجاح. يرجى إكمال الدفع عبر PayPal.", {
-      //      position: "top-right", autoClose: 3000 });
-      // }
-      // For now, assuming a generic success message is fine if no redirect is immediately needed:
+      
       toast.success("تم إرسال طلب الدفع بنجاح.", {
         position: "top-right",
         autoClose: 2000,

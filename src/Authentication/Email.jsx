@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Code from "./Code";
 
 
-export default function Email({email}) { // Get the email prop
+export default function Email({email,onFlowComplete}) { // Get the email prop
     const [visiblecode, setVisiblecode] = useState(false);
     const codeStyles = {
       content: {
@@ -39,7 +39,7 @@ export default function Email({email}) { // Get the email prop
                   top: '10px', 
                   right: '10px', 
                 }} ></i></button>
-             <Code email={email} /> {/* Pass the email prop here */}
+             <Code email={email} onFlowComplete={onFlowComplete}/> {/* Pass the email prop here */}
             </Modal>
                 </p>
                 <hr />

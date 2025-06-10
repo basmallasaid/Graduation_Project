@@ -6,7 +6,7 @@ import Email from './Email';
 import toast, { Toaster } from "react-hot-toast";
 import Code from './Code';
 import api from '../API/axiosInstance';
-export default function Forget() {
+export default function Forget({onFlowComplete}) {
   const [visibleemail, setVisibleemail] = useState(false);
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -116,7 +116,7 @@ export default function Forget() {
                     }}
                   ></i>
                 </button>
-                <Email email={email} /> 
+                <Email email={email} onFlowComplete={onFlowComplete}/> 
                               </Modal>
             </div>
           </form>

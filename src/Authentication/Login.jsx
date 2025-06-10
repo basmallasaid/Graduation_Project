@@ -18,7 +18,6 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
     const navigate = useNavigate();
     const { startConnection } = useSignalR(); // Get startConnection from context
 
-    // ... (forgetStyles, useEffect for rememberMe, validate function are the same)
     const forgetStyles = {
         content: {
             maxWidth: '600px',
@@ -69,7 +68,7 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
             }
 
             const cookieOptions = {
-                secure: process.env.NODE_ENV === 'production', // More secure for production
+                secure: process.env.NODE_ENV === 'production',
                 sameSite: 'Strict',
                 expires: rememberMe ? 7 : 1
             };
@@ -96,11 +95,8 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
 
             toast.success("تم تسجيل الدخول بنجاح!", { duration: 1000 });
 
-            // Call onLoginSuccess which might update App's state
             if (onLoginSuccess) onLoginSuccess();
 
-
-            // Delay navigation slightly to allow toast and potential state updates
             setTimeout(() => {
                 if (role === "Farmer") {
                     navigate("/HomeFarmer");
@@ -109,29 +105,26 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
                 } else if (role === "Merchant") {
                     navigate("/MerchentHome");
                 } else {
-                    navigate("/"); // Fallback, or a dashboard
+                    navigate("/");
                 }
-                // setVisibleLogin is likely for a modal, ensure it's handled if this isn't a page
                 if (setVisibleLogin) setVisibleLogin(false);
-
-                // Consider removing window.location.reload() if state management handles updates correctly
-                // If Navbar and other components correctly re-render based on login state, reload is often not needed.
-                // window.location.reload();
-            }, 1500); // Increased delay slightly
+            }, 1500);
 
         } catch (error) {
             console.error("Login error:", error);
-            if (error.response) {
-                if (error.response.status === 400) {
-                    toast.error("البريد الإلكتروني أو كلمة المرور غير صحيحة", { duration: 3000 });
-                } else {
-                    toast.error(` ${error.response.data?.message || error.response.statusText || 'البريد الإلكتروني أو كلمة المرور غير صحيحة'}`, { duration: 3000 });
-                }
-            } else if (error.message === "لم يتم استلام بيانات الدخول بشكل صحيح") {
-                 toast.error(error.message, { duration: 3000 });
-            }
-            else {
-                toast.error("فشل الاتصال بالخادم أو خطأ في إعداد الطلب", { duration: 3000 });
+            // Updated Error Handling Block
+            if (error.response && error.response.data) {
+                // Prioritize backend error message if it exists (either as a string or in a `message` property)
+                const errorMessage = typeof error.response.data === 'string'
+                    ? error.response.data
+                    : error.response.data.message || "البريد الإلكتروني أو كلمة المرور غير صحيحة";
+                toast.error(errorMessage, { duration: 4000 });
+            } else if (error.request) {
+                // Handle network errors (no response received)
+                toast.error("فشل الاتصال بالخادم. يرجى التحقق من اتصالك بالإنترنت.", { duration: 3000 });
+            } else {
+                // Handle other errors (e.g., client-side validation error thrown above, or request setup issues)
+                toast.error(error.message || "حدث خطأ غير متوقع", { duration: 3000 });
             }
         } finally {
             setIsLoading(false);
@@ -144,10 +137,18 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
             setVisibleLogin(false);
             setVisibleRegister(true);
         } else {
-            navigate('/register'); // Fallback if modal props not passed
+            navigate('/register');
         }
     };
-
+  // *** STEP 1: DEFINE THE MASTER CALLBACK FUNCTION ***
+    const handlePasswordResetSuccess = () => {
+        setVisibleForget(false); // Close the 'Forget' modal
+        if (setVisibleLogin) {
+            setVisibleLogin(false); // Close the main 'Login' modal
+        }
+        navigate('/'); // Navigate to home/main page
+        toast.success("يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.");
+    };
     return (
         <div>
             <Toaster position="top-center" reverseOrder={false} />
@@ -237,7 +238,7 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
                         >
                             <button
                                 onClick={() => setVisibleForget(false)}
-                                style={{ // Basic styling for close button
+                                style={{
                                     background: 'transparent',
                                     border: 'none',
                                     fontSize: '24px',
@@ -247,11 +248,11 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
                                     top: '10px',
                                     right: '10px'
                                 }}
-                                disabled={isLoading} // Disable if main form is loading
+                                disabled={isLoading}
                             >
                                 <i className="fa-solid fa-xmark"></i>
                             </button>
-                            <Forget />
+                            <Forget onFlowComplete={handlePasswordResetSuccess}/>
                         </Modal>
                     </div>
                 </form>

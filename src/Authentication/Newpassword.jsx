@@ -4,7 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from 'react-router-dom';
 import api from '../API/axiosInstance';
 
-export default function PasswordPage({ email, token, resetCode }) {
+export default function PasswordPage({ email, token, resetCode,onSuccess }) {
   const [newPassword, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -47,9 +47,11 @@ export default function PasswordPage({ email, token, resetCode }) {
       );
 
       toast.success("تم تحديث كلمة المرور بنجاح!");
-      setTimeout(() => {
-        navigate('/'); // Redirect to login page after 2 seconds
-      }, 2000);
+        setTimeout(() => {
+        if (onSuccess) {
+          onSuccess(); // This function will close all modals and navigate.
+        }
+      }, 1500);
 
     } catch (err) {
       console.error(err);

@@ -7,7 +7,7 @@ import api from '../API/axiosInstance';
 
 // Set the app element for react-modal for accessibility
 
-export default function Code({ email }) {
+export default function Code({ email,onFlowComplete }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [code, setCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -116,7 +116,7 @@ export default function Code({ email }) {
           </button>
           
           {/* **CRITICAL CHANGE**: Pass the `token` to the next component, not the `resetCode` */}
-          <New email={email} token={verifiedToken} resetCode={code}/>
+          <New email={email} token={verifiedToken} resetCode={code} onSuccess={onFlowComplete}/>
         </Modal>
       </div>
     </>

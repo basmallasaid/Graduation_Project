@@ -1,18 +1,65 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2'; // استيراد SweetAlert2
-import NavbarInv from '../Main/NavbarInv';
-import NavSideInv from '../Main/NavSideInv';
-import FooterInv from '../Main/FooterInv';
 import stylesInv from "../StylesInv/stylesInv.module.css";
 import api from '../../../API/axiosInstance';
-
+import FooterF from '../../FarmerDashboard/Main/FooterF';
+import FooterInv from '../Main/FooterInv';
+import FooterMer from '../../merchantDashboard/Main/FooterMer';
+import NavSideF from '../../FarmerDashboard/Main/NavSideF';
+import NavSideInv from '../Main/NavSideInv';
+import NavSideMer from '../../merchantDashboard/Main/NavSideMer';
+import NavbarF from '../../FarmerDashboard/Main/NavbarF';
+import NavbarInv from '../Main/NavbarInv';
+import NavbarMer from '../../merchantDashboard/Main/NavbarMer';
+const userData = JSON.parse(localStorage.getItem("user_data"));
+const role = userData?.userId;
 const FavouritePage = () => {
     const [farmers, setFarmers] = useState([]);
     const [sortOrder, setSortOrder] = useState('asc');
     const [filterRating, setFilterRating] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
+     const [userRole, setUserRole] = useState(null);
 
+const RenderNavbarByRole = ({ role}) => {
+  switch (role) {
+    case 'Merchant':
+      return <NavbarMer/>;
+    case 'Investor':
+      return <NavbarInv/>;
+    case 'Farmer':
+    default:
+      return <NavbarF/>;
+  }
+};
+
+const RenderNavSideByRole = ({ role }) => {
+  switch (role) {
+    case 'Merchant':
+      return <NavSideMer/>;
+    case 'Investor':
+      return <NavSideInv/>;
+    case 'Farmer':
+    default:
+      return <NavSideF/>;
+  }
+};
+
+const RenderFooterByRole = ({ role }) => {
+  switch (role) {
+    case 'Merchant':
+      return <FooterMer/>;
+    case 'Investor':
+      return <FooterInv />;
+    case 'Farmer':
+    default:
+      return <FooterF />;
+  }
+};
     useEffect(() => {
+           const userData = JSON.parse(localStorage.getItem("user_data"));
+  if (userData?.role) {
+    setUserRole(userData.role); 
+  }
         const fetchData = async () => {
             try {
                 const response = await api.get('FavouriteFarmer/Favourites');
@@ -61,9 +108,9 @@ const FavouritePage = () => {
 
     return (
         <div className="d-flex flex-column min-vh-100">
-            <NavbarInv />
+           <RenderNavbarByRole role={userRole} />
             <div className="d-flex flex-grow-1">
-                <NavSideInv />
+                <RenderNavSideByRole role={userRole} />
                 <main className="flex-grow-1 p-3">
                     <div className="position-relative w-25 m-5">
                         <input
@@ -139,7 +186,7 @@ const FavouritePage = () => {
                     </div>
                 </main>
             </div>
-            <FooterInv />
+            <RenderFooterByRole role={userRole} />
         </div>
     );
 };

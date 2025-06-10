@@ -110,10 +110,10 @@ const CreateAccountForm = ({ onRegistrationSuccess, setVisibleRegister, setVisib
 
                 if (err.response) {
                     const status = err.response.status;
-                    const message = err.response.data?.message || "";
+                    const message = err.response?.message ;
 
-                    if (status === 409) {
-                        showError("هذا البريد الإلكتروني مستخدم بالفعل.");
+                    if (status === 400) {
+                        showError(message);
                     } else if (message.toLowerCase().includes("email") || message.includes("البريد")) {
                         showError("البريد الإلكتروني غير متاح، استخدم بريدًا آخر.");
                     } else {

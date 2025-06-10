@@ -122,10 +122,10 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
         } catch (error) {
             console.error("Login error:", error);
             if (error.response) {
-                if (error.response.status === 401) {
+                if (error.response.status === 400) {
                     toast.error("البريد الإلكتروني أو كلمة المرور غير صحيحة", { duration: 3000 });
                 } else {
-                    toast.error(`حدث خطأ في الخادم: ${error.response.data?.message || error.response.statusText || 'Unknown server error'}`, { duration: 3000 });
+                    toast.error(` ${error.response.data?.message || error.response.statusText || 'البريد الإلكتروني أو كلمة المرور غير صحيحة'}`, { duration: 3000 });
                 }
             } else if (error.message === "لم يتم استلام بيانات الدخول بشكل صحيح") {
                  toast.error(error.message, { duration: 3000 });

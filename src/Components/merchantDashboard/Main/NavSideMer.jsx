@@ -26,6 +26,14 @@ const NavSideMer = () => {
                             <i class="fa-regular fa-heart" style={{fontSize:"1.3rem"}}></i>
                             {!isCollapsed && ' المفضله'}
                         </Link>
+                         <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/Opinon">
+                            <img src="/assets/opinion.png" alt='opinion' />
+                            {!isCollapsed && ' رأيك'}
+                        </Link>
+                         <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/Contact">
+                            <img src="/assets/customerservice.png" alt='Contact' />
+                            {!isCollapsed && ' تواصل معنا '}
+                        </Link>
                       
                     </div>
                 </>

@@ -135,10 +135,10 @@ function App() {
 
 
                         <Route path="/Services" element={<PublicPageLayout><Services /></PublicPageLayout>} />
-                        <Route path="/Contact" element={<PublicPageLayout><Contact /></PublicPageLayout>} />
+                        <Route path="/Contact" element={<Contact />} />
                         <Route path="/About" element={<PublicPageLayout><About /></PublicPageLayout>} />
                         <Route path="/Instructions" element={<PublicPageLayout><Instructions /></PublicPageLayout>} />
-                        <Route path="/Opinon" element={<PublicPageLayout><Opinon /></PublicPageLayout>} />
+                        <Route path="/Opinon" element={<Opinon />} />
 
                         {/* Standalone Authentication Pages (if any, Newpassword might be one) */}
                         <Route path="/Newpassword" element={<Newpassword />} />

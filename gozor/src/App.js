@@ -135,7 +135,7 @@ function App() {
 
 
                         <Route path="/Services" element={<PublicPageLayout><Services /></PublicPageLayout>} />
-                        <Route path="/Contact" element={<PublicPageLayout><Contact /></PublicPageLayout>} />
+                        <Route path="/Contact" element={<ProtectedRoute><Contact/></ProtectedRoute>} />
                         <Route path="/About" element={<PublicPageLayout><About /></PublicPageLayout>} />
                         <Route path="/Instructions" element={<PublicPageLayout><Instructions /></PublicPageLayout>} />
                         <Route path="/Opinon" element={<PublicPageLayout><Opinon /></PublicPageLayout>} />

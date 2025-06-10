@@ -25,6 +25,14 @@ const NavSideF = () => {
                             <img src="/assets/partly_cloudy_day.png" alt='partly_cloudy_day' />
                             {!isCollapsed && ' الطقس'}
                         </Link>
+                        <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/Opinon">
+                            <img src="/assets/opinion.png" alt='opinion' />
+                            {!isCollapsed && ' رأيك'}
+                        </Link>
+                         <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/Contact">
+                            <img src="/assets/customerservice.png" alt='Contact' />
+                            {!isCollapsed && ' تواصل معنا '}
+                        </Link>
                     </div>
                 </>
     );

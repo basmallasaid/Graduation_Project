@@ -31,6 +31,14 @@ const NavSideInv = () => {
                             <i class="fa-solid fa-box" style={{fontSize:"1.3rem"}} > </i>
                             {!isCollapsed && ' الطلبات'}
                         </Link>
+                        <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/Opinon">
+                            <img src="/assets/opinion.png" alt='opinion' />
+                            {!isCollapsed && ' رأيك'}
+                        </Link>
+                         <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/Contact">
+                            <img src="/assets/customerservice.png" alt='Contact' />
+                            {!isCollapsed && ' تواصل معنا '}
+                        </Link>
                     </div>
                 </>
     );

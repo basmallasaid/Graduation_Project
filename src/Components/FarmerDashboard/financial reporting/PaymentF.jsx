@@ -97,10 +97,12 @@ const PaymentF = () => {
         let filtered = [...paymentData.payments];
 
         // Apply type filter
-        const apiType = transactionTypeMap[typeFilter];
-        if (typeFilter !== 'all' && apiType) {
-            filtered = filtered.filter(transaction => transaction.type === apiType);
-        }
+        if (typeFilter !== 'all') {
+    const apiType = transactionTypeMap[typeFilter]; 
+    filtered = filtered.filter(transaction => {
+        return transaction.type === typeFilter || transaction.type === apiType;
+    });
+}
 
         // Apply date filter
         const { from, to } = dateFilterRange;
@@ -141,7 +143,7 @@ const PaymentF = () => {
 
     }, [paymentData.payments]); // Depend on the source payments array
 
-    // --- Filter Event Handlers --- (Keep existing handlers: handleTypeFilter, handleDateFilter, handleDateRangeChange)
+   
         const handleTypeFilter = (type) => {
         setActiveTypeFilter(type);
         applyFilters(type, dateRange);

@@ -73,7 +73,7 @@ const MerchentPayment = () => {
                     const transformedPaymentDetails = res.data.payments.map(payment => ({
                         ...payment,
                         type: translateTypeMer(payment.type), // ترجمة النوع إلى العربية
-                        CycleName: payment.associatedCycle?.cycleName ?? 'N/A', // استخراج اسم المحصول
+                        CycleName: payment.associatedHarvest?.cropName ?? 'N/A', // استخراج اسم المحصول
                     }));
 
                     settransactionsInv({

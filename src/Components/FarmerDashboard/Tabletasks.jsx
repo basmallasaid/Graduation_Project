@@ -141,11 +141,11 @@ const handleTaskUpdate = (updatedTask) => {
 
   const getRowColor = (status) => {
     switch (status) {
-      case "مكتمله":
+      case "اكتملت":
         return "#A4D0A4";
-      case "قيد التنفيذ":
+      case "في_تقدم":
         return "#878680";
-      case "لم تبدأ":
+      case "لم_تبدأ":
         return "#C5CE38";
       default:
         return "transparent";

@@ -28,7 +28,9 @@ export default function Forget() {
     setEmail(event.target.value);
   };
 
-  const handleSubmit = async (event) => {
+    const handleSubmit = async (event) => {
+    // Correctly use the 'event' object passed to the function
+    event.stopPropagation();
     event.preventDefault();
 
     if (!email.trim()) {
@@ -36,18 +38,24 @@ export default function Forget() {
       return;
     }
 
+    
     setVisibleemail(true);
 
     setIsLoading(true);
 
     try {
-      const response = await api.post("/Authentication/forget-password", { email });
+      const response = await api.post("Authentication/forget-password", { email });
 
       if (response.status === 200) {
         toast.success("تم إرسال البريد الإلكتروني بنجاح");
+        // Here you might want to open the modal instead of before the call
       }
     } catch (error) {
       console.error('Error sending email:', error);
+      // You should probably add an error toast here as well
+      toast.error("حدث خطأ أثناء إرسال البريد الإلكتروني");
+      // And close the modal if the API call fails
+      setVisibleemail(false); 
     } finally {
       setIsLoading(false);
     }
@@ -108,8 +116,8 @@ export default function Forget() {
                     }}
                   ></i>
                 </button>
-                <Email email={email} /> {/* Pass the email prop here */}
-              </Modal>
+                <Email email={email} /> 
+                              </Modal>
             </div>
           </form>
         </div>

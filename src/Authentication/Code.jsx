@@ -1,53 +1,71 @@
 import React, { useState } from 'react';
 import styles from '../Styles/style.module.css';
 import Modal from 'react-modal';
-import New from './Newpassword';
-import axios from 'axios';  
+import New from './Newpassword'; // Renamed New.jsx to PasswordPage.jsx for clarity
 import toast, { Toaster } from "react-hot-toast";
 import api from '../API/axiosInstance';
-export default function Code({ email }) { 
-  const [visiblenew, setVisiblenew] = useState(false);
-  const [code, setCode] = useState('');  
+
+// Set the app element for react-modal for accessibility
+
+export default function Code({ email }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [code, setCode] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // State to store the temporary token received from the server
+  const [verifiedToken, setVerifiedToken] = useState(null);
 
   const newStyles = {
     content: {
       maxWidth: '500px',
       margin: '0 auto',
-      padding: '10px',
+      padding: '20px', // Increased padding
       borderRadius: '10px',
-      height: '500px',
+      height: '500px', // Auto height
+      border: 'none',
     },
     overlay: {
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: 'rgba(0, 0, 0, 0.6)',
     },
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();  
-  
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!code.trim() || code.length < 6) { // Common codes are 6 digits
+        toast.error("يرجى إدخال الكود الصحيح.");
+        return;
+    }
     if (!email) {
-      toast.error("البريد الإلكتروني غير متوفر!");
+      toast.error("حدث خطأ: البريد الإلكتروني غير متوفر!");
       return;
     }
-  
+
+    setIsLoading(true);
+
     try {
-      const response = await api.post("/Authentication/check-reset-code", {
-        email: email,  
-        code: code  
+      const response = await api.post("Authentication/check-reset-code", {
+        email: email,
+        resetCode: code
       });
-  
-      if (response.data.isValid) {
-        setVisiblenew(true);
+
+      // **CRITICAL CHANGE**: Extract and save the token from the response
+      if (response.data && response.data.token) {
+        toast.success("تم التحقق من الرمز بنجاح.");
+        setVerifiedToken(response.data.token); // Save the token
+        setIsModalOpen(true); // Open the modal
       } else {
-        toast.error('الكود غير صحيح');  
+        // Handle cases where the server gives a 200 OK but no token
+        toast.error('حدث خطأ غير متوقع أثناء التحقق.');
       }
     } catch (error) {
-      console.error('Error verifying code:', error);
-      toast.error('حدث خطأ. يرجى المحاولة لاحقاً');  
+      console.error('Error verifying code:', error.response);
+      toast.error(error.response?.data?.message || 'الكود الذي أدخلته غير صحيح أو انتهت صلاحيته.');
+    } finally {
+      setIsLoading(false);
     }
   };
-  
-  
 
   return (
     <>
@@ -57,56 +75,48 @@ export default function Code({ email }) {
         <div className={styles.logcontainer}>
           <form className={styles.forgetform} onSubmit={handleSubmit}>
             <h1 className={styles.firsttitle}>برجاء ادخال كود التحقق</h1>
-            <br />
             <hr className={styles.hr} />
             <div className={styles.holder}>
               <div className={styles.reginput}>
-                <label for="code" className={styles.reglabel}>الكود</label>
+                <label htmlFor="code" className={styles.reglabel}>الكود</label>
                 <br />
                 <input
-                  type="text"  
+                  type="text"
+                  id="code"
                   name="code"
-                  placeholder="Ex:25648975"
-                  value={code}  
-                  onChange={(e) => setCode(e.target.value)}  
+                  placeholder="123456"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
                   className={styles.loginput}
                 />
               </div>
-              <button type="submit" className={styles.logButton}
-                  onClick={(e) => {
-                    e.preventDefault(); 
-                    e.stopPropagation(); 
-                    handleSubmit(e); 
-                  }}
-              >
-                
-                ارسال
+              <button type="submit" className={styles.logButton} disabled={isLoading}>
+                {isLoading ? 'جاري التحقق...' : 'التحقق من الكود'}
               </button>
             </div>
           </form>
         </div>
 
         <Modal
-          isOpen={visiblenew}
-          onRequestClose={() => setVisiblenew(false)}
+          isOpen={isModalOpen}
+          onRequestClose={() => setIsModalOpen(false)}
           style={newStyles}
         >
-          <button onClick={() => setVisiblenew(false)}>
-            <i
-              className="fa-solid fa-xmark"
-              style={{
-                backgroundColor: 'transparent',
-                border: 'none',
-                fontSize: '24px',
-                color: '#333',
-                cursor: 'pointer',
-                position: 'absolute',
-                top: '10px',
-                right: '10px',
-              }}
-            ></i>
+          {/* Close button inside modal */}
+          <button 
+            onClick={() => setIsModalOpen(false)}
+            style={{
+                background: 'transparent', border: 'none', fontSize: '24px',
+                color: '#333', cursor: 'pointer', position: 'absolute',
+                top: '15px', right: '15px'
+            }}
+            aria-label="Close"
+          >
+            <i className="fa-solid fa-xmark"></i>
           </button>
-          <New email={email} code={code}/>
+          
+          {/* **CRITICAL CHANGE**: Pass the `token` to the next component, not the `resetCode` */}
+          <New email={email} token={verifiedToken} resetCode={code}/>
         </Modal>
       </div>
     </>

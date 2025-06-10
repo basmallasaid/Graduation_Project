@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styles from "../Styles/style.module.css";
 import toast, { Toaster } from "react-hot-toast";
-import axios from "axios";
 import Cookies from "js-cookie";
 import api from "../API/axiosInstance";
 
@@ -11,7 +10,7 @@ const CreateAccountForm = ({ onRegistrationSuccess, setVisibleRegister, setVisib
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
     const [repPassword, setRepPassword] = useState("");
-    const [category, setCategory] = useState("farmer");
+    const [category, setCategory] = useState("Farmer"); // Default to uppercase 'Farmer'
     const [username, setUsername] = useState("");
     const [bio, setBio] = useState("");
 
@@ -31,60 +30,31 @@ const CreateAccountForm = ({ onRegistrationSuccess, setVisibleRegister, setVisib
         });
     };
 
-   const validateForm = () => {
-    if (!name.trim() || name.split(" ").length < 3) {
-    showError("يرجى إدخال الاسم بالكامل (اسم ثلاثي على الأقل).");
-    return false;
-}
-
-    if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
-        showError("يرجى إدخال بريد إلكتروني صحيح.");
-        return false;
-    }
-    if (!phone.trim() || !/^\d{11}$/.test(phone)) {
-        showError("يرجى إدخال رقم هاتف مكون من 11 رقمًا.");
-        return false;
-    }
-
-    // ✅ شرط كلمة المرور الجديدة
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    if (!password.trim() || !passwordRegex.test(password)) {
-        showError("يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل، وتتضمن حروفًا وأرقامًا.");
-        return false;
-    }
-
-    if (password !== repPassword) {
-        showError("كلمتا المرور غير متطابقتين.");
-        return false;
-    }
-    if (!category) {
-        showError("يرجى اختيار فئة واحدة.");
-        return false;
-    }
-    if (!username.trim()) {
-        showError("يرجى إدخال اسم المستخدم.");
-        return false;
-    }
-    if (!bio.trim()) {
-        showError("يرجى كتابة السيرة الذاتية.");
-        return false;
-    }
-    return true;
-};
-
     const handleRegister = (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+        e.preventDefault();
 
-        const regObj = { name, email, phone, password, category, username, bio };
+       
+        if (password !== repPassword) {
+            showError("كلمتا المرور غير متطابقتين.");
+            return; 
+        }
+    
 
-        api
-            .post("/Authentication/register", regObj, {
-                headers: { "Content-Type": "application/json" },
-            })
+
+        const formData = new FormData();
+        formData.append("Name", name);
+        formData.append("Email", email);
+        formData.append("PhoneNumber", phone);
+        formData.append("Password", password);
+        formData.append("Role", category);
+        formData.append("UserName", username);
+        formData.append("Bio", bio);
+
+        api.post("/Authentication/register", formData)
             .then((response) => {
-                if (response.status === 201) {
-                    toast.success("تم إنشاء الحساب بنجاح!", {
+                // A status of 200 or 201 can indicate success.
+                if (response.status === 201 || response.status === 200) {
+                    toast.success("تم إنشاء الحساب بنجاح! سيتم تحويلك لتسجيل الدخول.", {
                         duration: 4000,
                         position: "top-center",
                         style: {
@@ -94,33 +64,39 @@ const CreateAccountForm = ({ onRegistrationSuccess, setVisibleRegister, setVisib
                         },
                     });
 
-                    const user = response.data;
-                    Cookies.set("user", JSON.stringify(user), { expires: 1 });
-
                     setTimeout(() => {
                         setVisibleRegister(false);
                         setVisibleLogin(true);
                     }, 2000);
 
-                    onRegistrationSuccess();
+                    if (onRegistrationSuccess) {
+                        onRegistrationSuccess();
+                    }
                 }
             })
             .catch((err) => {
-                console.error("Error during registration:", err);
+                console.error("Error during registration:", err.response);
 
-                if (err.response) {
-                    const status = err.response.status;
-                    const message = err.response?.message ;
+                if (err.response && err.response.data) {
+                    const responseData = err.response.data;
 
-                    if (status === 400) {
-                        showError(message);
-                    } else if (message.toLowerCase().includes("email") || message.includes("البريد")) {
-                        showError("البريد الإلكتروني غير متاح، استخدم بريدًا آخر.");
-                    } else {
-                        showError("فشل التسجيل. حاول مرة أخرى.");
+                    if (typeof responseData === 'object' && responseData.errors) {
+                        const errors = responseData.errors;
+                        const firstErrorKey = Object.keys(errors)[0];
+                        const errorMessage = errors[firstErrorKey][0];
+                        showError(errorMessage);
+                    } 
+                    else if (typeof responseData === 'string') {
+                        showError(responseData);
+                    } 
+                    else if (typeof responseData === 'object' && responseData.title) {
+                        showError(responseData.title);
+                    } 
+                    else {
+                        showError("فشل التسجيل. حدث خطأ غير متوقع.");
                     }
                 } else {
-                    showError("حدث خطأ غير متوقع. حاول لاحقًا.");
+                    showError("فشل التسجيل. خطأ في الشبكة.");
                 }
             });
     };
@@ -133,7 +109,8 @@ const CreateAccountForm = ({ onRegistrationSuccess, setVisibleRegister, setVisib
             <div className={styles.regcontainer}>
                 <h1 className={styles.firsttitle}>حساب جديد</h1>
                 <p className={styles.subtitlee}>أهلا بك في جذور</p>
-                <form className={styles.regform}>
+                <form className={styles.regform} onSubmit={handleRegister}>
+                    {/* All input fields remain the same */}
                     <div className={styles.reginput}>
                         <label className={styles.reglabel}>
                             <i className="fa-solid fa-user" style={{ paddingLeft: "15px" }}></i>
@@ -201,24 +178,25 @@ const CreateAccountForm = ({ onRegistrationSuccess, setVisibleRegister, setVisib
                     </div>
                     <label className={styles.reglabel}>اختار الفئة</label>
                     <div className={styles.regcategory}>
+                        {/* FIX: Use uppercase to match state and styling logic */}
                         <button
                             type="button"
-                            className={`${styles.regcategoryButton} ${category === "farmer" ? styles.active : ""}`}
-                            onClick={() => handleCategoryChange("farmer")}
+                            className={`${styles.regcategoryButton} ${category === "Farmer" ? styles.active : ""}`}
+                            onClick={() => handleCategoryChange("Farmer")}
                         >
                             مزارع
                         </button>
                         <button
                             type="button"
-                            className={`${styles.regcategoryButton} ${category === "merchant" ? styles.active : ""}`}
-                            onClick={() => handleCategoryChange("merchant")}
+                            className={`${styles.regcategoryButton} ${category === "Merchant" ? styles.active : ""}`}
+                            onClick={() => handleCategoryChange("Merchant")}
                         >
                             تاجر
                         </button>
                         <button
                             type="button"
-                            className={`${styles.regcategoryButton} ${category === "investor" ? styles.active : ""}`}
-                            onClick={() => handleCategoryChange("investor")}
+                            className={`${styles.regcategoryButton} ${category === "Investor" ? styles.active : ""}`}
+                            onClick={() => handleCategoryChange("Investor")}
                         >
                             مستثمر
                         </button>
@@ -251,7 +229,6 @@ const CreateAccountForm = ({ onRegistrationSuccess, setVisibleRegister, setVisib
                     <button
                         type="submit"
                         className={styles.regButton}
-                        onClick={handleRegister}
                     >
                         إنشاء
                     </button>

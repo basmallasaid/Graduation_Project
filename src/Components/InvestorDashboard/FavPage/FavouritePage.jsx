@@ -2,17 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2'; // استيراد SweetAlert2
 import stylesInv from "../StylesInv/stylesInv.module.css";
 import api from '../../../API/axiosInstance';
-import FooterF from '../../FarmerDashboard/Main/FooterF';
-import FooterInv from '../Main/FooterInv';
-import FooterMer from '../../merchantDashboard/Main/FooterMer';
-import NavSideF from '../../FarmerDashboard/Main/NavSideF';
-import NavSideInv from '../Main/NavSideInv';
-import NavSideMer from '../../merchantDashboard/Main/NavSideMer';
-import NavbarF from '../../FarmerDashboard/Main/NavbarF';
-import NavbarInv from '../Main/NavbarInv';
-import NavbarMer from '../../merchantDashboard/Main/NavbarMer';
-const userData = JSON.parse(localStorage.getItem("user_data"));
-const role = userData?.userId;
+
 const FavouritePage = () => {
     const [farmers, setFarmers] = useState([]);
     const [sortOrder, setSortOrder] = useState('asc');
@@ -64,6 +54,7 @@ const RenderFooterByRole = ({ role }) => {
             try {
                 const response = await api.get('FavouriteFarmer/Favourites');
                 setFarmers(response.data);
+                console.log(response);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -179,7 +170,23 @@ const RenderFooterByRole = ({ role }) => {
                                         >
                                             🗑
                                         </span>
+                                        
                                     </div>
+                                         <Link
+                                    to="/Chatinterface"
+                                    state={{ 
+                                        farmerToChatWith: {
+                                            userId: farmer?.farmerId, // farmer is from harvestDetails
+                                            name: farmer?.name,
+                                            imageUrl: farmer?.imageUrl 
+                                        }
+                                    }}
+                                    type="button"
+                                    className="btn fs-5"
+                                >
+                                    <span style={{ color: "#6C4C94" }}>تواصل مع المزارع</span>
+                                    <i className="fa-solid fa-message"></i>
+                                </Link>
                                 </div>
                             </div>
                         ))}

@@ -7,7 +7,7 @@ const NavSideF = () => {
             setIsCollapsed(!isCollapsed);
         };
     return (
-         <>
+         <>      
                     <div className={`${styles.item3} ${isCollapsed ? styles.collapsed : ''}`} onClick={toggleCollapse} >
                         <Link className={`navbar-brand text-black ${styles.iconNavSide}`} to="/ProfileManegment">
                             <img style={{ width: "20px" }} src='/assets/account_circle.png' alt="account_circle" />
@@ -34,6 +34,7 @@ const NavSideF = () => {
                             {!isCollapsed && ' تواصل معنا '}
                         </Link>
                     </div>
+                    
                 </>
     );
 };

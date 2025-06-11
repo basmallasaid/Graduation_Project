@@ -83,7 +83,7 @@ const Agricultural = () => {
                 <NavSideF />
                 <main className="flex-grow-1">
                     <div className="container mt-4">
-                        <div className="d-flex justify-content-end">
+                        <div className={` ${styles.AddFarm}`}>
                             <button className="btn btn-dark mb-3" style={{ borderRadius: "10px" }}
                                 onClick={() => setAddModalOpen(true)}>إضافة مزرعة جديدة</button>
                         </div>

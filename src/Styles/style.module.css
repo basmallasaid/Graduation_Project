@@ -1742,6 +1742,9 @@ font-size: 20px;
   color: #ffffff; /* لون النص */
   margin: 0;
   padding: 0;
+   overflow: hidden;
+   white-space: nowrap;
+    max-width: 100%;
 
 }
 .outButton {
@@ -1771,14 +1774,12 @@ font-size: 20px;
 .greenline_bg{
   background: linear-gradient(to bottom, rgb(183, 220, 183), white);
 }
-.item3{
+/* .item3{
   background-color: #A4D0A4;
-  /* height: 100vh; */
   border-radius:10px  0px 0px 10px ;
   width: 250px;
   display: flex;
   flex-direction: column; 
-  /* justify-content: space-around;  */
   cursor: pointer; 
   transition: width 0.3s ease;
   align-items: center;
@@ -1788,9 +1789,36 @@ font-size: 20px;
 }
 .item3.collapsed {
   width: 70px; 
-  /* overflow:auto;  */
   align-items: center; 
+} */
+ .item3{
+  background-color: #A4D0A4;
+  border-radius:10px  0px 0px 10px ;
+  width: 250px;
+  display: flex;
+  flex-direction: column; 
+  cursor: pointer; 
+  transition: width 0.3s ease;
+  align-items: center;
 }
+.iconNavSide{
+  margin: 40px 0px;
+}
+.item3.collapsed {
+  width: 70px; 
+  align-items: center; 
+} 
+
+/* عند الشاشات الصغيرة (موبايل) */
+@media (max-width: 500px) {
+  .item3 {
+    background-color: #A4D0A4;
+  }
+  .item3.show {
+    transform: translateX(0);
+   }
+}
+
 /* .item2{
   width: 100%;
   margin-bottom: 90px;
@@ -1801,6 +1829,12 @@ font-size: 20px;
   top:5%;
   margin-bottom: 80px;
 }
+@media (max-width: 500px) {
+  .divflex {
+    flex-direction: column; 
+    align-items: center;
+    width: 500px;  
+  }}
 .Crop_Services ,.farm_management,.agr_courses,.fina_repo{
   width: 30%;
   /* background-color: #1F4E3D; */
@@ -2147,16 +2181,44 @@ font-size: 20px;
   }
 
   .filter_dropdown {
-    width: 100%; /* Make dropdowns full width */
+    width: 100%;
   }
+  
 
   .transactions_table th, .transactions_table td {
-    font-size: 12px; /* Smaller font size for mobile */
+    font-size: 12px; 
     font-weight: bold;
-    padding: 8px; /* Adjust padding for mobile */
+    padding: 8px;
   }
 
 }
+@media (max-width: 415px) {
+  .transactions_table {
+    font-size: 12px; /* تصغير الخط للجدول كله */
+    display: block;
+    width: 40%;
+  }
+
+  .transactions_table th,
+  .transactions_table td {
+    padding:5px;
+    font-size: 11px; /* تصغير إضافي للخانات */
+  }
+}
+@media (max-width: 360px) {
+  .transactions_table {
+    font-size: 12px; /* تصغير الخط للجدول كله */
+    display: block;
+    width: 40%;
+  }
+
+  .transactions_table th,
+  .transactions_table td {
+    padding:5px;
+    font-size: 8px; /* تصغير إضافي للخانات */
+  }
+}
+
 
 
 
@@ -2192,6 +2254,18 @@ font-size: 20px;
   
   margin-bottom: 5px;
 }
+ .AddFarm {
+    display: flex;
+    justify-content: end;
+  }
+@media (max-width: 500px) {
+  .AddFarm {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+
 /*model Agr*/
 .modal_overlayA {
   position: fixed;
@@ -2217,6 +2291,7 @@ font-size: 20px;
   direction: rtl;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 
 .modal_closeA {
   position: absolute;
@@ -2267,6 +2342,55 @@ font-size: 20px;
   text-overflow: ellipsis;
   text-align: center;
    
+}
+
+/* ----- هنا يبدأ كود الـ Responsive ----- */
+/* يتم تطبيق هذه الأنماط فقط عندما يكون عرض الشاشة 500 بكسل أو أقل */
+@media (max-width: 500px) {
+   .modal_overlayA {
+    /* تغيير المحاذاة العمودية من الوسط إلى الأعلى */
+    align-items:center;
+
+    /* إضافة هوامش داخلية لمنع المودال من الالتصاق بحواف الشاشة */
+    padding: 20px 10px; 
+  }
+ 
+    .modal_contentA {
+    width: 80%;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 10px;  
+     max-height: 600px; /* يمكنك تغيير هذا الرقم ليناسب تصميمك */
+  
+  /* 2. إضافة شريط تمرير عمودي عند الحاجة */
+  overflow-y: auto;
+  }
+  /* تغيير اتجاه flexbox إلى عمودي */
+  .first_rowA {
+    flex-direction: column; /* أهم تغيير: يجعل العناصر تحت بعضها */
+    align-items: stretch; /* لجعل العناصر تمتد بعرض الحاوية */
+    gap: 15px; /* يمكن زيادة المسافة العمودية بين العناصر */
+    margin-top: 30px; /* تقليل الهامش العلوي على الشاشات الصغيرة */
+  }
+
+  /* يمكن أيضًا تصغير حجم خط العنوان الرئيسي ليتناسب مع الشاشة الصغيرة */
+  .modal_titleA {
+    font-size: 20px;
+  }
+
+  .first_row_itemA {
+    /* يمكنك تعديل محاذاة العناصر الداخلية إذا لزم الأمر */
+    justify-content: space-between; 
+  }
+  /* .section_dividerA {
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  margin-top:60px;
+  padding: 5px;
+  border-radius: 4px;
+} */
+
 }
 .modal_valueAA{
   width: 110px;
@@ -2366,6 +2490,39 @@ font-size: 20px;
   gap: 10px;
   
 }
+@media (max-width: 500px) {
+
+  /* 1. تحويل الصف إلى عمود */
+  .land_parcel_rowA {
+    flex-direction: column; /* أهم تغيير: يجعل العناصر تحت بعضها */
+    gap: 15px; /* تعديل المسافة لتكون عمودية */
+  }
+
+  /* 2. تحويل العنصر الداخلي أيضًا إلى عمود */
+  .land_parcel_itemA {
+    flex-direction: column; /* يجعل العنوان فوق القيمة */
+    align-items: flex-start; /* لمحاذاة النص إلى البداية (اليمين في العربية) */
+    gap: 5px; 
+  }
+
+  /* يمكن أيضًا تعديل المسافة الرئيسية بين الصفوف إذا لزم الأمر */
+  .land_parcel_dataA {
+    gap: 20px;
+    /* height: 300px; */
+  }
+  .land_parcelA {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  padding: 20px;
+  border-bottom: 1px solid white;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  height: 300px;
+}
+}
 
 .parcel_imageA {
   max-width: 100%;
@@ -2437,36 +2594,6 @@ font-size: 20px;
 
  
 }
-
-/*
-.image_container {
-  width: 100px;
-  height: 200px;
-  background-color: #e9e9e9; 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px; 
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  flex: 1; 
-}
-
-.file_inputL {
-  width: 100%;
-  height: 100%;
-  opacity: 0; 
-  cursor: pointer;
-  position: absolute;
-}
-
-.image_container::before {
-  content: "+"; 
-  font-size: 80px;
-  color: #555;
-  position: absolute;
-}*/
 .image_container {
   width: 100px;
   height: 200px;
@@ -2593,6 +2720,54 @@ font-size: 20px;
      margin-left: 40px;
 }
 
+@media (max-width: 500px) {
+
+  /* 1. تعديل المودال الرئيسي ليتناسب مع الجوال */
+  .modal_contentL {
+    width: 75%; /* استخدام أكبر مساحة ممكنة من الشاشة */
+    height: auto; /* السماح للمحتوى بتحديد الارتفاع */
+    max-height: 90vh; /* تحديد أقصى ارتفاع لتجنب تغطية الشاشة بالكامل */
+    padding: 15px;
+    justify-content: flex-start; /* بدء المحتوى من الأعلى بدلًا من المنتصف */
+  }
+
+  /* 2. تحويل حاوية الصورة والبيانات إلى عمود (أهم تغيير) */
+  .image_and_data_container {
+    flex-direction: column; /* وضع الصورة فوق البيانات */
+    align-items: center; /* توسيط العناصر أفقيًا */
+    gap: 20px; /* زيادة المسافة العمودية */
+  }
+
+  /* 3. تعديل حجم حاوية الصورة */
+  .image_container, .image_containerL {
+    width: 150px;  /* يمكن تكبير العرض قليلاً */
+    height: 150px; /* جعله مربعًا لمظهر أفضل */
+    flex: none; /* إلغاء خاصية flex-grow */
+  }
+
+  /* 4. تحويل كل عنصر إدخال إلى عمود (لتحسين القراءة) */
+  .modal_itemL {
+    flex-direction: column; /* وضع النص فوق حقل الإدخال */
+    align-items: flex-start; /* محاذاة النص والإدخال إلى البداية (اليمين) */
+    gap: 5px; /* مسافة صغيرة بين النص وحقل الإدخال */
+  }
+
+  /* 5. جعل حقل الإدخال يأخذ العرض الكامل */
+  .modal_inputL {
+    width: 100%;
+  }
+  .modal_inputEdit{
+  color: black;
+  background: #e9e9e9;
+  padding: 2px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  width: 150px;
+  margin-right:15px ;
+  text-align: center;
+}
+}
 
 /* Investor pages */
 

@@ -24,7 +24,6 @@ const AuthRedirect = () => {
             '/Services', 
             '/About', 
             '/Instructions', 
-            // NOTE: Do not add /Contact or /Newpassword here if you want logged-in users to be able to see them.
         ];
 
         // --- SCENARIO 1: User is logged in ---

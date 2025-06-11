@@ -1621,7 +1621,80 @@ cursor: pointer;
   font-size: 14px;
   color: gray;
 }
+@media (max-width: 500px) {
 
+  /* 1. تعديل القسم التقديمي (Ai) */
+  .Ai {
+    margin: 20px 10px; /* تقليل الهوامش بشكل كبير */
+    text-align: center; /* توسيط كل شيء بعد أن أصبح عموديًا */
+  }
+
+  .Ai p {
+    font-size: 16px;  /* تصغير حجم الخط */
+    position: static; /* إلغاء خاصية right: 10% لتجنب الخروج عن الشاشة */
+    margin: 15px 0;
+  }
+
+  /* Bootstrap columns will stack automatically, but we can center them */
+  .Ai .col-3, .Ai .col-5 {
+    width: 80%;
+    margin: 10px auto; /* توسيط الصور والنص أفقيًا */
+  }
+
+  /* 2. تعديل قسم رفع الصور (imginfo) */
+  .imginfo {
+    margin: 40px 10px; /* تقليل الهامش الكبير جدًا */
+  }
+
+  .titleimg {
+    margin: 0 10px 20px; /* تقليل الهامش وتوسيط النص */
+    font-size: 18px;
+    text-align: center;
+  }
+
+  /* Bootstrap columns for uploadBox and fileList will stack. Now we style them. */
+  .uploadBox {
+    margin: 0 auto 30px; /* توسيط الصندوق أفقيًا وإضافة هامش سفلي */
+    width: 95%;         /* جعله يأخذ عرض الشاشة تقريبًا */
+    padding: 20px;      /* تقليل الحشو الداخلي قليلًا */
+  }
+
+  .fileList {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .imgButton {
+    width: 80%; /* تكبير الزر ليملأ مساحة أكبر */
+  }
+
+  /* 3. تعديل قسم عرض النتائج (showplane) */
+  .showplane {
+    width: 95%;          /* جعله يأخذ عرض الشاشة بالكامل تقريبًا */
+    position: static;    /* إلغاء تحديد الموضع لتسهيل التوسيط */
+    margin: 40px auto;   /* توسيط الصندوق باستخدام الهوامش */
+    padding: 25px 15px;  /* تقليل الحشو الداخلي */
+  }
+
+  .showplane p {
+    font-size: 17px; /* تصغير حجم الخط */
+  }
+
+  .showplane li {
+    font-size: 15px; /* تصغير حجم خط القائمة */
+  }
+
+  /* 4. تعديل حجم الصورة المعروضة في النتائج */
+  /* نستخدم !important هنا لتجاوز النمط المضمن في كود React */
+  .showplane .imgPreview {
+    width: 80% !important; 
+  }
+
+  /* 5. تحسين عرض قائمة الملفات المرفوعة */
+  .fileItem {
+    margin: 10px 0; /* تقليل الهامش */
+  }
+}
 /* crop menu view page  */
 
 .Menutitle{
@@ -1963,6 +2036,12 @@ font-size: 20px;
   gap: 15px;
   margin-top: 20px;
 }
+@media (max-width: 500px) {
+  .modal_grid {
+    grid-template-columns: 1fr;
+    gap: 20px; 
+  }
+}
 
 .modal_item {
   display: flex;
@@ -2017,7 +2096,9 @@ font-size: 20px;
   width:90%;
   min-width: 300px;
 }
-
+.btnselectyear{
+  text-align:center;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
   .Chart {
@@ -2030,13 +2111,54 @@ font-size: 20px;
       max-width: 600px; /* Set a max width for better appearance */
   }
 }
+/* =========================================== */
+/* ====   Responsive Code (max-width: 500px)   ==== */
+/* =========================================== */
+@media (max-width: 500px) {
 
-@media (max-width: 480px) {
-  .SelectYearly {
-      font-size: 14px; /* Smaller font size for mobile */
-      padding: 6px 12px; /* Adjust padding for mobile */
+  /* 1. تقليل الهوامش والحشو للصفحة الرئيسية */
+  .ChartPage {
+    margin-top: 30px; /* تقليل الهامش العلوي الكبير */
+    padding: 15px;    /* تقليل الحشو الجانبي */
+    overflow: hidden;
   }
+
+  .Chart {
+    flex-direction: column; 
+    align-items: start;
+    gap: 15px;              /* زيادة المسافة العمودية بين المخططات */
+  }
+
+  /* 3. جعل كل مخطط يأخذ العرض الكامل للشاشة */
+  .Bar {
+    width: 45%;       
+  }
+ .btnselectyear{
+  text-align:right;
 }
+}
+@media (max-width: 380px) {
+
+  /* 1. تقليل الهوامش والحشو للصفحة الرئيسية */
+  .ChartPage {
+    margin-top: 30px; /* تقليل الهامش العلوي الكبير */
+    padding: 15px;    /* تقليل الحشو الجانبي */
+    overflow: hidden;
+  }
+
+  .Chart {
+    flex-direction: column; 
+    align-items: start;
+    gap: 15px;           
+  }
+  .Bar {
+    width: 44%;       
+  }
+ .btnselectyear{
+  text-align:right;
+}
+}
+
 .table_section {
   position: relative;
   padding: 20px;
@@ -2056,6 +2178,7 @@ font-size: 20px;
 }
 .tablePay{
   max-height: calc(48px + (40px * 7));
+
 }
 
 .transactions_table {
@@ -2173,7 +2296,9 @@ font-size: 20px;
   font-size: 18px;
   color: #000;
 }
-
+.hid{
+  overflow: hidden;
+}
 /* Responsive Design */
 @media (max-width: 1000px) {
   .filter_section {
@@ -2192,35 +2317,6 @@ font-size: 20px;
   }
 
 }
-@media (max-width: 415px) {
-  .transactions_table {
-    font-size: 12px; /* تصغير الخط للجدول كله */
-    display: block;
-    width: 40%;
-  }
-
-  .transactions_table th,
-  .transactions_table td {
-    padding:5px;
-    font-size: 11px; /* تصغير إضافي للخانات */
-  }
-}
-@media (max-width: 360px) {
-  .transactions_table {
-    font-size: 12px; /* تصغير الخط للجدول كله */
-    display: block;
-    width: 40%;
-  }
-
-  .transactions_table th,
-  .transactions_table td {
-    padding:5px;
-    font-size: 8px; /* تصغير إضافي للخانات */
-  }
-}
-
-
-
 
 /* Custom Scrollbar */
 .table_container::-webkit-scrollbar {
@@ -2240,7 +2336,84 @@ font-size: 20px;
 .table_container::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
+/* =========================================== */
+/* ====   Responsive Code (max-width: 500px)   ==== */
+/* =========================================== */
+@media (max-width: 500px) {
+  .transactions_table th,
+  .transactions_table td {
+    padding: 8px; /* تقليل الحشو الداخلي قليلًا لتوفير مساحة */
+  }
 
+  /* 2. تحويل قسم الفلاتر إلى عمود واحد */
+  .filter_section {
+    flex-direction: column; /* جعل الفلاتر تحت بعضها البعض */
+    gap: 10px; /* تقليل المسافة بين الفلاتر */
+  }
+
+  /* 3. تحويل قسم الإجماليات إلى عمود واحد */
+  .totals_section {
+    flex-direction: column; /* جعل صناديق الإجماليات تحت بعضها البعض */
+    padding: 0; /* إزالة الحشو الجانبي لأنه لم يعد ضروريًا */
+  }
+
+  /* 4. تعديلات عامة على المساحات والخطوط */
+  .table_section {
+    width: 45%;
+    margin: 20px 5px; 
+    padding: 15px;
+    overflow: hidden;
+  }
+
+  .filter_button {
+    font-size: 13px; /* تصغير حجم خط الأزرار قليلًا */
+  }
+
+  .total_item {
+    padding: 12px; /* تقليل حشو صناديق الإجماليات */
+  }
+
+  .total_item span {
+    font-size: 16px; /* تصغير حجم خط الأرقام الكبيرة */
+  }
+}
+@media (max-width: 380px) {
+  .transactions_table th,
+  .transactions_table td {
+    padding: 8px; /* تقليل الحشو الداخلي قليلًا لتوفير مساحة */
+  }
+
+  /* 2. تحويل قسم الفلاتر إلى عمود واحد */
+  .filter_section {
+    flex-direction: column; /* جعل الفلاتر تحت بعضها البعض */
+    gap: 10px; /* تقليل المسافة بين الفلاتر */
+  }
+
+  /* 3. تحويل قسم الإجماليات إلى عمود واحد */
+  .totals_section {
+    flex-direction: column; /* جعل صناديق الإجماليات تحت بعضها البعض */
+    padding: 0; 
+  }
+
+  .table_section {
+    width: 40%;
+    margin: 20px 5px; 
+    padding: 15px;
+    overflow: hidden;
+  }
+
+  .filter_button {
+    font-size: 13px; /* تصغير حجم خط الأزرار قليلًا */
+  }
+
+  .total_item {
+    padding: 12px; /* تقليل حشو صناديق الإجماليات */
+  }
+
+  .total_item span {
+    font-size: 16px; /* تصغير حجم خط الأرقام الكبيرة */
+  }
+}
 /* RTL Support */
 [dir="rtl"] .table_container {
   direction: rtl;
@@ -2355,14 +2528,12 @@ font-size: 20px;
     padding: 20px 10px; 
   }
  
-    .modal_contentA {
+    .modal_contentA ,.modal_content {
     width: 80%;
     padding: 10px;
     border-radius: 6px;
     font-size: 10px;  
      max-height: 600px; /* يمكنك تغيير هذا الرقم ليناسب تصميمك */
-  
-  /* 2. إضافة شريط تمرير عمودي عند الحاجة */
   overflow-y: auto;
   }
   /* تغيير اتجاه flexbox إلى عمودي */
@@ -2382,14 +2553,6 @@ font-size: 20px;
     /* يمكنك تعديل محاذاة العناصر الداخلية إذا لزم الأمر */
     justify-content: space-between; 
   }
-  /* .section_dividerA {
-  display: flex;
-  justify-content:space-between;
-  align-items: center;
-  margin-top:60px;
-  padding: 5px;
-  border-radius: 4px;
-} */
 
 }
 .modal_valueAA{

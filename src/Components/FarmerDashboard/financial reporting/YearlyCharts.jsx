@@ -96,7 +96,7 @@ const YearlyCharts = () => {
 
   return (
     <div className={styles.ChartPage}>
-      <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+      <div style={{ marginBottom: '50px' }} className={`${styles.btnselectyear}`}>
         <span style={{ margin: "5px" }}>ادخل السنة لعرض التقارير</span>
         <select
           className={styles.SelectYearly}

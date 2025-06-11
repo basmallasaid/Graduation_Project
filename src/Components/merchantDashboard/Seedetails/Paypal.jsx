@@ -1,4 +1,4 @@
-import React, { useState } from "react"; // Added React import
+import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "../../../API/axiosInstance"; // Ensure this path is correct relative to Paypal.js
@@ -12,7 +12,7 @@ export default function Paypal({ harvestId }) {
   // Retrieve logged-in merchant's data from localStorage
   const userData = JSON.parse(localStorage.getItem("user_data"));
   // 'merchantUserId' is the ID of the merchant making the payment
-  const merchantUserId = userData?.userId; // Make sure 'loggedId' is the correct key
+  const merchantUserId = userData?.userId;
 
   const handlePayment = async (e) => {
     e.preventDefault();
@@ -38,7 +38,6 @@ export default function Paypal({ harvestId }) {
         return;
     }
 
-    // Validate email format (basic)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(sellerEmail)) {
         toast.warn("يرجى إدخال عنوان بريد إلكتروني صحيح للبائع.", { position: "top-right" });
@@ -58,13 +57,29 @@ export default function Paypal({ harvestId }) {
       // Use the 'api' (axios) instance to make the POST request
       const response = await api.post("/PayPal/create-paymentforMerchant", payload);
       
-      toast.success(response.data?.message || "تم إرسال طلب الدفع بنجاح. قد يستغرق الأمر بعض الوقت للمعالجة.", {
-        position: "top-right",
-        autoClose: 3000,
-      });
-      
-      setAmount("");
-      setSellerEmail(""); // Clear sellerEmail field
+      // *** MODIFICATION START ***
+      // Check if the response contains the PayPal URL
+      if (response.data && response.data.url) {
+        // Open the PayPal URL in a new tab to complete the payment
+        window.open(response.data.url, "_blank", "noopener,noreferrer");
+        
+        // Optionally show a toast that redirection is happening
+        toast.info("يتم الآن تحويلك إلى PayPal لإتمام عملية الدفع.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+        
+        // Clear the form fields after successful request
+        setAmount("");
+        setSellerEmail("");
+      } else {
+        // Handle unexpected success response without a URL
+        toast.error("تم استلام استجابة غير متوقعة من الخادم. لم يتم العثور على رابط الدفع.", {
+          position: "top-right",
+        });
+      }
+      // *** MODIFICATION END ***
+
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message || "حدث خطأ أثناء عملية الدفع، حاول مرة أخرى.";
       toast.error(errorMessage, {
@@ -95,8 +110,8 @@ export default function Paypal({ harvestId }) {
               </label>
               <input
                 type="number"
-                min="0.01" // Minimum payment amount greater than 0
-                step="any"  // Allows decimal values
+                min="0.01"
+                step="any"
                 className="form-control"
                 style={{ backgroundColor: "rgb(231, 231, 231)", width: "65%", borderRadius: "10px", border: "none", padding: "10px" }}
                 value={amount}
@@ -105,7 +120,6 @@ export default function Paypal({ harvestId }) {
               />
             </div>
             <div className="mb-3 d-flex align-items-center">
-              {/* Label "ايميل PayPal للمزارع" is appropriate as the farmer is the seller */}
               <label className="form-label" style={{ width: "35%", textAlign: "right", marginRight: "10px" }}>
                 ايميل PayPal للمزارع
               </label>
@@ -113,8 +127,8 @@ export default function Paypal({ harvestId }) {
                 type="email"
                 className="form-control"
                 style={{ backgroundColor: "rgb(231, 231, 231)", width: "65%", borderRadius: "10px", border: "none", padding: "10px" }}
-                value={sellerEmail} // Bind to sellerEmail state
-                onChange={(e) => setSellerEmail(e.target.value)} // Update sellerEmail state
+                value={sellerEmail}
+                onChange={(e) => setSellerEmail(e.target.value)}
                 placeholder="farmer@example.com"
               />
             </div>

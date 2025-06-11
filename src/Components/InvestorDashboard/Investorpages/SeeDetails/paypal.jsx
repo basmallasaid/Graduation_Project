@@ -5,11 +5,10 @@ import api from "../../../../API/axiosInstance"; // Your pre-configured Axios in
 
 export default function Paypal({ cycleId }) {
   const [amount, setAmount] = useState("");
-  const [sellerEmail, setSellerEmail] = useState(""); // Renamed from 'email' to 'sellerEmail' for clarity
+  const [sellerEmail, setSellerEmail] = useState(""); // Farmer's PayPal email
   const [loading, setLoading] = useState(false);
 
   const userData = JSON.parse(localStorage.getItem("user_data"));
-  // console.log("User Data (from localStorage):", userData); // For debugging
   const investorUserId = userData?.userId; // This is the string GUID for the user
 
   const handlePayment = async (e) => {
@@ -17,7 +16,6 @@ export default function Paypal({ cycleId }) {
 
     if (!investorUserId) {
       toast.warn("لم يتم التعرف على المستخدم. يرجى تسجيل الدخول مرة أخرى.", { position: "top-right" });
-      setLoading(false); // Ensure loading is false if we return early
       return;
     }
 
@@ -48,19 +46,30 @@ export default function Paypal({ cycleId }) {
     };
 
     try {
-    
       const response = await api.post("/PayPal/create-payment", paymentData);
 
-      
-      toast.success("تم إرسال طلب الدفع بنجاح.", {
-        position: "top-right",
-        autoClose: 2000,
-      });
+      // *** MODIFICATION START ***
+      // Check if the response contains the PayPal URL
+      if (response.data && response.data.url) {
+        // Open the PayPal URL in a new tab to complete the payment
+        window.open(response.data.url, "_blank", "noopener,noreferrer");
 
-      setAmount("");
-      setSellerEmail("");
-      // Potentially close the modal or navigate away after successful payment submission
-      // if (onPaymentSuccess) onPaymentSuccess();
+        // Optionally, inform the user they are being redirected
+        toast.info("يتم الآن تحويلك إلى PayPal لإتمام عملية الدفع.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+
+        // Clear form fields
+        setAmount("");
+        setSellerEmail("");
+      } else {
+        // Handle the case where the API call is successful but no URL is returned
+        toast.error("تم استلام استجابة غير متوقعة من الخادم. لم يتم العثور على رابط الدفع.", {
+          position: "top-right",
+        });
+      }
+      // *** MODIFICATION END ***
 
     } catch (error) {
       console.error("Payment error:", error.response || error.message);
@@ -92,8 +101,8 @@ export default function Paypal({ cycleId }) {
               </label>
               <input
                 type="number"
-                min="0.01" // Minimum amount for payment
-                step="0.01" // Allow decimals
+                min="0.01"
+                step="0.01"
                 className="form-control"
                 style={{ backgroundColor: "rgb(231, 231, 231)", width: "65%", borderRadius: "10px", border: "none", padding: "10px" }}
                 value={amount}

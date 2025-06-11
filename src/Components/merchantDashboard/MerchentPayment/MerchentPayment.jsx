@@ -7,7 +7,7 @@ import FooterMer from '../Main/FooterMer';
 import YearlyChartsMer from './YearlyChartsMer';
 import TransactionModalMer from './TransactionModalMer';
 import api from '../../../API/axiosInstance';
-
+import stylesInv from "../../InvestorDashboard/StylesInv/stylesInv.module.css";
 // --- دالة مساعد لترجمة أنواع معاملات التاجر ---
 const translateTypeMer = (type) => {
     const translations = {
@@ -235,57 +235,14 @@ const MerchentPayment = () => {
             <NavbarMer />
             <div className="d-flex flex-grow-1 ">
                 <NavSideMer />
-                <main className={`flex-grow-1`}>
-                    <div className={styles.table_section}>
+                <main className={`flex-grow-1 ${styles.hid}`}>
+                    <div className={` ${stylesInv.tabsec} `}>
                         {loading && <div className={stylesmer.loading_message || ''}>جاري تحميل البيانات...</div>}
                         {error && <div className={stylesmer.error_message || ''} style={{ color: 'red' }}>{error}</div>}
 
                         {!loading && !error && (
                             <>
-                                {/* Table */}
-                                <div className={`${styles.table_container} ${styles.tablePay}`}>
-                                    <table className={styles.transactions_table}>
-                                        <thead>
-                                            <tr>
-                                                <th>رقم المعاملة</th>
-                                                <th>تاريخ المعاملة</th>
-                                                <th>المبلغ</th>
-                                                <th>نوع المعاملة</th>
-                                                <th>اسم المحصول</th>
-                                                <th>الطرف المستقبل</th>
-                                                <th>طريقة الدفع</th>
-                                                <th>حالة الدفع</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {Array.isArray(filteredtransactionsInv.paymentDetails) && filteredtransactionsInv.paymentDetails.length > 0 ? (
-                                                filteredtransactionsInv.paymentDetails.map((transaction) => (
-                                                    <tr
-                                                        key={transaction.paymentId}
-                                                        onClick={() => setSelectedTransaction(transaction)}
-                                                        className={styles.clickable_row}
-                                                        aria-label={`Transaction ID: ${transaction.paymentId}`}
-                                                    >
-                                                        <td>{transaction.paymentId}</td>
-                                                        <td>{new Date(transaction.paymentDate).toLocaleDateString('ar-EG')}</td>
-                                                        <td>{formatCurrency(transaction.amount)}</td>
-                                                        <td>{transaction.type}</td>
-                                                        <td>{transaction.CycleName}</td>
-                                                        <td>{transaction.payeeName}</td>
-                                                        <td>{transaction.paymentMethod}</td>
-                                                        <td>{transaction.status}</td>
-                                                    </tr>
-                                                ))
-                                            ) : (
-                                                <tr>
-                                                    <td colSpan="8" style={{ textAlign: "center", padding: "20px" }}>لا توجد معاملات لعرضها</td>
-                                                </tr>
-                                            )}
-                                        </tbody>
-                                    </table>
-                                </div>
-                                
-                                {/* Filters */}
+                            {/* Filters */}
                                 <div className={styles.filter_section}>
                                     <div className={`${styles.filter_dropdown}`}>
                                         <select
@@ -369,6 +326,50 @@ const MerchentPayment = () => {
                                         )}
                                     </div>
                                 </div>
+                                {/* Table */}
+                                <div className={`${styles.table_container} ${styles.tablePay}`}>
+                                    <table className={styles.transactions_table}>
+                                        <thead>
+                                            <tr>
+                                                <th>رقم المعاملة</th>
+                                                <th>تاريخ المعاملة</th>
+                                                <th>المبلغ</th>
+                                                <th>نوع المعاملة</th>
+                                                <th>اسم المحصول</th>
+                                                <th>الطرف المستقبل</th>
+                                                <th>طريقة الدفع</th>
+                                                <th>حالة الدفع</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {Array.isArray(filteredtransactionsInv.paymentDetails) && filteredtransactionsInv.paymentDetails.length > 0 ? (
+                                                filteredtransactionsInv.paymentDetails.map((transaction) => (
+                                                    <tr
+                                                        key={transaction.paymentId}
+                                                        onClick={() => setSelectedTransaction(transaction)}
+                                                        className={styles.clickable_row}
+                                                        aria-label={`Transaction ID: ${transaction.paymentId}`}
+                                                    >
+                                                        <td>{transaction.paymentId}</td>
+                                                        <td>{new Date(transaction.paymentDate).toLocaleDateString('ar-EG')}</td>
+                                                        <td>{formatCurrency(transaction.amount)}</td>
+                                                        <td>{transaction.type}</td>
+                                                        <td>{transaction.CycleName}</td>
+                                                        <td>{transaction.payeeName}</td>
+                                                        <td>{transaction.paymentMethod}</td>
+                                                        <td>{transaction.status}</td>
+                                                    </tr>
+                                                ))
+                                            ) : (
+                                                <tr>
+                                                    <td colSpan="8" style={{ textAlign: "center", padding: "20px" }}>لا توجد معاملات لعرضها</td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                
 
                                 {/* Totals */}
                                 <div className={styles.totals_section}>

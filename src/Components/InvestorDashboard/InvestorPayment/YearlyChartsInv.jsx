@@ -84,7 +84,7 @@ const YearlyChartsInv = () => {
 
   return (
     <div className={styles.ChartPage}>
-      <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+      <div style={{ marginBottom: '50px' }} className={`${styles.btnselectyear}`}>
         <span style={{ margin: "5px" }}>ادخل السنة لعرض التقارير</span>
         <select className={styles.SelectYearly}
           value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} >
@@ -94,7 +94,7 @@ const YearlyChartsInv = () => {
         </select>
       </div>
       <div className={`${stylesInv.ChartInv}`}>
-        <div className={styles.Bar}>
+        <div className={stylesInv.Bar}>
           <Bar data={investmentsData} options={options} />
         </div>
       </div>

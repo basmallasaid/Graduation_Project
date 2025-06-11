@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from "../../../Styles/style.module.css";
 import { Bar } from 'react-chartjs-2';
 import stylesmer from "../StylesMer/stylesmer.module.css";
+import stylesInv from "../../InvestorDashboard/StylesInv/stylesInv.module.css";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -95,7 +96,7 @@ const YearlyChartsMer = () => {
 
   return (
     <div className={styles.ChartPage}>
-      <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+      <div style={{marginBottom: '50px' }} className={`${styles.btnselectyear}`}>
         <span style={{ margin: "5px" }}>ادخل السنة لعرض التقارير</span>
         <select 
           className={styles.SelectYearly}
@@ -108,8 +109,8 @@ const YearlyChartsMer = () => {
           ))}
         </select>
       </div>
-      <div className={`${stylesmer.ChartInv}`}>
-        <div className={styles.Bar}>
+      <div className={`${stylesInv.ChartInv}`}>
+        <div className={`${stylesInv.Bar}`}>
           {/* عرض الرسم البياني */}
           <Bar data={investmentsData} options={options} />
         </div>

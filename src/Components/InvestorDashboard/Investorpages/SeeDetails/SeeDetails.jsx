@@ -77,48 +77,79 @@ export default function SeeDetails({ farmer: initialFarmerProp }) {
         setLoading(true); 
         fetchCycleDetails();
     }, [currentCycleId, InvestorId]);
+    
+const handleRating = async (clickedRating) => {
+    if (!cycleDetails?.farmer?.userId) {
+        toast.error("Cannot rate: Missing farmer user ID.");
+        return;
+    }
 
-        const handleRating = async (clickedRating) => {
-        if (!cycleDetails?.farmer?.userId) {
-            toast.error("Cannot rate: Missing farmer user ID.");
-            return;
+    const farmerIdToRate = cycleDetails.farmer.userId;
+    const previousLocalRating = rating; // Store previous state for rollback on error
+
+    // --- Case 1: DELETING the rating ---
+    if (rating === clickedRating) {
+        // Optimistic UI update: Immediately reset the user's rating
+        setRating(0);
+        setHoverRating(0);
+
+        try {
+            const response = await api.delete("Rate", {
+                data: { farmerId: farmerIdToRate },
+            });
+
+            toast.success("تم ازاله التقييم بنجاح");
+
+            // Update the overall farmer rate with the new value from the API
+            const newAverage = response.data.newAverageRating;
+            setCycleDetails(prevDetails => ({
+                ...prevDetails,
+                farmer: {
+                    ...prevDetails.farmer,
+                    rate: newAverage,
+                },
+            }));
+
+        } catch (error) {
+            console.error("خطا في ازاله التقييم:", error);
+            const errorMessage = error.response?.data?.message || "Failed to remove rating.";
+            toast.error(errorMessage);
+            // Rollback on failure
+            setRating(previousLocalRating);
         }
+    }
+    // --- Case 2: ADDING or UPDATING the rating ---
+    else {
+        // Optimistic UI update: Immediately set the new rating
+        setRating(clickedRating);
 
-        const farmerIdToRate = cycleDetails.farmer.userId;
+        try {
+            const response = await api.post("Rate", {
+                farmerId: farmerIdToRate,
+                rating: clickedRating,
+            });
 
-        // THIS IS THE CRUCIAL PART FOR DELETING THE RATING:
-        if (rating === clickedRating) {
-            // User clicked the same star they previously rated: attempt to delete the rating
-            try {
-                await api.delete("Rate", { // Sends a DELETE request
-                    data: { farmerId: farmerIdToRate } // With farmerId in the body, as per your cURL
-                });
-                toast.success("تم ازاله التقييم بنجاح");
-                setRating(0); // Reset the investor's specific rating to 0 in the UI
-                setHoverRating(0); // Reset hover effect
-                await fetchCycleDetails(); // Re-fetch all details to update overall farmer rate etc.
-            } catch (error) {
-                console.error("خطا في ازاله التقييم  :", error);
-                const errorMessage = error.response?.data?.message || "Failed to remove rating.";
-                toast.error(errorMessage);
-            }
-        } else {
-            // User clicked a new/different star (or rating was 0): attempt to post/update the rating
-            try {
-                await api.post("Rate", { // Sends a POST request
-                    farmerId: farmerIdToRate,
-                    rating: clickedRating,
-                });
-                toast.success("تم تقييم المزارع بنجاح");
-                setRating(clickedRating); // Set the investor's specific rating in the UI
-                await fetchCycleDetails(); // Re-fetch all details
-            } catch (error) {
-                console.error("Error sending rating:", error);
-                const errorMessage = error.response?.data?.message || "Failed to submit rating.";
-                toast.error(errorMessage);
-            }
+            toast.success("تم تقييم المزارع بنجاح");
+
+            // Update the overall farmer rate with the new value from the API
+            const newAverage = response.data.newAverageRating;
+            setCycleDetails(prevDetails => ({
+                ...prevDetails,
+                farmer: {
+                    ...prevDetails.farmer,
+                    rate: newAverage,
+                },
+            }));
+
+        } catch (error) {
+            console.error("Error sending rating:", error);
+            const errorMessage = error.response?.data?.message || "Failed to submit rating.";
+            toast.error(errorMessage);
+            // Rollback on failure
+            setRating(previousLocalRating);
         }
-    };
+    }
+};
 
     const handleFavoriteToggle = async () => {
         if (!cycleDetails?.farmer?.userId) {
@@ -290,30 +321,32 @@ export default function SeeDetails({ farmer: initialFarmerProp }) {
                             </div>
                             <div className="mb-3 align-items-center" style={{ display: "flex", gap: "15px" }}><label className="form-label">السيره الذاتيه</label><textarea readOnly rows={4} className="form-control" style={{ backgroundColor: "rgb(231, 231, 231)", width: "90%", fontSize: "1rem" }} value={farmerBio} /></div>
                             <div className="d-flex flex-column flex-md-row justify-content-between align-items-center" style={{ margin: "5px 20px 5px 100px" }}>
-                                <div className="text-warning fs-4 mb-2 mb-md-0" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                                    <p style={{ color: "black", marginLeft: "20px", marginBottom: 0 }}> التقييم </p>
-                                    {[1, 2, 3, 4, 5].map((star) => {
-                                        const effectiveRating = hoverRating > 0 
-                                                                ? hoverRating 
-                                                                : (rating > 0 
-                                                                    ? rating 
-                                                                    : Math.round(farmerOverallRate));
-                                        return (
-                                            <i
-                                                key={star}
-                                                className={
-                                                    effectiveRating >= star
-                                                        ? "fa-solid fa-star text-warning"
-                                                        : "fa-regular fa-star"
-                                                }
-                                                onClick={() => handleRating(star)}
-                                                onMouseEnter={() => setHoverRating(star)}
-                                                onMouseLeave={() => setHoverRating(0)}
-                                                style={{ cursor: "pointer" }}
-                                            ></i>
-                                        );
-                                   })}
-                                </div>
+                               <div className="text-warning fs-4 mb-2 mb-md-0" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+    <p style={{ color: "black", marginLeft: "20px", marginBottom: 0 }}> التقييم </p>
+    {[1, 2, 3, 4, 5].map((star) => {
+        // This logic correctly prioritizes the user's immediate action
+        const effectiveRating = hoverRating > 0
+                                ? hoverRating
+                                : (rating > 0
+                                    ? rating
+                                    // Use the live value from the state
+                                    : Math.round(cycleDetails?.farmer?.rate || 0));
+        return (
+            <i
+                key={star}
+                className={
+                    effectiveRating >= star
+                        ? "fa-solid fa-star text-warning"
+                        : "fa-regular fa-star"
+                }
+                onClick={() => handleRating(star)}
+                onMouseEnter={() => setHoverRating(star)}
+                onMouseLeave={() => setHoverRating(0)}
+                style={{ cursor: "pointer" }}
+            ></i>
+        );
+    })}
+</div>
                                 <button type="button" className="btn mb-2 fs-4 mb-md-0" onClick={handleFavoriteToggle}>
                                     <span style={{ marginLeft: "10px" }}>اضافه الي المفضله</span>
                                     {isFavorite ? <i className="fa-solid fa-heart text-danger"></i> : <i className="fa-regular fa-heart"></i>}
@@ -338,12 +371,31 @@ export default function SeeDetails({ farmer: initialFarmerProp }) {
                             </div>                        </form>
                     </div>
 
-                    <div className="container mt-4" style={{ marginBottom: "20px" }}>
-                        <h2 className={styles.Invtitledetails}>تفاصيل عن الدوره</h2>
-                        <form className="p-4 rounded" style={{ boxShadow: "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px", backgroundImage: "url('/assets/landinv.jpg')", backgroundSize: "cover", backgroundPosition: "center", padding: 0, height: "400px" }}>
-                            <div style={{ width: "100%", height: "100%", overflow: "hidden", borderRadius: "0.25rem" }}><img className="img-fluid w-100" style={{ height: "100%", objectFit: "cover" }} src={landParcelImageUrl} alt="Land Parcel" /></div>
-                        </form>
-                    </div>
+               <div className="container mt-4" style={{ marginBottom: "20px" }}>
+    <h2 className={styles.Invtitledetails}>تفاصيل عن الدوره</h2>
+    <form className="p-4 rounded" style={{ boxShadow: "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px", backgroundImage: "url('/assets/landinv.jpg')", backgroundSize: "cover", backgroundPosition: "center", padding: 0, height: "400px" }}>
+        
+        {/* This div gets the white background */}
+        <div style={{ 
+            width: "100%", 
+            height: "100%", 
+            overflow: "hidden", 
+            borderRadius: "0.25rem",
+            backgroundColor: "white" // <-- ADDED: This fills the extra space
+        }}>
+            <img 
+                className="img-fluid w-100" 
+                style={{ 
+                    height: "100%", 
+                    objectFit: "contain" // <-- CHANGED: This fits the entire image
+                }} 
+                src={landParcelImageUrl} 
+                alt="Land Parcel" 
+            />
+        </div>
+        
+    </form>
+</div>
 
                     <div className="container mt-4" style={{ marginBottom: "70px" }}>
                         <form className="p-4 rounded d-flex justify-content-center" style={{ boxShadow: "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px", fontSize: "1.3rem", backgroundImage: "url('/assets/forminv.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>

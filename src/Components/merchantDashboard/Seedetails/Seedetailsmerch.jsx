@@ -82,46 +82,84 @@ export default function Seedetailsmerch({ farmer: initialFarmerProp }) { // MODI
         fetchHarvestDetails();
     }, [currentHarvestId]); // MerchantId removed as dependency if not in GET URL
 
-    const handleRating = async (clickedRating) => {
-        if (!harvestDetails?.farmer?.userId) {
-            toast.error("Cannot rate: Missing farmer user ID.");
-            return;
-        }
-        const farmerIdToRate = harvestDetails.farmer.userId;
-        const rateEndpoint = "Rate"; // Endpoint for submitting/deleting rating
+   // Assumed State Structure in your component:
+// const [harvestDetails, setHarvestDetails] = useState(null);
+// const [rating, setRating] = useState(0); // The current user's specific rating
+// const [hoverRating, setHoverRating] = useState(0);
 
-        if (rating === clickedRating) {
-            try {
-                await api.delete(rateEndpoint, {
-                    // MerchantId is typically sent via Auth token, data might only need farmerId
-                    data: { farmerId: farmerIdToRate }
-                });
-                toast.success("تم حذف التقييم");
-                setRating(0);
-                setHoverRating(0);
-                await fetchHarvestDetails(); // Re-fetch to update overall farmer rate etc.
-            } catch (error) {
-                console.error("Error removing rating:", error);
-                const errorMessage = error.response?.data?.message || "Failed to remove rating.";
-                toast.error(errorMessage);
-            }
-        } else {
-            try {
-                await api.post(rateEndpoint, {
-                    farmerId: farmerIdToRate,
-                    rating: clickedRating,
-                    // MerchantId likely implicit via Auth token
-                });
-                toast.success("تم اضافه التقييم بنجاح");
-                setRating(clickedRating);
-                await fetchHarvestDetails(); // Re-fetch
-            } catch (error) {
-                console.error("حدث خطا اثناء التقييم", error);
-                const errorMessage = error.response?.data?.message || "حدث خطا اثناء التقييم";
-                toast.error(errorMessage);
-            }
+const handleRating = async (clickedRating) => {
+    // 1. Guard Clause: Ensure we have the necessary data
+    if (!harvestDetails?.farmer?.userId) {
+        toast.error("Cannot rate: Missing farmer user ID.");
+        return;
+    }
+
+    const farmerIdToRate = harvestDetails.farmer.userId;
+    const previousRating = rating; // Store the original rating for rollback on error
+
+    // --- CASE 1: DELETING A RATING (clicking the same star again) ---
+    if (rating === clickedRating) {
+        // 2. Optimistic UI Update: Instantly remove the rating from the UI
+        setRating(0);
+        setHoverRating(0);
+
+        try {
+            // 3. Make the API call
+            const response = await api.delete("Rate", {
+                data: { farmerId: farmerIdToRate },
+            });
+
+            toast.success("تم ازاله التقييم بنجاح");
+
+            // 4. Finalize State: Surgically update the overall farmer rate from API response
+            const newAverage = response.data.newAverageRating; // <-- Get new rate from API
+            setHarvestDetails(prevDetails => ({
+                ...prevDetails,
+                farmer: {
+                    ...prevDetails.farmer,
+                    rate: newAverage,
+                },
+            }));
+
+        } catch (error) {
+            // 5. Rollback on Failure: Revert the UI to its previous state
+            console.error("خطا في ازاله التقييم:", error);
+            toast.error(error.response?.data?.message || "Failed to remove rating.");
+            setRating(previousRating); // Put the user's old rating back
         }
-    };
+    }
+    // --- CASE 2: ADDING OR UPDATING A RATING ---
+    else {
+        // 2. Optimistic UI Update: Instantly show the new rating
+        setRating(clickedRating);
+
+        try {
+            // 3. Make the API call
+            const response = await api.post("Rate", {
+                farmerId: farmerIdToRate,
+                rating: clickedRating,
+            });
+
+            toast.success("تم تقييم المزارع بنجاح");
+
+            // 4. Finalize State: Surgically update the overall farmer rate
+            const newAverage = response.data.newAverageRating; // <-- Get new rate from API
+            setHarvestDetails(prevDetails => ({
+                ...prevDetails,
+                farmer: {
+                    ...prevDetails.farmer,
+                    rate: newAverage,
+                },
+            }));
+
+        } catch (error) {
+            // 5. Rollback on Failure: Revert the UI to its previous state
+            console.error("Error sending rating:", error);
+            toast.error(error.response?.data?.message || "Failed to submit rating.");
+            setRating(previousRating); // Put the user's old rating back
+        }
+    }
+};
 
     const handleFavoriteToggle = async () => {
         if (!harvestDetails?.farmer?.userId) {
@@ -298,23 +336,30 @@ export default function Seedetailsmerch({ farmer: initialFarmerProp }) { // MODI
                             </div>
                             <div className="mb-3 align-items-center" style={{ display: "flex", gap: "15px" }}><label className="form-label">السيره الذاتيه</label><textarea readOnly rows={4} className="form-control" style={{ backgroundColor: "rgb(231, 231, 231)", width: "90%", fontSize: "1rem" }} value={farmerBio} /></div>
                             <div className="d-flex flex-column flex-md-row justify-content-between align-items-center" style={{ margin: "5px 20px 5px 100px" }}>
-                                <div className="text-warning fs-4 mb-2 mb-md-0" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                                    <p style={{ color: "black", marginLeft: "20px", marginBottom: 0 }}> التقييم </p>
-                                    {[1, 2, 3, 4, 5].map((star) => {
-                                        // Use farmerOverallRate for display, `rating` state for merchant's own interaction
-                                        const displayRating = hoverRating > 0 ? hoverRating : (rating > 0 ? rating : Math.round(farmerOverallRate));
-                                        return (
-                                            <i
-                                                key={star}
-                                                className={displayRating >= star ? "fa-solid fa-star text-warning" : "fa-regular fa-star"}
-                                                onClick={() => handleRating(star)}
-                                                onMouseEnter={() => setHoverRating(star)}
-                                                onMouseLeave={() => setHoverRating(0)}
-                                                style={{ cursor: "pointer" }}
-                                            ></i>
-                                        );
-                                    })}
-                                </div>
+                                 <div className="text-warning fs-4 mb-2 mb-md-0" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+        <p style={{ color: "black", marginLeft: "20px", marginBottom: 0 }}> التقييم </p>
+        {[1, 2, 3, 4, 5].map((star) => {
+            // Explicitly get the overall rate from the main state object
+            const farmerOverallRate = harvestDetails?.farmer?.rate || 0;
+
+            // This display logic is perfect. It prioritizes live interaction.
+            const displayRating = hoverRating > 0
+                                  ? hoverRating
+                                  : (rating > 0
+                                      ? rating
+                                      : Math.round(farmerOverallRate));
+            return (
+                <i
+                    key={star}
+                    className={displayRating >= star ? "fa-solid fa-star text-warning" : "fa-regular fa-star"}
+                    onClick={() => handleRating(star)}
+                    onMouseEnter={() => setHoverRating(star)}
+                    onMouseLeave={() => setHoverRating(0)}
+                    style={{ cursor: "pointer" }}
+                ></i>
+            );
+        })}
+    </div>
                                 <button type="button" className="btn mb-2 fs-4 mb-md-0" onClick={handleFavoriteToggle}>
                                     <span style={{ marginLeft: "10px" }}>اضافه الي المفضله</span>
                                     {isFavorite ? <i className="fa-solid fa-heart text-danger"></i> : <i className="fa-regular fa-heart"></i>}
@@ -341,14 +386,33 @@ export default function Seedetailsmerch({ farmer: initialFarmerProp }) { // MODI
                         </form>
                     </div>
 
-                    <div className="container mt-4" style={{ marginBottom: "20px" }}>
-                        <h2 className={styles.Invtitledetails}>صورة الحصاد</h2>
-                        <form className="p-4 rounded" style={{ boxShadow: "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px", backgroundImage: "url('/assets/landinv.jpg')", backgroundSize: "cover", backgroundPosition: "center", padding: 0, height: "400px" }}>
-                            <div style={{ width: "100%", height: "100%", overflow: "hidden", borderRadius: "0.25rem" }}>
-                                <img className="img-fluid w-100" style={{ height: "100%", objectFit: "cover" }} src={harvestDisplayImageUrl} alt="Harvest" />
-                            </div>
-                        </form>
-                    </div>
+                  <div className="container mt-4" style={{ marginBottom: "20px" }}>
+    <h2 className={styles.Invtitledetails}>صورة الحصاد</h2>
+    {/* The outer form can keep its background image as a fallback or decorative element */}
+    <form className="p-4 rounded" style={{ boxShadow: "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px", backgroundImage: "url('/assets/landinv.jpg')", backgroundSize: "cover", backgroundPosition: "center", padding: 0, height: "400px" }}>
+        
+        {/* This div will now have a white background and will contain the image */}
+        <div style={{ 
+            width: "100%", 
+            height: "100%", 
+            overflow: "hidden", 
+            borderRadius: "0.25rem",
+            backgroundColor: "white" // <-- ADD THIS: This color will fill the empty space
+        }}>
+            <img 
+                className="img-fluid w-100" 
+                style={{ 
+                    height: "100%", 
+                    objectFit: "contain", // <-- CHANGE THIS: from 'cover' to 'contain'
+                    objectPosition: "center" // (Optional but good practice) Ensures the image is centered
+                }} 
+                src={harvestDisplayImageUrl} 
+                alt="Harvest" 
+            />
+        </div>
+
+    </form>
+</div>
 
                     <div className="container mt-4" style={{ marginBottom: "70px" }}>
                         <h2 className={styles.Invtitledetails}>تفاصيل عن الحصاد</h2>

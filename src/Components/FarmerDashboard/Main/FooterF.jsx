@@ -26,26 +26,16 @@ const FooterF = () => {
                <div className={`col-md-3 ${styles.footer_column}`}>
                <h3>روابط مهمة</h3>
                  <ul className="list-unstyled">
-                   <li>
-                     <Link to="/" >
-                     الأسئلة الشائعة
-                     </Link>
-                   </li>
-                   <li>
-                     <Link  >
-                     سياسيه الخصوصيه
-                     </Link>
-                   </li>
-                   <li>
-                     <Link to="/" >
-                     شروط الاستخدام 
-                     </Link>
-                   </li>
-                   <li>
-                     <Link to="/" >
-                     دعم العملاء
-                     </Link>
-                   </li>
+                     <li>
+                  <Link to="/Opinon" >
+                  رايك يهمنا
+                  </Link>
+                </li>
+              
+                <li>
+                  <Link to="/Contact" >
+تواصل معنا                  </Link>
+                </li>
                  </ul>
                </div>
                <div className={`col-md-3 ${styles.footer_column}`}>

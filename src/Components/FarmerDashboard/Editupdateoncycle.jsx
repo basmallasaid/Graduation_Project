@@ -9,54 +9,57 @@ export default function Editupdateoncycle({ cycle, onupdateSuccess }) {
   console.log("Editupdateoncycle received cycle:", cycle);
 
   const [formData, setFormData] = useState({
-    imageSrc: "",
+    imageSrc: "", // This will hold either the server path or a local data URL
     progress: 0,
     title: "",
     status: "",
     description: "",
     AdditionalNotes: "",
     date: "",
-    cycleId:""
+    cycleId: ""
   });
+
+  // This state will hold the file object itself if a new one is selected
+  const [newImageFile, setNewImageFile] = useState(null);
 
   const lineRef = useRef(null);
   const circleRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  // Initialize form data when cycle prop changes
   useEffect(() => {
-    console.log("useEffect triggered. Cycle data:", cycle);  //Check if useEffect is working
     if (cycle) {
       console.log("Initializing form with cycle data:", cycle);
       setFormData({
-        imageSrc: cycle.imageUrl || "",  //Use imageUrl instead imageSrc
-        progress: cycle.growthRate || 0,  //Use growthRate instead progress
+        imageSrc: cycle.imageUrl || "",
+        progress: cycle.growthRate || 0,
         title: cycle.title || "",
-        status: cycle.qualityCheck || "",  //Use qualityCheck instead status
+        status: cycle.qualityCheck || "",
         description: cycle.description || "",
-        AdditionalNotes: cycle.additionalNotes || "",  //Use additionalNotes instead AdditionalNotes
-        date: cycle.updateDate ? new Date(cycle.updateDate).toISOString().split('T')[0] : "",  //Use updateDate instead date
-        cycleId:cycle.cycleId
+        AdditionalNotes: cycle.additionalNotes || "",
+        date: cycle.updateDate ? new Date(cycle.updateDate).toISOString().split('T')[0] : "",
+        cycleId: cycle.cycleId
       });
+      // Reset the new image file when the cycle prop changes
+      setNewImageFile(null);
     }
   }, [cycle]);
 
   const handleMouseMove = (event) => {
-      if (isDragging) {
-        const rect = lineRef.current.getBoundingClientRect();
-        const mouseX = event.clientX - rect.left;
-        const width = rect.width;
-        const newProgress = Math.min(Math.max(0, (mouseX / width) * 100), 100);
-        setFormData(prev => ({ ...prev, progress: newProgress }));
-      }
+    if (isDragging) {
+      const rect = lineRef.current.getBoundingClientRect();
+      const mouseX = event.clientX - rect.left;
+      const width = rect.width;
+      const newProgress = Math.min(Math.max(0, (mouseX / width) * 100), 100);
+      setFormData(prev => ({ ...prev, progress: newProgress }));
+    }
   };
 
   const handleMouseDown = () => {
-      setIsDragging(true);
+    setIsDragging(true);
   };
 
   const handleMouseUp = () => {
-      setIsDragging(false);
+    setIsDragging(false);
   };
 
   const handleDrag = (event) => {
@@ -68,61 +71,58 @@ export default function Editupdateoncycle({ cycle, onupdateSuccess }) {
   };
 
   const validateForm = () => {
-      const { title, status, description, AdditionalNotes, imageSrc, date, progress } = formData;
-      if (!title || !status || !description || !AdditionalNotes || !imageSrc || !date || progress === undefined) {
-        toast.error("جميع الحقول مطلوبة!");
-        return false;
-      }
-      return true;
-    };
-
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      if (!validateForm()) return;
-
-      const formDataForUpload = new FormData();
-      formDataForUpload.append('title', formData.title);
-      formDataForUpload.append('description', formData.description);
-      formDataForUpload.append('additionalNotes', formData.AdditionalNotes);
-      formDataForUpload.append('growthRate', Number(formData.progress)); // Ensure it's a number
-      formDataForUpload.append('qualityCheck', formData.status);
-      formDataForUpload.append('updateId', cycle.updateId);
-      formDataForUpload.append('updateDate', new Date(formData.date).toISOString()); // Add updateDate in ISO format
-
-      // Append the image if it's a data URL (meaning it was just uploaded)
-      if (formData.imageSrc.startsWith('data:image')) {
-          const base64Response = await fetch(formData.imageSrc);
-          const blob = await base64Response.blob();
-          const file = new File([blob], "image.jpg", { type: 'image/jpeg' }); // Or determine the file type
-          formDataForUpload.append('image', file);
-      }
-
-      try {
-  const response = await api.put(`CycleUpdate/${cycle.updateId}`, formDataForUpload, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
+    const { title, status, description, AdditionalNotes, imageSrc, date, progress } = formData;
+    if (!title || !status || !description || !AdditionalNotes || !imageSrc || !date || progress === undefined) {
+      toast.error("جميع الحقول مطلوبة!");
+      return false;
     }
-  });
+    return true;
+  };
 
-  const updatedData = response.data;
-  Swal.fire({
-    title: "تم التحديث!",
-    text: "تم تحديث الدورة بنجاح",
-    icon: "success",
-    confirmButtonColor: "#28a745"
-  });
-  onupdateSuccess(updatedData);
-} catch (error) {
-  console.error('Error updating cycle:', error);
-  Swal.fire({
-    title: "خطأ!",
-    text: "حدث خطأ أثناء تحديث الدورة",
-    icon: "error",
-    confirmButtonColor: "#dc3545"
-  });
-}
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
 
-    };
+    const formDataForUpload = new FormData();
+    formDataForUpload.append('title', formData.title);
+    formDataForUpload.append('description', formData.description);
+    formDataForUpload.append('additionalNotes', formData.AdditionalNotes);
+    formDataForUpload.append('growthRate', Number(formData.progress));
+    formDataForUpload.append('qualityCheck', formData.status);
+    formDataForUpload.append('updateId', cycle.updateId);
+    formDataForUpload.append('updateDate', new Date(formData.date).toISOString());
+
+    // *** CHANGE HERE ***
+    // Only append the 'image' if a new file was actually selected.
+    if (newImageFile) {
+        formDataForUpload.append('image', newImageFile);
+    }
+
+    try {
+      const response = await api.put(`CycleUpdate/${cycle.updateId}`, formDataForUpload, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      const updatedData = response.data;
+      Swal.fire({
+        title: "تم التحديث!",
+        text: "تم تحديث الدورة بنجاح",
+        icon: "success",
+        confirmButtonColor: "#28a745"
+      });
+      onupdateSuccess(updatedData);
+    } catch (error) {
+      console.error('Error updating cycle:', error);
+      Swal.fire({
+        title: "خطأ!",
+        text: "حدث خطأ أثناء تحديث الدورة",
+        icon: "error",
+        confirmButtonColor: "#dc3545"
+      });
+    }
+  };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -133,23 +133,37 @@ export default function Editupdateoncycle({ cycle, onupdateSuccess }) {
         return;
       }
 
-      const reader = new FileReader();
+      // Store the file object for submission
+      setNewImageFile(file);
 
+      const reader = new FileReader();
       reader.onload = (e) => {
+        // Set imageSrc to the Data URL for immediate preview
         setFormData(prev => ({ ...prev, imageSrc: e.target.result }));
       };
-
       reader.onerror = () => {
         toast.error('حدث خطأ أثناء قراءة الملف');
       };
-
       reader.readAsDataURL(file);
     }
   };
 
+  // *** SOLUTION LOGIC ***
+  // Decide what the image source URL should be.
+  const getImagePreviewUrl = () => {
+    if (!formData.imageSrc) {
+        return ""; // No image to show
+    }
+    // If it's a Data URL (from the new file upload), use it directly.
+    if (formData.imageSrc.startsWith('data:image')) {
+        return formData.imageSrc;
+    }
+    // Otherwise, it's a path from the server, so build the full URL.
+    return `https://cityroots.runasp.net/${formData.imageSrc}`;
+  };
 
   return (
-    <div className="container" style={{ padding: "20px",fontSize:"20px",fontWeight:"500" }}>
+    <div className="container" style={{ padding: "20px", fontSize: "20px", fontWeight: "500" }}>
       <ToastContainer />
       <div className="row align-items-start">
         {/* Form Section */}
@@ -157,8 +171,8 @@ export default function Editupdateoncycle({ cycle, onupdateSuccess }) {
           <form
             onSubmit={handleSubmit}
             style={{ backgroundColor: "#FFF", padding: "20px", borderRadius: "8px" }}
-            encType="multipart/form-data" // Add enctype for file uploads
           >
+            {/* ... (rest of your form is unchanged) ... */}
             {/* Title Input */}
             <div className="row mb-3">
               <div className="col-md-3 d-flex align-items-center">
@@ -316,7 +330,7 @@ export default function Editupdateoncycle({ cycle, onupdateSuccess }) {
                 </span>
               </div>
             </div>
-
+            
             <button type="submit" className={styles.updatecyclebutt}>
               حفظ
             </button>
@@ -327,7 +341,8 @@ export default function Editupdateoncycle({ cycle, onupdateSuccess }) {
         <div className="col-lg-4 col-md-6 col-12 d-flex flex-column align-items-center mb-4">
           {formData.imageSrc ? (
             <img
-              src={`https://cityroots.runasp.net/${formData.imageSrc}`}
+              // *** APPLY THE SOLUTION HERE ***
+              src={getImagePreviewUrl()}
               alt="صورة المحصول"
               style={{
                 width: "100%",

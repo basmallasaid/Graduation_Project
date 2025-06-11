@@ -28,24 +28,14 @@ export default function Footer() {
             <h3>روابط مهمة</h3>
               <ul className="list-unstyled">
                 <li>
-                  <Link to="/" >
-                  الأسئلة الشائعة
+                  <Link to="/Opinon" >
+                  رايك يهمنا
                   </Link>
                 </li>
+              
                 <li>
-                  <Link  >
-                  سياسيه الخصوصيه
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/" >
-                  شروط الاستخدام 
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/" >
-                  دعم العملاء
-                  </Link>
+                  <Link to="/Contact" >
+تواصل معنا                  </Link>
                 </li>
               </ul>
             </div>

@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import NavSideF from './NavSideF';
 import FooterF from './FooterF';
 import NavbarF from './NavbarF';
-    const userData = JSON.parse(localStorage.getItem("user_data"));
+const userData = JSON.parse(localStorage.getItem("user_data"));
 console.log(userData)
 const HomeFarmer = () => {
     const [info, setinfo] = useState(true);
@@ -23,15 +23,15 @@ const HomeFarmer = () => {
     }
 
     return (
-        <div className="d-flex flex-column min-vh-100">
-         <NavbarF/>
+        <div className="d-flex flex-column min-vh-100" style={{ overflowX: 'hidden' }}>
+            <NavbarF />
             <div className={`d-flex flex-grow-1 ${styles.greenline_bg}`}>
-                <NavSideF/>
+                <NavSideF />
                 <main className="flex-grow-1">
-                <div className={styles.divflex}>
+                    <div className={styles.divflex}>
                         <div className={styles.farm_management} onClick={farmManagement}>
                             <h4>إدارة المزارع</h4>
-                            <img src="/assets/Naturalist.png" alt="Naturalist"  />
+                            <img src="/assets/Naturalist.png" alt="Naturalist" />
                             <h5 className={styles.tooltip_text}>تنظيم المزارع و الاراضي المرتبطة بها بدقة</h5>
                         </div>
                         <div className={styles.Crop_Services} onClick={showInfo}>
@@ -63,7 +63,7 @@ const HomeFarmer = () => {
                     </div>
                 </main>
             </div>
-         <FooterF/>
+            <FooterF />
         </div>
     );
 };

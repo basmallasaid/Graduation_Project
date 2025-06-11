@@ -89,7 +89,7 @@ const NavbarF = () => {
   };
 
   return (
-    <nav className={`navbar navbar-expand-lg ${styles.NavF}`} >
+    <nav className={`navbar  ${styles.NavF}`} >
       <div className="container-fluid">
         <Link className="navbar-brand text-white" to="/HomeFarmer"> {/* Make logo link to a relevant page */}
           <img

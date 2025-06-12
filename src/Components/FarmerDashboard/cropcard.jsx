@@ -40,10 +40,33 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
                 await api.delete(`Harvest/${harvestId}`);
                 Swal.fire("تم الحذف!", "تم حذف المحصول بنجاح.", "success");
                 onCropDeleted?.(harvestId); // Notify parent component
-            } catch (error) {
-                Swal.fire("حدث خطأ", "فشل حذف المحصول.", "error");
+            }catch (error) {
+                console.error("Error during delete:", error);
+            
+                const status = error?.response?.status;
+                const backendMessage = error?.response?.data?.message;
+            
+                if (status === 409) {
+                  Swal.fire({
+                    title: "تعذر الحذف!",
+                    text: backendMessage || "لا يمكن حذف المحصول لأنه يحتوي على طلبات شراء مقبولة",
+                    icon: "warning"
+                  });
+                } else if (status === 401) {
+                  Swal.fire({
+                    title: "غير مصرح!",
+                    text: "انتهت صلاحية الجلسة أو لم يتم تسجيل الدخول.",
+                    icon: "error"
+                  });
+                } else {
+                  Swal.fire({
+                    title: "حدث خطأ!",
+                    text: backendMessage || "حدث خطأ أثناء حذف الدورة.",
+                    icon: "error"
+                  });
+                }
+              }
             }
-        }
     };
 
     const formatDate = (dateString) => {
@@ -80,17 +103,22 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
     };
 
     // THIS IS THE CORRECTED LOGIC
-    let displayImageUrl = PLACEHOLDER_IMAGE_URL;
-    if (currentCrop.imageUrl) {
-        // Check if it's a Base64 Data URL
-        if (currentCrop.imageUrl.startsWith('data:image')) {
-            displayImageUrl = currentCrop.imageUrl;
-        } else {
-            // Otherwise, treat it as a relative path and build the full URL with cache-busting
-            const imagePath = currentCrop.imageUrl.startsWith('/') ? currentCrop.imageUrl.substring(1) : currentCrop.imageUrl;
-            displayImageUrl = `https://cityroots.runasp.net/${imagePath}?v=${imageVersion}`;
-        }
-    }
+ let displayImageUrl = PLACEHOLDER_IMAGE_URL;
+
+// if (currentCrop?.imageUrl && typeof currentCrop.imageUrl === 'string') {
+//     if (currentCrop.imageUrl.startsWith('data:image')) {
+//         displayImageUrl = currentCrop.imageUrl;
+//     } else {
+//         const imagePath = currentCrop.imageUrl.startsWith('/')
+//             ? currentCrop.imageUrl.substring(1)
+//             : currentCrop.imageUrl;
+
+//         displayImageUrl = `https://cityroots.runasp.net/${imagePath}?v=${imageVersion}`;
+//     }
+// } else {
+//     console.warn("Image URL is missing or invalid:", currentCrop?.imageUrl);
+// }
+
 
     return (
         <div className="container" style={{ backgroundColor: "#F5F5F5" }}>
@@ -150,13 +178,19 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
 
                 {/* Image Section */}
                 <div className="col-lg-6 col-md-6 col-12 d-flex justify-content-center">
+                     <div className="col-lg-6 col-md-6 col-12 d-flex justify-content-center">
                     <img
-                        key={imageVersion} // The key now reliably changes on every successful update
                         className="crop-image"
-                        src={displayImageUrl} // Use the correctly constructed URL
+                        src={`https://cityroots.runasp.net/${currentCrop.imageUrl}`}
                         alt={`صورة ${currentCrop.name}`}
-                        style={{ maxWidth: "80%", borderRadius: "8px", maxHeight: "400px", objectFit: "cover" }}
+                        style={{
+                            maxWidth: "80%",
+                            borderRadius: "8px",
+                            maxHeight: "400px",
+                            objectFit: "cover",
+                        }}
                     />
+                </div>
                 </div>
             </div>
         </div>

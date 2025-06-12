@@ -185,8 +185,7 @@ setSeeds(seedsRes.data);
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
   };
-
- const handleDelete = async (id) => {
+const handleDelete = async (id) => {
   try {
     const isConfirmed = await Swal.fire({
       title: "هل أنت متأكد؟",
@@ -200,7 +199,23 @@ setSeeds(seedsRes.data);
     });
 
     if (isConfirmed.isConfirmed) {
-      const response = await api.delete(`Cycle/Delete/${id}`);
+      const token = userData?.token;
+
+      if (!token) {
+        Swal.fire({
+          title: "غير مصرح!",
+          text: "يرجى تسجيل الدخول أولاً.",
+          icon: "warning"
+        });
+        return;
+      }
+
+      const response = await api.delete(`Cycle/Delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "*/*"
+        }
+      });
 
       if (response.status === 200) {
         setData((prevData) => prevData.filter((item) => item.cycleId !== id));
@@ -219,14 +234,33 @@ setSeeds(seedsRes.data);
       }
     }
   } catch (error) {
-    console.error("Error during delete:", error); // helpful for debugging
-    Swal.fire({
-      title: "خطأ!",
-      text: "حدث خطأ أثناء حذف الدورة.",
-      icon: "error"
-    });
+    console.error("Error during delete:", error);
+
+    const status = error?.response?.status;
+    const backendMessage = error?.response?.data?.message;
+
+    if (status === 409) {
+      Swal.fire({
+        title: "تعذر الحذف!",
+        text: backendMessage || "للا يمكن حذف المحصول لأنه يحتوي على طلبات شراء مقبولة",
+        icon: "warning"
+      });
+    } else if (status === 401) {
+      Swal.fire({
+        title: "غير مصرح!",
+        text: "انتهت صلاحية الجلسة أو لم يتم تسجيل الدخول.",
+        icon: "error"
+      });
+    } else {
+      Swal.fire({
+        title: "حدث خطأ!",
+        text: backendMessage || "حدث خطأ أثناء حذف الدورة.",
+        icon: "error"
+      });
+    }
   }
 };
+
 
 
 

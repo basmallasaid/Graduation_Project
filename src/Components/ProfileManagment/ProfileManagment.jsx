@@ -161,24 +161,16 @@ const ProfileManegment = () => {
           formData.append('UserName', name);
           formData.append('Phone', phone);
           formData.append('Bio', bio);
-          // Email is not sent as it's not in the PUT API parameters for update
-          // Rate/Title is not sent as it's not in the PUT API parameters for update
-
-          // Handle image:
-          // Send 'Image' field only if a new image file has been selected (profilePic is a data URL)
+     
           if (profilePic && profilePic.startsWith('data:image/')) {
             const imageFile = dataURLtoFile(profilePic, 'profile_upload');
             if (imageFile) {
               formData.append('Image', imageFile);
             } else {
               console.warn("Could not convert data URL to file. Image will not be uploaded.");
-              // Optionally, inform the user if conversion failed.
             }
           }
-          // If profilePic is null (user clicked "Remove Image"), we don't append 'Image'.
-          // The backend determines how to handle this: either keep the old image,
-          // or remove it. Based on typical REST APIs, not sending the field means "no change".
-          // If specific removal is needed, the API would usually have a flag like `RemoveImage: true`.
+       
 
           api.put('Authentication/profile', formData, {
             headers: {
@@ -189,13 +181,10 @@ const ProfileManegment = () => {
             setIsEditing(false);
             Swal.fire('تم الحفظ!', 'تم تحديث بياناتك بنجاح.', 'success');
 
-            // After successful save, update profilePic state if backend returns a new image URL
             if (response.data && response.data.imageProfileUrl) {
               setProfilePic(response.data.imageProfileUrl);
             }
-            // If no imageProfileUrl in response, but we uploaded a new image (data URL was set to profilePic),
-            // profilePic already holds the data URL, which will display the new image.
-            // On next full fetch/refresh, the actual server URL will be loaded by useEffect.
+           
           })
           .catch(error => {
             console.error("Error updating profile:", error.response?.data || error.message);

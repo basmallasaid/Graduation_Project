@@ -1,3 +1,4 @@
+// Cropcard.jsx
 import React, { useState, useEffect } from "react";
 import styles from "../../Styles/style.module.css";
 import Modal from "react-modal";
@@ -6,26 +7,19 @@ import Croprequests from "./croprequests";
 import Editcrop from "./Editcrop";
 import api from "../../API/axiosInstance";
 
-// Define a placeholder image URL for cases where an image is missing
 const PLACEHOLDER_IMAGE_URL = "https://via.placeholder.com/400x400.png?text=No+Image+Available";
 
 export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
     const [visibleEditCrop, setVisibleEditCrop] = useState(false);
     const [visibletalabatCrop, setVisibletalabatCrop] = useState(false);
-    
-    // This local state holds the data this card displays.
     const [currentCrop, setCurrentCrop] = useState(crop);
+    const [imageVersion, setImageVersion] = useState(Date.now());
 
-    // =======================================================================
-    //  THE FIX: This `useEffect` hook listens for changes to the `crop` prop.
-    //  When the parent component updates its state and passes a new `crop`
-    //  object down, this effect runs and updates the card's local state,
-    //  triggering an instant re-render with the new data.
-    // =======================================================================
     useEffect(() => {
         setCurrentCrop(crop);
-    }, [crop]); // Dependency array: This effect re-runs whenever the 'crop' prop changes.
+    }, [crop]);
 
+    // ... (deletePost and formatDate functions remain the same) ...
     const deletePost = async () => {
         const harvestId = currentCrop?.harvestId;
         if (!harvestId) return;
@@ -45,9 +39,7 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
             try {
                 await api.delete(`Harvest/${harvestId}`);
                 Swal.fire("تم الحذف!", "تم حذف المحصول بنجاح.", "success");
-                if (onCropDeleted) {
-                    onCropDeleted(harvestId); // Notify parent component
-                }
+                onCropDeleted?.(harvestId); // Notify parent component
             } catch (error) {
                 Swal.fire("حدث خطأ", "فشل حذف المحصول.", "error");
             }
@@ -59,18 +51,21 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
         return new Date(dateString).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
     };
 
-    // This function is called by the Editcrop modal upon a successful update.
     const handleeditSuccess = (updatedCropData) => {
-        setVisibleEditCrop(false); // Close the modal
+        setVisibleEditCrop(false); 
+        
+        // IMPORTANT: The API response 'updatedCropData' contains the NEW relative URL.
+        // We update the state with this new data.
+        setCurrentCrop(prev => ({ ...prev, ...updatedCropData }));
 
-        // Notify the parent component about the update.
-        // The parent will update its master list, which triggers the 'useEffect' in this component.
+        // We update the image version to bust the cache for the NEW relative URL.
+        setImageVersion(Date.now());
+
         if (onCropUpdated) {
             onCropUpdated(updatedCropData);
         }
     };
 
-    // Render guard: don't render if essential data is missing
     if (!currentCrop || !currentCrop.harvestId) {
         return null; 
     }
@@ -84,16 +79,29 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
         overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
     };
 
+    // THIS IS THE CORRECTED LOGIC
+    let displayImageUrl = PLACEHOLDER_IMAGE_URL;
+    if (currentCrop.imageUrl) {
+        // Check if it's a Base64 Data URL
+        if (currentCrop.imageUrl.startsWith('data:image')) {
+            displayImageUrl = currentCrop.imageUrl;
+        } else {
+            // Otherwise, treat it as a relative path and build the full URL with cache-busting
+            const imagePath = currentCrop.imageUrl.startsWith('/') ? currentCrop.imageUrl.substring(1) : currentCrop.imageUrl;
+            displayImageUrl = `https://cityroots.runasp.net/${imagePath}?v=${imageVersion}`;
+        }
+    }
+
     return (
         <div className="container" style={{ backgroundColor: "#F5F5F5" }}>
             <div className="row d-flex flex-column flex-md-row align-items-start align-items-md-center">
                 {/* Form Section */}
                 <div className="col-lg-6 col-md-6 col-12 mb-4">
                     <div className="border rounded p-4 shadow">
-                        <form style={{ padding: "30px" }}>
+                        <form style={{ padding: "30px" }} onSubmit={(e) => e.preventDefault()}>
                             <div className="row mb-3">
                                 <div className={styles.cropsfa}>
-                                    <button className={styles.buttfaedit} onClick={(e) => { e.preventDefault(); setVisibleEditCrop(true); }}>
+                                    <button className={styles.buttfaedit} onClick={() => setVisibleEditCrop(true)}>
                                         <i className="fa-solid fa-pen"></i>
                                     </button>
                                     <Modal isOpen={visibleEditCrop} onRequestClose={() => setVisibleEditCrop(false)} ariaHideApp={false} style={cropStyles}>
@@ -102,20 +110,19 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
                                         </button>
                                         <Editcrop crop={currentCrop} oneditSuccess={handleeditSuccess} />
                                     </Modal>
-
-                                    <button className={styles.buttfadel} onClick={(e) => { e.preventDefault(); deletePost(); }}>
+                                    {/* ... rest of the form buttons and fields ... */}
+                                    <button className={styles.buttfadel} onClick={deletePost}>
                                         <i className="fa-solid fa-trash"></i>
                                     </button>
                                 </div>
-                                {/* All JSX now correctly uses the local 'currentCrop' state */}
                                 <div className="col-md-12"><label className="form-label" style={{ fontSize: "35px" }}>{currentCrop.name}</label></div>
                                 <div className="col-md-12">
                                     <label className="form-label" style={{ fontSize: "23px" }}>السعر:</label>
-                                    <span style={{ marginRight: "10px", color: "#49A760", fontSize: "17px" }}>{currentCrop.price}</span>
+                                    <span style={{ marginRight: "10px", color: "#49A760", fontSize: "17px" }}>{currentCrop.price} جنيه</span>
                                 </div>
                                 <div className="col-md-12">
                                     <label className="form-label" style={{ fontSize: "23px" }}>الكمية:</label>
-                                    <span style={{ marginRight: "10px", boxShadow: "rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset", padding: "7px", borderRadius: "7px" }}>{currentCrop.yield}</span>
+                                    <span style={{ marginRight: "10px", boxShadow: "rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset", padding: "7px", borderRadius: "7px" }}>{currentCrop.yield} كيلو</span>
                                 </div>
                                 <div className="col-md-12">
                                     <label className="form-label" style={{ fontSize: "23px" }}>تاريخ الانتاج:</label>
@@ -126,7 +133,7 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
                                     <button className={`btn ${currentCrop.status === 'تحت_الطلب' ? styles.croppending : currentCrop.status === 'نفذت_الكميه' ? styles.cropempty : styles.cropava}`}>{currentCrop.status}</button>
                                 </div>
                                 {currentCrop.reuestsCount > 0 && (
-                                    <button className={styles.talabat} onClick={(e) => { e.preventDefault(); setVisibletalabatCrop(true); }}>
+                                    <button className={styles.talabat} onClick={() => setVisibletalabatCrop(true)}>
                                         عرض تفاصيل الطلبات ({currentCrop.reuestsCount})
                                     </button>
                                 )}
@@ -144,8 +151,9 @@ export default function Cropcard({ crop, onCropDeleted, onCropUpdated }) {
                 {/* Image Section */}
                 <div className="col-lg-6 col-md-6 col-12 d-flex justify-content-center">
                     <img
+                        key={imageVersion} // The key now reliably changes on every successful update
                         className="crop-image"
-                        src={currentCrop.imageUrl ? `https://cityroots.runasp.net/${currentCrop.imageUrl}` : PLACEHOLDER_IMAGE_URL}
+                        src={displayImageUrl} // Use the correctly constructed URL
                         alt={`صورة ${currentCrop.name}`}
                         style={{ maxWidth: "80%", borderRadius: "8px", maxHeight: "400px", objectFit: "cover" }}
                     />

@@ -253,6 +253,7 @@ const handleCropDeleted = (deletedId) => {
                       crop={selectedCrop}
                       onCropDeleted={handleCropDeleted}
                       onCropUpdated={handleCropUpdated}
+                      
                     />
                   </Modal>
                 )}

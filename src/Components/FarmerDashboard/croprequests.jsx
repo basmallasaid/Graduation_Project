@@ -63,26 +63,32 @@ export default function Croprequests({ purchaseRequests, onRequestHandled }) {
     try {
       await api.get(apiEndpoint);
 
+      // Add to localStorage first so it's not shown if the user stops the reload
+      addHandledIdToStorage(purchaseRequestId);
+
+      // Show success message and then reload the page
       Swal.fire({
         icon: 'success',
         title: successTitle,
         confirmButtonText: 'حسناً'
+      }).then((result) => {
+        // This block executes after the user clicks "حسناً"
+        if (result.isConfirmed) {
+            // *** THIS IS THE NEW LINE TO REFRESH THE PAGE ***
+            window.location.reload();
+        }
       });
 
-      // Add to localStorage so it's not shown on next refresh from this client
-      addHandledIdToStorage(purchaseRequestId);
-
-      // Remove the handled request from the local displayable list for immediate UI update
+      // The code below this point might not execute if the page reloads quickly,
+      // but it's good practice to keep for robustness.
       setDisplayableRequests(prevRequests =>
         prevRequests.filter((req) => req.purchaseRequestId !== purchaseRequestId)
       );
-
       if (typeof onRequestHandled === 'function') {
         onRequestHandled(purchaseRequestId);
-      } else {
-        console.warn(`Croprequests: onRequestHandled prop is not a function or was not provided. Parent component won't be notified for ${actionType}.`);
       }
       setSelectedRequest(null);
+
     } catch (error) {
       console.error(`${actionType === 'approve' ? 'Approval' : 'Decline'} failed:`, error);
       Swal.fire({
@@ -131,7 +137,7 @@ export default function Croprequests({ purchaseRequests, onRequestHandled }) {
 
       {selectedRequest && (
         <>
-          <div style={{display:"flex",gap:"20px"}}>
+          <div style={{display:"flex",gap:"20px", alignItems: "center"}}>
             <div style={{ display: "flex" }}>
               <label className={styles.labelreq}>اسم التاجر:</label>
               <p className={styles.preq}>{selectedRequest.merchantName}</p>
@@ -139,17 +145,17 @@ export default function Croprequests({ purchaseRequests, onRequestHandled }) {
             <div>
               <Link to="/Chatinterface"
                 state={{ 
-                                        farmerToChatWith: {
-                                            userId: selectedRequest.userId, // farmer is from harvestDetails
-                                            name: selectedRequest.fullName,
-                                            imageUrl: selectedRequest.userimageUrl 
-                                        }
-                                    }}
+                  farmerToChatWith: {
+                      userId: selectedRequest.userId,
+                      name: selectedRequest.fullName,
+                      imageUrl: selectedRequest.userimageUrl 
+                  }
+                }}
               >
-                 <i class="fa-solid fa-message" style={{color:"black",fontSize:"1.5rem"}}></i></Link>
-           
+                 <i className="fa-solid fa-message" style={{color:"black",fontSize:"1.5rem"}}></i>
+              </Link>
             </div>
-            </div>
+          </div>
           <div style={{ display: "flex" }}>
             <label className={styles.labelreq}>السعر المطلوب:</label>
             <p className={styles.preq}>{selectedRequest.requestedPrice}</p>

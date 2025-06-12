@@ -6,6 +6,7 @@ import stylesmer from "../StylesMer/stylesmer.module.css"
 import NavbarMer from '../Main/NavbarMer';
 import NavSideMer from '../Main/NavSideMer';
 import FooterMer from '../Main/FooterMer';
+import styles from "../../../Styles/style.module.css";
 const MerchentHome = () => {
     const [info, setinfo] = useState(true);
     const showInfo = () => {
@@ -26,7 +27,7 @@ const MerchentHome = () => {
             <NavbarMer/>
             <div className={`d-flex flex-grow-1 ${stylesmer.bgMer}`}>
                 <NavSideMer/>
-                <main className={`flex-grow-1 ${stylesmer.Home}`}>
+                <main className={`flex-grow-1 ${stylesmer.Home} ${styles.hid}`}>
                     <div className={`d-flex justify-content-center ${stylesmer.div}`}>
                         <div className={`${stylesmer.FSMer}`} onClick={InverstorPayment}>
                             <h4>الخدمات المالية</h4>

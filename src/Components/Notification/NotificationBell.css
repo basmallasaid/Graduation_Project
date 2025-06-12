@@ -20,7 +20,7 @@
 
 /* Main notification dropdown box */
 .notification-box {
-  position: absolute;
+  position:absolute;
   right: 0;
   top: 45px;
   width: 370px;
@@ -154,4 +154,34 @@
 
 .new-notification {
   animation: pulse 2s ease-out;
+}
+/* =========================================== */
+
+@media (max-width: 500px) {
+
+  /* 1. التغيير الرئيسي: تعديل صندوق الإشعارات الرئيسي */
+  .notification-box {
+    
+    width:200px; 
+    right: -300px;
+    transform: translateX(-50%); /* اسحبه للخلف بمقدار نصف عرضه لتوسيطه تمامًا */
+
+    max-height: 85vh;
+    top: 10px; 
+  }
+
+  /* 2. تعديلات بسيطة على الخطوط والحشو لتوفير مساحة */
+  .notification-header,
+  .notification-item,
+  .notification-footer {
+    padding: 10px 12px; /* تقليل الحشو الداخلي قليلًا */
+  }
+
+  .notification-title {
+    font-size: 14px;
+  }
+
+  .notification-desc {
+    font-size: 13px;
+  }
 }

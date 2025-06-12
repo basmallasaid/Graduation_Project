@@ -81,7 +81,7 @@ const Agricultural = () => {
             <NavbarF />
             <div className="d-flex flex-grow-1">
                 <NavSideF />
-                <main className="flex-grow-1">
+                <main className={`flex-grow-1 ${styles.hid}`}>
                     <div className="container mt-4">
                         <div className={` ${styles.AddFarm}`}>
                             <button className="btn btn-dark mb-3" style={{ borderRadius: "10px" }}

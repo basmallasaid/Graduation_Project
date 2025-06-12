@@ -23,7 +23,7 @@ const HomeFarmer = () => {
     }
 
     return (
-        <div className="d-flex flex-column min-vh-100" style={{ overflowX: 'hidden' }}>
+        <div className="d-flex flex-column min-vh-100">
             <NavbarF />
             <div className={`d-flex flex-grow-1 ${styles.greenline_bg}`}>
                 <NavSideF />

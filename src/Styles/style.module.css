@@ -1815,10 +1815,9 @@ font-size: 20px;
   color: #ffffff; /* لون النص */
   margin: 0;
   padding: 0;
-   overflow: hidden;
-   white-space: nowrap;
-    max-width: 100%;
-
+   /* overflow: hidden;
+   white-space: nowrap; */
+    max-width:100%;
 }
 .outButton {
   font-size: 14px;

@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import styles from "../../../Styles/style.module.css";
 import Swal from "sweetalert2";
 import api from '../../../API/axiosInstance';
-const AgrcEdit = ({ transaction, onClose }) => {
+
+// 1. استقبل الدالة الجديدة onEditSuccess من الـ props
+const AgrcEdit = ({ transaction, onClose, onEditSuccess }) => {
     const [editedFarm, setEditedFarm] = useState({
         farmName: transaction?.farmName || "",
         location: transaction?.location || "",
@@ -30,8 +32,13 @@ const AgrcEdit = ({ transaction, onClose }) => {
         api.put("/Farm/EditFarm", farmData)
             .then((response) => {
                 console.log("Updated farm:", response.data);
-                Swal.fire("تم التعديل!", "تم تحديث بيانات المزرعة بنجاح.", "success");
-                onClose();
+                Swal.fire("تم التعديل!", "تم تحديث بيانات المزرعة بنجاح.", "success")
+                    .then(() => {
+                        // 2. استدع الدالة لتحديث البيانات في المكون الأب
+                        onEditSuccess();
+                        // 3. أغلق النافذة
+                        onClose();
+                    });
             })
             .catch((err) => {
                 console.error("Error updating farm:", err);

@@ -615,6 +615,19 @@ padding-top: 70px;
   align-items: center;
   text-align: center;
 }
+@media (max-width: 500px) {
+  .aboutdiv{
+    width: 70%;
+    align-content: center;
+    margin: 0px 15px;
+
+}
+.imgabout{
+  width: 25%;
+ margin: 0px 10px;
+
+}
+}
 
 .sliderTitle {
   font-size: 2rem;
@@ -1377,108 +1390,201 @@ cursor: pointer;
     padding:10px 40px 40px;
      
   }
-  .weather img{
-    width: 10%;
-    
-    
+.weather img {
+  width: 10%;
+}
+.weather span {
+  font-weight: bold;
+  font-size: 20px;
+}
+.weather {
+  margin: 50px 20px;
+  margin-bottom: 150px;
+}
+.Temperature {
+  width: 50%;
+  height: 180px;
+  background: linear-gradient(to bottom, rgb(163, 216, 190), rgb(86, 114, 100));
+  border-radius: 50px;
+  text-align: center;
+  color: white;
+  box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
+  transform: translateX(0);
+  animation: Move 1.5s linear;
+  position: relative; /* تمت إضافته لضمان التوسيط الصحيح للنص */
+}
+.Humidity {
+  width: 50%;
+  height: 180px;
+  background: linear-gradient(to bottom, rgb(90, 167, 130), rgb(35, 65, 51));
+  border-radius: 50px;
+  text-align: center;
+  color: white;
+  box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
+  transform: translateX(0);
+  animation: Move 1.5s linear;
+  position: relative; /* تمت إضافته لضمان التوسيط الصحيح للنص */
+}
+.Air {
+  width: 50%;
+  height: 180px;
+  background: linear-gradient(
+    to bottom,
+    rgba(25, 153, 212, 0.872),
+    rgb(30, 54, 79)
+  );
+  border-radius: 50px;
+  text-align: center;
+  color: white;
+  box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
+  transform: translateX(0);
+  animation: Move 1.5s linear;
+  position: relative; /* تمت إضافته لضمان التوسيط الصحيح للنص */
+}
+.infoweather {
+  width: 70%;
+  background: rgba(255, 255, 255, 0.776);
+  color: #000;
+  border-radius: 20px;
+  margin: 50px 0px 1px;
+  box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  transform: translateX(0);
+  animation: Move 1.5s linear;
+}
+.infoweather p {
+  color: #cf2917;
+  font-weight: 550;
+  padding: 5px 40px;
+}
+.infoweather img {
+  width: 3%;
+}
+.infoweather h4 {
+  font-weight: bold;
+  padding: 5px 40px;
+}
+.leftside {
+  width: 20%;
+  height: 500px;
+  background: linear-gradient(to bottom, rgb(112, 135, 99), rgb(27, 33, 24));
+  position: relative;
+  top: 100px;
+  border-radius: 30px;
+  box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
+}
+.Temperature p,
+.Air p {
+  padding: 25px;
+  position: relative;
+  top: 8%;
+  font-weight: 700;
+  font-size: 30px;
+  text-align: center;
+}
+.Humidity p {
+  position: relative;
+  top: 20%;
+  font-weight: 700;
+  font-size: 30px;
+  text-align: center;
+  padding: 25px;
+}
+.infoweather:hover {
+  transform: translateY(-10px);
+}
+
+/* ============================================== */
+/* ====   Responsive Styles for small screens   ==== */
+/* ============================================== */
+@media (max-width: 500px) {
+  .weather {
+    margin: 30px 10px;
+    margin-bottom: 20px;
   }
-  .weather span{
-    font-weight: bold;
+.currentweather span{
+  /* width: 50px; */
+font-size: 15px;
+  font-weight: bold;
+}
+.currentweather img{
+  width: 20%;
+  
+}
+  
+
+  .weather .col-4:last-child {
+    margin-bottom: 0; /* إزالة المسافة السفلية من آخر عنصر */
+  }
+
+  .weather span {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .weather img {
+    width: 25px; /* تصغير حجم الأيقونة */
+  }
+   .headerf h2{
+    color: #1F4E3D;
+    font-weight:bold;
     font-size: 20px;
   }
-  .weather{
-    margin:50px 20px;
-    margin-bottom: 150px;
-    
+
+  .Temperature,
+  .Humidity,
+  .Air {
+    width: 70%; 
+    height: 150px; 
+    margin: 15px 0px;
+    /* align-content: center; */
   }
-  .Temperature{
-    width: 50%; 
-    height: 180px;
-    background: linear-gradient(to bottom, rgb(163,216,190), rgb(86,114,100));
-    border-radius: 50px;
-    text-align: center;
-    color: white;
-    box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
-    transform: translateX(0);
-  animation: Move 1.5s linear;
-  }
-  .Humidity{
-    width: 50%; 
-    height: 180px;
-    background: linear-gradient(to bottom, rgb(90,167,130), rgb(35,65,51));
-    border-radius: 50px;
-    text-align: center;
-    color: white;
-    box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
-    transform: translateX(0);
-  animation: Move 1.5s linear;
-   
-  }
-  .Air{
-    width: 50%; 
-    height: 180px;
-    background: linear-gradient(to bottom, rgba(25, 153, 212, 0.872), rgb(30,54,79));
-    border-radius: 50px;
-    text-align: center;
-    color: white;
-    box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
-    transform: translateX(0);
-  animation: Move 1.5s linear;
-  }
-  .infoweather{
-    width: 70%;
-    background: rgba(255, 255, 255, 0.776);
-    color: #000;
-    border-radius: 20px ;
-    margin: 50px 0px 1px;
-    box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
-    padding: 20px;
-    transform: translateX(0);
-  animation: Move 1.5s linear;
+
+  /* استخدام طريقة أفضل لتوسيط النص داخل الصناديق */
+  .Temperature p,
+  .Humidity p,
+  .Air p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0; /* إزالة الحشوة لأن التوسيط يتم الآن بشكل مطلق */
+    font-size: 28px;
 
   }
-  .infoweather p{
-    color: #CF2917;
-    font-weight: 550;
-    padding: 5px 40px;
-  }
-  .infoweather img{
-    width: 3%;
 
+  .infoweather {
+    width: 95%; /* جعل صندوق المعلومات يأخذ معظم عرض الشاشة */
+    margin: 25px auto; /* توسيطه */
+    padding: 15px;
   }
-  .infoweather h4{
-    font-weight: bold;
-    padding: 5px 40px;
+
+  .infoweather h4,
+  .infoweather p {
+    padding: 5px 10px; /* تقليل الحشوة الجانبية للنصوص */
+    text-align: center; /* توسيط النص ليعطي شكلاً أفضل على الشاشة الصغيرة */
+    font-size: 1rem;
   }
-  .leftside{
-    width:20% ;
-    height: 500px;
-    background: linear-gradient(to bottom, rgb(112, 135, 99), rgb(27,33,24));
-    position: relative;
-    top: 100px;
-    border-radius: 30px;
-    box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
+
+  .infoweather p {
+    font-size: 0.9rem;
   }
-  .Temperature p  , .Air p{
-   padding: 25px;
-   position: relative;
-   top:8%;
-   font-weight: 700;
-   font-size:30px;
-   text-align: center;
+
+  .infoweather img {
+    width: 20px;
   }
-  .Humidity p{
-    position: relative;
-   top:20%;
-    font-weight: 700;
-    font-size:30px;
-    text-align: center;
-    padding: 25px;
-   
-  }
-  .infoweather:hover{
-    transform: translateY(-10px);
-  }
+  .cloud{
+  width: 120px;
+  height: 60px;
+  background-color: #457b9d;
+  margin-right:50px ;
+  border-radius: 20px ;
+  box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  display: flex;
+}
+}
+/*   
   @media (max-width: 719px) {
     .Humidity p, .Temperature p  , .Air p{
       font-weight: bold;
@@ -1507,7 +1613,7 @@ cursor: pointer;
     .weather span{
       font-size: 10px;
     }
-  }
+  } */
   /*AI Model farmer*/
   .Ai{
     margin: 50px;

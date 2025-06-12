@@ -36,24 +36,9 @@ const handleApprove = async () => {
       icon: 'success',
       title: 'تم قبول الطلب بنجاح',
       confirmButtonText: 'حسناً'
+    }).then(() => {
+      window.location.reload(); // 🔁 FULL PAGE RELOAD
     });
-
-    setCyclesData(prevCyclesData =>
-      prevCyclesData.map(cycle => {
-        if (cycle.cycleName !== selectedRequest.cycleName) return cycle;
-
-        return {
-          ...cycle,
-          requestsForInvestments: Array.isArray(cycle.requestsForInvestments)
-            ? cycle.requestsForInvestments.filter(
-                req => req.investmentRequestId !== selectedRequest.investmentRequestId
-              )
-            : []
-        };
-      })
-    );
-
-    setTimeout(() => setSelectedRequest(null), 1500);
   } catch (error) {
     console.error("Approval failed:", error);
     Swal.fire({
@@ -65,6 +50,7 @@ const handleApprove = async () => {
 };
 
 
+
 const handleDecline = async () => {
   if (!selectedRequest) return;
   try {
@@ -74,24 +60,9 @@ const handleDecline = async () => {
       icon: 'success',
       title: 'تم رفض الطلب بنجاح',
       confirmButtonText: 'حسناً'
+    }).then(() => {
+      window.location.reload(); 
     });
-
-    setCyclesData(prevCyclesData =>
-      prevCyclesData.map(cycle => {
-        if (cycle.cycleName !== selectedRequest.cycleName) return cycle;
-
-        return {
-          ...cycle,
-          requestsForInvestments: Array.isArray(cycle.requestsForInvestments)
-            ? cycle.requestsForInvestments.filter(
-                req => req.investmentRequestId !== selectedRequest.investmentRequestId
-              )
-            : []
-        };
-      })
-    );
-
-    setTimeout(() => setSelectedRequest(null), 1500);
   } catch (error) {
     console.error("Decline failed:", error);
     Swal.fire({
@@ -101,6 +72,7 @@ const handleDecline = async () => {
     });
   }
 };
+
 
 
 

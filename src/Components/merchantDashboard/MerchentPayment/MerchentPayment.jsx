@@ -225,7 +225,7 @@ const MerchentPayment = () => {
     const calculateTotals = (filteredData) => {
         const dataToProcess = Array.isArray(filteredData) ? filteredData : [];
         const totalPurchasesValue = dataToProcess
-            .filter(transaction => transaction.type === 'شراء') // استخدام النوع المترجم
+            .filter(transaction => transaction.type === 'شراء' && transaction.status === 'مقبول') // استخدام النوع المترجم
             .reduce((sum, transaction) => sum + (transaction.amount || 0), 0);
         setTotalPurchases(totalPurchasesValue);
     };

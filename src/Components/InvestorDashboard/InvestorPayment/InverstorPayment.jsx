@@ -239,7 +239,7 @@ const InverstorPayment = () => {
         // This function correctly filters by the translated Arabic 'استثمار'
         const dataToProcess = Array.isArray(filteredData) ? filteredData : [];
         const totalInvestmentValue = dataToProcess
-            .filter(transaction => transaction.type === 'استثمار')
+            .filter(transaction => transaction.type === 'استثمار' && transaction.status === 'مقبول')
             .reduce((sum, transaction) => sum + (transaction.amount || 0), 0);
 
         setTotalInvestment(totalInvestmentValue);

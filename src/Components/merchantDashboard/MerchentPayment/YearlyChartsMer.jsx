@@ -71,7 +71,7 @@ const YearlyChartsMer = () => {
     labels: months,
     datasets: [
       {
-        label: 'تقرير عمليات الاستثمار',
+        label: 'تقرير عمليات الشراء ',
         // استخدام بيانات السنة المحددة، أو مصفوفة من الأصفار في حالة عدم وجودها
         data: selectedSummary ? selectedSummary.purchasesPerMonth : Array(12).fill(0),
         backgroundColor: '#459595',

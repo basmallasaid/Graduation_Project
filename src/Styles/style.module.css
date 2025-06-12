@@ -92,7 +92,6 @@ body {
   font-size: 14px;
   font-weight: bold;
   width: 150px;
-  margin: 0 35px; /* تقليل المسافة بين الأزرار */
   background-color: #4BAF47;
   border-radius: 7px;
   color: #ffffff;
@@ -117,7 +116,24 @@ margin-left: 50px;
   background-color: #4BAF47;
   color: #ffffff;
 }
+/* Add this to your style.module.css */
 
+.closeModalButton {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 0;
+    line-height: 1; /* Ensures the icon is centered in the button area */
+}
+
+.closeModalButton:hover {
+    color: #ff0000; /* Example hover color */
+}
 /* إضافة تنسيق لأزرار البحث */
 form .form-control {
   border-radius: 50px; /* جعل حدود شريط البحث دائرية */

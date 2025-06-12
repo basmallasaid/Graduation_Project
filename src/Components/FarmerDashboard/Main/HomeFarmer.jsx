@@ -27,7 +27,7 @@ const HomeFarmer = () => {
             <NavbarF />
             <div className={`d-flex flex-grow-1 ${styles.greenline_bg}`}>
                 <NavSideF />
-                <main className="flex-grow-1">
+                <main className={`flex-grow-1 ${styles.hid}`}>
                     <div className={styles.divflex}>
                         <div className={styles.farm_management} onClick={farmManagement}>
                             <h4>إدارة المزارع</h4>

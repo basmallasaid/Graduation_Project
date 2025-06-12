@@ -25,7 +25,7 @@ const InvestorHome = () => {
             <NavbarInv />
             <div className={`d-flex flex-grow-1 ${stylesInv.bgInv}`}>
                 <NavSideInv />
-                <main className={`flex-grow-1 ${stylesInv.Home}`}>
+                <main className={`flex-grow-1 ${stylesInv.Home} ${styles.hid}`}>
                     <div className={`d-flex justify-content-center ${stylesInv.div}`}>
                         <div className={`${stylesInv.FS}`} onClick={InverstorPayment}>
                             <h4>الخدمات المالية</h4>

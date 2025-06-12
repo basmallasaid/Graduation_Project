@@ -90,6 +90,41 @@
   .parentfilter{
    margin-bottom: 15px;
   }
+  @media (max-width: 500px) {
+  .Home {
+    height: auto;       
+    min-height: 100%;  
+    margin-top: 10px;   
+  }
+  .div {
+    flex-direction: column; /* <-- هذا هو الأمر الذي يجعلها أعمدة */
+    align-items: center;    /* توسيط البطاقات أفقيًا */
+  }
+  .FSMer, .cycles, .Browsecrops { /* تم إضافة كل الكلاسات لضمان التطبيق */
+    width: 70%;       /* جعل كل بطاقة تأخذ 90% من عرض الشاشة */
+    margin: 15px 0;   /* تقليل الهوامش وجعلها عمودية فقط */
+    height: 200px;     /* السماح للارتفاع بأن يتحدد بالمحتوى */
+    min-height: 200px;
+  }
+  
+  .cycles img , .FS img , .NewCycle img, .Browsecrops img {
+    width: 20%; /* يمكن تصغير حجم الأيقونة قليلًا */
+  }
+ /* .tooltip_textInv {
+    
+    position: relative; 
+    transform: none;    
+    opacity: 1;         
+    visibility: visible;
+    font-size: 13px;    
+    bottom: auto;       
+    left: 20%;
+    margin-top: 10px;  
+    padding: 0 10px;
+    
+  }*/
+ 
+}
  /*Fav*/
  .cardbg{
 background-image: url('../../../../public/assets/cardbg.jpg');

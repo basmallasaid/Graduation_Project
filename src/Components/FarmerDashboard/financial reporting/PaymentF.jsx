@@ -98,11 +98,11 @@ const PaymentF = () => {
 
         // Apply type filter
         if (typeFilter !== 'all') {
-    const apiType = transactionTypeMap[typeFilter]; 
-    filtered = filtered.filter(transaction => {
-        return transaction.type === typeFilter || transaction.type === apiType;
-    });
-}
+            const apiType = transactionTypeMap[typeFilter];
+            filtered = filtered.filter(transaction => {
+                return transaction.type === typeFilter || transaction.type === apiType;
+            });
+        }
 
         // Apply date filter
         const { from, to } = dateFilterRange;
@@ -143,8 +143,8 @@ const PaymentF = () => {
 
     }, [paymentData.payments]); // Depend on the source payments array
 
-   
-        const handleTypeFilter = (type) => {
+
+    const handleTypeFilter = (type) => {
         setActiveTypeFilter(type);
         applyFilters(type, dateRange);
         setShowTypeDropdown(false);
@@ -214,16 +214,26 @@ const PaymentF = () => {
     };
 
     // --- Totals Calculation --- (Based on *filtered* transactions)
+    //  FIXED: This section now checks for both Arabic and English transaction types to ensure totals are calculated correctly.
     const { totalInvestment, totalPurchase } = React.useMemo(() => {
-        const investmentTypeApi = transactionTypeMap['استثمار'];
-        const purchaseTypeApi = transactionTypeMap['شراء'];
+        const investmentTypeUi = 'استثمار';
+        const investmentTypeApi = transactionTypeMap[investmentTypeUi]; // 'Investment'
+        
+        const purchaseTypeUi = 'شراء';
+        const purchaseTypeApi = transactionTypeMap[purchaseTypeUi]; // 'Purchase'
 
-        const totalInvestment = filteredTransactions // Use filteredTransactions here
-            .filter(transaction => transaction.type === investmentTypeApi)
+        const totalInvestment = filteredTransactions
+            .filter(transaction =>
+                (transaction.type === investmentTypeUi || transaction.type === investmentTypeApi) &&
+                transaction.status === 'مقبول'
+            )
             .reduce((sum, transaction) => sum + (transaction.amount || 0), 0);
 
-        const totalPurchase = filteredTransactions // Use filteredTransactions here
-            .filter(transaction => transaction.type === purchaseTypeApi)
+        const totalPurchase = filteredTransactions
+            .filter(transaction =>
+                (transaction.type === purchaseTypeUi || transaction.type === purchaseTypeApi) &&
+                transaction.status === 'مقبول'
+            )
             .reduce((sum, transaction) => sum + (transaction.amount || 0), 0);
 
         return { totalInvestment, totalPurchase };
@@ -373,10 +383,10 @@ const PaymentF = () => {
                                 {paymentData.payments.length > 0 && (
                                     <div className={styles.totals_section}>
                                         <div className={styles.total_item}>
-                                            إجمالي إيرادات الشراء (المصفاة): <span>{totalPurchase.toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</span>
+                                            إجمالي إيرادات الشراء : <span>{totalPurchase.toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</span>
                                         </div>
                                         <div className={styles.total_item}>
-                                             إجمالي إيرادات الاستثمار (المصفاة): <span>{totalInvestment.toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</span>
+                                             إجمالي إيرادات الاستثمار : <span>{totalInvestment.toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</span>
                                         </div>
                                     </div>
                                 )}

@@ -5,13 +5,26 @@ import AddLand from './AddLand';
 import EditLand from './EditLand';
 import api from '../../../API/axiosInstance';
 
-const AgriculturalPop = ({ transaction, onClose }) => {
+// 1. استقبل الدالة الجديدة onDataChange
+const AgriculturalPop = ({ transaction, onClose, onDataChange }) => {
     const [showAddLandPopup, setShowAddLandPopup] = useState(false);
     const [showEditLandPopup, setShowEditLandPopup] = useState(false);
     const [selectedLandId, setSelectedLandId] = useState(null);
 
     if (!transaction) return null;
 
+    // 2. أنشئ دوال للتعامل مع نجاح الإضافة والتعديل
+    const handleAddSuccess = () => {
+        onDataChange(); // أعد تحميل البيانات في المكون الجد
+        handleCloseAddLandPopup(); // أغلق النافذة
+    };
+
+    const handleEditSuccess = () => {
+        onDataChange(); // أعد تحميل البيانات في المكون الجد
+        handleCloseEditLandPopup(); // أغلق النافذة
+    };
+    
+    // دوال الفتح والإغلاق تبقى كما هي
     const handleOpenAddLandPopup = () => setShowAddLandPopup(true);
     const handleCloseAddLandPopup = () => setShowAddLandPopup(false);
     
@@ -25,6 +38,7 @@ const AgriculturalPop = ({ transaction, onClose }) => {
         setSelectedLandId(null);
     };
 
+    // 3. قم بتعديل دالة الحذف
     const handleDelete = (parcelId) => {
         if (!parcelId) {
             Swal.fire('خطأ!', 'الأرض غير موجودة', 'error');
@@ -45,6 +59,8 @@ const AgriculturalPop = ({ transaction, onClose }) => {
                 api.delete(`LandParcel/${parcelId}`)
                     .then(() => {
                         Swal.fire('تم الحذف!', 'تم حذف الأرض بنجاح.', 'success');
+                        // *** استدع دالة التحديث بعد الحذف الناجح ***
+                        onDataChange();
                     })
                     .catch(err => {
                         Swal.fire('خطأ!', 'حدثت مشكلة عند الحذف', 'error');
@@ -52,6 +68,7 @@ const AgriculturalPop = ({ transaction, onClose }) => {
             }
         });
     };
+
 
     return (
         <div className={styles.modal_overlayA} onClick={onClose}>
@@ -120,9 +137,20 @@ const AgriculturalPop = ({ transaction, onClose }) => {
                         </div>
                     ))}
                 </div>
-
-                {showAddLandPopup && <AddLand onClose={handleCloseAddLandPopup} farmId={transaction.farmId} />}
-                {showEditLandPopup && <EditLand onClose={handleCloseEditLandPopup} landId={selectedLandId} />}
+ {showAddLandPopup && (
+                    <AddLand 
+                        onClose={handleCloseAddLandPopup} 
+                        farmId={transaction.farmId}
+                        onAddSuccess={handleAddSuccess} // مرر الدالة الجديدة
+                    />
+                )}
+                {showEditLandPopup && (
+                    <EditLand 
+                        onClose={handleCloseEditLandPopup} 
+                        landId={selectedLandId}
+                        onEditSuccess={handleEditSuccess} // مرر الدالة الجديدة
+                    />
+                )}
             </div>
         </div>
     );

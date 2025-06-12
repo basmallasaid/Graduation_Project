@@ -17,19 +17,18 @@ const Agricultural = () => {
     const [isAddModalOpen, setAddModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    // Fetch farms using useCallback to optimize performance
     const fetchFarms = useCallback(async () => {
         setLoading(true);
         try {
             const response = await api.get("/Farm/GetAllFarmasOfFarmerId");
             const farmsWithServerId = response.data.map(farm => ({
                 ...farm,
-                serverId: farm.id // renaming 'id' to 'serverId'
+                serverId: farm.id
             }));
             setFarmData(farmsWithServerId);
         } catch (error) {
             console.error("Error fetching farms:", error);
-            Swal.fire("خطأ!", "حدث خطأ أثناء جلب البيانات.", "error");
+            // لا تظهر رسالة خطأ هنا إلا إذا كان أول تحميل
         } finally {
             setLoading(false);
         }
@@ -39,19 +38,31 @@ const Agricultural = () => {
         fetchFarms();
     }, [fetchFarms]);
 
+    // ===================================================================
+    // ===========  هذا هو الكود الجديد والمهم للغاية  ===========
+    // ===================================================================
+    useEffect(() => {
+        // هذا التأثير يعمل كلما تغيرت قائمة المزارع الرئيسية 'farmData'.
+        // إذا كانت النافذة المنبثقة مفتوحة (selectedTransaction ليست فارغة)،
+        // فإننا نحتاج إلى تحديث بياناتها بأحدث إصدار.
+        if (selectedTransaction) {
+            const updatedTransaction = farmData.find(
+                (farm) => farm.farmId === selectedTransaction.farmId
+            );
+
+            // إذا كانت المزرعة لا تزال موجودة، قم بتحديث الـ state الخاص بالنافذة
+            if (updatedTransaction) {
+                setSelectedTransaction(updatedTransaction);
+            } else {
+                // إذا تم حذف المزرعة، أغلق النافذة المنبثقة
+                setSelectedTransaction(null);
+            }
+        }
+    }, [farmData, selectedTransaction?.farmId]); // يعتمد على farmData و farmId المحدد
+    // ===================================================================
+
     const handleDelete = async (farmId) => {
-        if (!farmId) {
-            console.error("Error: farmId is undefined or null");
-            Swal.fire('خطأ!', 'المزرعة غير موجودة', 'error');
-            return;
-        }
-
-        const farmToDelete = farmData.find(farm => farm.farmId === farmId);
-        if (!farmToDelete || !farmToDelete.farmId) {
-            Swal.fire('خطأ!', 'المزرعة غير موجودة', 'error');
-            return;
-        }
-
+        // ... (كود الحذف يبقى كما هو، لكن من الأفضل أن يعيد تحميل البيانات)
         Swal.fire({
             title: 'تأكيد حذف',
             text: "هل أنت متأكد ؟",
@@ -64,10 +75,10 @@ const Agricultural = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    // إرسال طلب الحذف عبر الـ API مع الـ farmId في الرابط
-                    await api.delete(`/Farm/Delete/${farmToDelete.farmId}`);
-                    setFarmData(prevFarmData => prevFarmData.filter(farm => farm.farmId !== farmToDelete.farmId));
+                    await api.delete(`/Farm/Delete/${farmId}`);
                     Swal.fire('تم الحذف!', 'تم حذف المزرعة بنجاح.', 'success');
+                    // استدع fetchFarms لإعادة تحميل القائمة المحدثة
+                    fetchFarms();
                 } catch (error) {
                     console.error("Error deleting farm:", error);
                     Swal.fire('خطأ!', 'حدثت مشكلة عند الحذف', 'error');
@@ -87,8 +98,8 @@ const Agricultural = () => {
                             <button className="btn btn-dark mb-3" style={{ borderRadius: "10px" }}
                                 onClick={() => setAddModalOpen(true)}>إضافة مزرعة جديدة</button>
                         </div>
-                        {loading ? (
-                            <div>Loading...</div> 
+                        {loading && farmData.length === 0 ? (
+                            <div>Loading...</div>
                         ) : (
                             <div className={`${styles.table_container} ${styles.tableAgric}`}>
                                 <table className={styles.transactions_table}>
@@ -104,24 +115,24 @@ const Agricultural = () => {
                                     </thead>
                                     <tbody>
                                         {farmData.map((farm) => (
-                                            <tr key={farm.farmId}>
-                                                <td onClick={() => setSelectedTransaction(farm)}>{farm.farmId}</td>
-                                                <td onClick={() => setSelectedTransaction(farm)}>{farm.farmName}</td>
-                                                <td onClick={() => setSelectedTransaction(farm)}>{farm.location}</td>
-                                                <td onClick={() => setSelectedTransaction(farm)}>{farm.size} فدان</td>
-                                                <td onClick={() => setSelectedTransaction(farm)}>{farm.numbersOfLands}</td>
+                                            <tr key={farm.farmId} onClick={() => setSelectedTransaction(farm)}>
+                                                <td>{farm.farmId}</td>
+                                                <td>{farm.farmName}</td>
+                                                <td>{farm.location}</td>
+                                                <td>{farm.size} فدان</td>
+                                                <td>{farm.numbersOfLands}</td>
                                                 <td>
                                                     <span className="text-primary mx-2" style={{ cursor: "pointer" }}
-                                                          onClick={(e) => {
-                                                              e.stopPropagation();
-                                                              setSelectedTransaction(farm);
-                                                              setEditModalOpen(true);
-                                                          }}>✎</span>
+                                                        onClick={(e) => {
+                                                            e.stopPropagation(); // لمنع فتح النافذة الكبيرة
+                                                            setSelectedTransaction(farm);
+                                                            setEditModalOpen(true);
+                                                        }}>✎</span>
                                                     <span className="text-danger" style={{ cursor: "pointer" }}
-                                                          onClick={(e) => {
-                                                              e.stopPropagation();
-                                                              handleDelete(farm.farmId);
-                                                          }}>🗑</span>
+                                                        onClick={(e) => {
+                                                            e.stopPropagation(); // لمنع فتح النافذة الكبيرة
+                                                            handleDelete(farm.farmId);
+                                                        }}>🗑</span>
                                                 </td>
                                             </tr>
                                         ))}
@@ -131,17 +142,21 @@ const Agricultural = () => {
                                     <AgriculturalPop
                                         transaction={selectedTransaction}
                                         onClose={() => setSelectedTransaction(null)}
+                                        onDataChange={fetchFarms}
                                     />
                                 )}
                                 {isEditModalOpen && (
                                     <AgrcEdit
                                         transaction={selectedTransaction}
                                         onClose={() => setEditModalOpen(false)}
+                                        // هذا السطر هو الذي يربط بين المكونين
+                                        onEditSuccess={fetchFarms}
                                     />
                                 )}
                                 {isAddModalOpen && (
                                     <AddFarm
                                         onClose={() => setAddModalOpen(false)}
+                                        onFarmAdded={fetchFarms}
                                     />
                                 )}
                             </div>

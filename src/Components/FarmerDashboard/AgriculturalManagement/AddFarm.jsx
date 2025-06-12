@@ -3,7 +3,8 @@ import styles from "../../../Styles/style.module.css";
 import Swal from "sweetalert2";
 import api from "../../../API/axiosInstance";
 
-const AddFarm = ({ onClose }) => {
+// 1. استقبل الـ prop الجديد onFarmAdded
+const AddFarm = ({ onClose, onFarmAdded }) => {
     const [newFarm, setNewFarm] = useState({
         farmName: "",
         location: "",
@@ -16,18 +17,16 @@ const AddFarm = ({ onClose }) => {
 
     const handleAdd = () => {
         try {
-            // استخراج loggedId من localStorage
             const userData = JSON.parse(localStorage.getItem("user_data"));
-            const farmerId = userData?.loggedId; // تأكد من أن الحقل هو loggedId
+            const farmerId = userData?.loggedId;
 
             if (!farmerId) {
                 Swal.fire("خطأ!", "لم يتم العثور على معرف المستخدم.", "error");
                 return;
             }
 
-           
             const farmData = {
-                farmerId: farmerId,  
+                farmerId: farmerId,
                 farmName: newFarm.farmName,
                 location: newFarm.location,
                 size: newFarm.size
@@ -36,8 +35,13 @@ const AddFarm = ({ onClose }) => {
             api.post("/Farm/AddFarm", farmData)
                 .then((response) => {
                     console.log("Farm added:", response.data);
-                    Swal.fire("تمت الإضافة!", "تمت إضافة المزرعة بنجاح.", "success");
-                    onClose(); 
+                    Swal.fire("تمت الإضافة!", "تمت إضافة المزرعة بنجاح.", "success")
+                        .then(() => {
+                            // 2. استدع الدالة لتحديث القائمة في المكون الأب
+                            onFarmAdded();
+                            // 3. أغلق النافذة
+                            onClose();
+                        });
                 })
                 .catch((err) => {
                     console.error("Error adding farm:", err);

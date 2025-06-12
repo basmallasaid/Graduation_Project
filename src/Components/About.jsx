@@ -5,12 +5,12 @@ import Footer from './Footer';
 
 const About = () => {
     return (
-        <>
+        <div className={`${styles.hid}`}>
        {/* <Navbar /> */}
             <img className={styles.instimg} src='assets/about.png' />
-            <div className={` text-center ${styles.grid}`}>
+            <div className={` text-center ${styles.grid} `}>
                 <div className="row" >
-                    <div className="col">
+                    <div className={`col-12 col-lg-6 ${styles.aboutdiv}`}>
                         <p><span className={styles.yetxt}>تعرف علينا</span></p>
                         <h3><b>منصة زراعية متكاملة لربط المزارعين بالمستثمرين والتجار</b></h3>
                         <p className={styles.green_text}>نقدم في منصة " <span className={styles.yetxt}>جذور</span>" تجربة زراعية فريدة من نوعها، حيث نوفر حلولًا ذكية ومتكاملة لربط المزارعين مع المستثمرين والتجار، بهدف تحقيق تنمية مستدامة ودعم القطاع الزراعي.</p>
@@ -23,7 +23,7 @@ const About = () => {
                             <button type="submit" className={styles.subbutton}>أكتشف المزيد</button>
                         </div>
                     </div>
-                    <div className="col"><img src="assets/farmgirl.png" /></div>
+                    <div className={`col-12 col-lg-6 ${styles.imgabout}`}><img src="assets/farmgirl.png" /></div>
                 </div>
             </div>
             <div className={styles.card} style={{textAlign:"center"}}>
@@ -166,7 +166,7 @@ const About = () => {
 
             <Footer />
 
-        </>
+        </div>
     );
 };
 

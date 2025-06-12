@@ -3,7 +3,7 @@ import styles from "../../../Styles/style.module.css";
 import Swal from "sweetalert2";
 import api from "../../../API/axiosInstance";
 
-const EditLand = ({ onClose, landId }) => {
+const EditLand = ({ onClose, landId , onEditSuccess }) => {
     const [landData, setLandData] = useState({
         landName: '',
         image: null,
@@ -72,14 +72,14 @@ const EditLand = ({ onClose, landId }) => {
 
         try {
             await api.put(`LandParcel/EditLand`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
+                headers: { "Content-Type": "multipart/form-data" }
             });
 
-            Swal.fire("تم التعديل!", "تم تحديث بيانات الأرض بنجاح.", "success");
-            onClose();
-            window.location.reload();
+            Swal.fire("تم التعديل!", "تم تحديث بيانات الأرض بنجاح.", "success")
+                .then(() => {
+                    
+                    onEditSuccess(); 
+                });
         } catch (err) {
             console.error("Error updating land:", err);
             Swal.fire("خطأ!", "فشل تعديل الأرض: " + (err.response?.data?.message || "خطأ غير معروف"), "error");

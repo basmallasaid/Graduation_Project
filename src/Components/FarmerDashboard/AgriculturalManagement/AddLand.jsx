@@ -3,7 +3,7 @@ import styles from "../../../Styles/style.module.css";
 import Swal from "sweetalert2";
 import api from '../../../API/axiosInstance';
 
-const AddLand = ({ onClose, farmId }) => {
+const AddLand = ({ onClose, farmId ,onAddSuccess}) => {
     const [newLand, setNewLand] = useState({
         farmId: farmId || '',
         parcelName: '',
@@ -56,13 +56,14 @@ const AddLand = ({ onClose, farmId }) => {
         formData.append("Image", newLand.imageUrl);
 
         api.post("/LandParcel", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
+            headers: { "Content-Type": "multipart/form-data" }
         })
             .then(response => {
-                Swal.fire("تمت الإضافة!", "تمت إضافة الأرض بنجاح.", "success");
-                onClose();
+                Swal.fire("تمت الإضافة!", "تمت إضافة الأرض بنجاح.", "success")
+                    .then(() => {
+                        // 2. استدع الدالة التي تم تمريرها بدلاً من onClose
+                        onAddSuccess(); 
+                    });
             })
             .catch(err => {
                 console.error("Error adding land:", err.response?.data || err.message);

@@ -119,7 +119,7 @@ const WeatherF = () => {
             <div className={styles.containerf}>
                 <div className={styles.headerf}>
                     <div className={styles.cweather}>
-                        <h2>حالة الطقس اليوم</h2>
+                        <h2 >حالة الطقس اليوم</h2>
                         <div className={styles.currentweather}>
                             {weatherData.weatherDetails.description ? (
                                 getWeatherIcon(weatherData.weatherDetails.description)
@@ -139,8 +139,8 @@ const WeatherF = () => {
                 {/* بيانات الطقس */}
                 {weatherData.weatherDetails.temperature && (
                     <div className={`row ${styles.weather}`}>
-                        <div className={`col-4`}>
-                            <span>
+                        <div className={`col-12 col-lg-4 col-md-6`}>
+                            <span >
                                 <img src='/assets/Temperature.png' alt='درجة الحرارة' />
                                 درجة الحرارة
                             </span>
@@ -148,7 +148,7 @@ const WeatherF = () => {
                                 <p>{weatherData.weatherDetails.temperature}</p>
                             </div>
                         </div>
-                        <div className={`col-4`}>
+                        <div className={`col-12 col-lg-4 col-md-6`}>
                             <span>
                                 <img src='/assets/Humidity.png' alt='رطوبة' />
                                 الرطوبة
@@ -157,7 +157,7 @@ const WeatherF = () => {
                                 <p>{weatherData.weatherDetails.humidity}</p>
                             </div>
                         </div>
-                        <div className={`col-4`}>
+                        <div className={`col-12 col-lg-4 col-md-6`}>
                             <span>
                                 <img src='/assets/Air.png' alt='سرعة الرياح' />
                                 سرعة الرياح

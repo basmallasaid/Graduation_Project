@@ -1846,23 +1846,7 @@ font-size: 20px;
 .greenline_bg{
   background: linear-gradient(to bottom, rgb(183, 220, 183), white);
 }
-/* .item3{
-  background-color: #A4D0A4;
-  border-radius:10px  0px 0px 10px ;
-  width: 250px;
-  display: flex;
-  flex-direction: column; 
-  cursor: pointer; 
-  transition: width 0.3s ease;
-  align-items: center;
-}
-.iconNavSide{
-  margin: 40px 0px;
-}
-.item3.collapsed {
-  width: 70px; 
-  align-items: center; 
-} */
+
  .item3{
   background-color: #A4D0A4;
   border-radius:10px  0px 0px 10px ;
@@ -1872,6 +1856,7 @@ font-size: 20px;
   cursor: pointer; 
   transition: width 0.3s ease;
   align-items: center;
+  margin-left: 10px;
 }
 .iconNavSide{
   margin: 40px 0px;
@@ -1889,6 +1874,7 @@ font-size: 20px;
   .item3.show {
     transform: translateX(0);
    }
+   
 }
 
 /* .item2{
@@ -1904,7 +1890,6 @@ font-size: 20px;
 @media (max-width: 500px) {
   .divflex {
     flex-direction: column; 
-    align-items: center;
     width: 500px;  
   }}
 .Crop_Services ,.farm_management,.agr_courses,.fina_repo{

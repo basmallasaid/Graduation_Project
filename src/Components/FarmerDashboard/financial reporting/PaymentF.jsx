@@ -233,9 +233,9 @@ const PaymentF = () => {
     return (
         <div className="d-flex flex-column min-vh-100">
             <NavbarF />
-            <div className={`d-flex flex-grow-1  ${styles.hid}`}>
+            <div className={`d-flex flex-grow-1 ${styles.hid}`}>
                 <NavSideF />
-                <main className={` flex-grow-1  `}>
+                <main className={` flex-grow-1`}>
                     <div className={styles.table_section} >
 
                         {/* --- Filters Section --- */}

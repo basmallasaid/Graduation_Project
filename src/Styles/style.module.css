@@ -1896,6 +1896,10 @@ font-size: 20px;
 }
 .shoppingcard{
   text-align: center;
+  display: flex;
+  justify-content: center; /* توسيط أفقي */
+  align-items: center;  
+  height: 100%;
 }
 .titlecardshooping{
  margin:10px 0px;
@@ -1916,9 +1920,9 @@ font-size: 20px;
   margin: 10% 25%;
 } */
 .imgcard_shopping{
-  width: 50%;
-  height: 50%; 
-  margin: 10% 25%;
+  width: 100px;
+  height: 100px; 
+  margin-top: 10px;
 }
 .descshopping h5{
   color: #A78E49; 

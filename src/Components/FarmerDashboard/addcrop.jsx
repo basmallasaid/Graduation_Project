@@ -52,62 +52,65 @@ export default function Addcrop({ onCropAdded, onaddSuccess }) {
         setSelectedCrop(cropName);
     };
 
-    const handleFormSubmit = (event) => {
-      event.preventDefault();
-  
-      if (
-          !selectedCrop ||
-          selectedCrop === "اختر المحصول" ||
-          !productionDate ||
-          !quantity ||
-          !price ||
-          !imageFile
-      ) {
-          toast.error("يرجى ملء جميع الحقول!");
-          return;
-      }
-  
-      const formData = new FormData();
-  
-      const cropId = cropNames.find((crop) => crop.cropName === selectedCrop)?.cropId || 0;
-      formData.append("CropId", cropId);
-  
-      if (selectedCycle !== "no") {
-          formData.append("CycleId", parseInt(selectedCycle, 10));
-      }
-  
-      formData.append("Yield", parseFloat(quantity));
-      formData.append("Price", parseFloat(price));
-      formData.append("ProductionDate", new Date(productionDate).toISOString());
-      formData.append("IsAlLowedToShowUpdatesToMerchant", allowUpdates === "yes");
-      formData.append("Image", imageFile);
-  
-      api.post(`Harvest?farmerId=${farmerId}`, formData)
-          .then((response) => {
-              toast.success("تم إضافة المحصول بنجاح!");
-  
-              setTimeout(() => {
-                  onaddSuccess();
-              }, 2000);
-  
-              if (onCropAdded) {
-                  onCropAdded({
-                      id: response.data.id,
-                      name: selectedCrop,
-                      yield: quantity,
-                      price: price,
-                      status: quantity > 0 ? "متاح" : "نفذت الكمية",
-                  });
-              }
-          })
-          .catch((error) => {
-              console.error("Error submitting data:", error);
-              console.error("Response data from server:", error.response?.data);
-              setError("Failed to submit data. Please try again.");
-              toast.error("فشل في إرسال البيانات. يرجى المحاولة مرة أخرى.");
-          });
-  };
+    // The corrected version of your submit handler in addcrop.jsx
 
+const handleFormSubmit = (event) => {
+    event.preventDefault();
+
+    // Your validation is good, keep it.
+    if (
+        !selectedCrop ||
+        selectedCrop === "اختر المحصول" ||
+        !productionDate ||
+        !quantity ||
+        !price ||
+        !imageFile
+    ) {
+        toast.error("يرجى ملء جميع الحقول!");
+        return;
+    }
+
+    const formData = new FormData();
+
+    // Your FormData setup is also good, keep it.
+    const cropId = cropNames.find((crop) => crop.cropName === selectedCrop)?.cropId || 0;
+    formData.append("CropId", cropId);
+
+    if (selectedCycle !== "no") {
+        formData.append("CycleId", parseInt(selectedCycle, 10));
+    }
+
+    formData.append("Yield", parseFloat(quantity));
+    formData.append("Price", parseFloat(price));
+    // Sending the full ISO string is correct for backend compatibility.
+    formData.append("ProductionDate", new Date(productionDate).toISOString());
+    formData.append("IsAlLowedToShowUpdatesToMerchant", allowUpdates === "yes");
+    formData.append("Image", imageFile);
+
+    // Your API endpoint seems to have a query parameter, which is fine for POST requests.
+    api.post(`Harvest?farmerId=${farmerId}`, formData)
+        .then((response) => {
+            // 1. Show a success message to the user.
+            toast.success("تم إضافة المحصول بنجاح!");
+
+            // 2. This is the crucial step: 
+            //    Call the onCropAdded prop with the complete data from the API response.
+            //    The parent component (`ViewCrops.jsx`) will receive this new crop object
+            //    and handle updating the list and closing the modal.
+              setTimeout(() => {
+                if (onCropAdded) {
+                    onCropAdded(response.data);
+                }
+            }, 3000); // 300 milliseconds is usually enough
+        })
+        .catch((error) => {
+            // Your error handling is good.
+            console.error("Error submitting data:", error);
+            console.error("Response data from server:", error.response?.data);
+            setError("Failed to submit data. Please try again.");
+            toast.error("فشل في إرسال البيانات. يرجى المحاولة مرة أخرى.");
+        });
+};
   useEffect(() => {
     api.get('Crop/CropsOfType?CropTypeId=0')
         .then((response) => {

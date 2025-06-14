@@ -5,6 +5,7 @@ import FooterInv from '../Main/FooterInv';
 import api from '../../../API/axiosInstance';
 import { Link } from 'react-router-dom';
 import SeeDetails from '../Investorpages/SeeDetails/SeeDetails';
+import styles from "../.././../Styles/style.module.css";
 
 const Newcycles = () => {
     const [cycles, setCycles] = useState([]);
@@ -55,7 +56,7 @@ const Newcycles = () => {
         try {
             const response = await api.get('Recommendation/ReccommendationForInvestor');
             const data = response.data;
-            const cyclesWithRatings = data.map(cycle => ({ ...cycle }));
+            const cyclesWithRatings = data.map(cycle => ({ ...cycle , rating: cycle.rate !== undefined ? cycle.rate : 0 }));
             setRecommendedCycles(cyclesWithRatings);
         } catch (error) {
             console.error("Could not fetch recommended cycles:", error);
@@ -175,17 +176,22 @@ const Newcycles = () => {
                         <div style={{ display: "flex", flexDirection: "column", marginBottom: "10px", width: "100%" }}>
                             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                                 <label style={{ fontSize: "1.3rem", marginRight: "10px", fontWeight: "600" }}> الهدف الاستثماري</label>
-                                <input
-                                    readOnly
-                                    value={cycle.openInvestmentCycleDTO.expectedFinancialGoal}
-                                    style={{
-                                        borderRadius: "5px",
-                                        borderColor: "#B4D3E0",
-                                        border: "solid #B4D3E0 1px",
-                                        padding: "3px 0",
-                                        width: "50%",
-                                        textAlign: "center"
-                                    }} />
+                             <input
+  readOnly
+  value={cycle.openInvestmentCycleDTO.expectedFinancialGoal}
+  style={{
+    borderRadius: "5px",
+    borderColor: "#B4D3E0",
+    border: "solid #B4D3E0 1px",
+    padding: "6px 8px",
+    width: "60%",
+    maxWidth: "400px",         // limits growth on large screens
+    textAlign: "center",
+    fontSize: "1rem",
+    boxSizing: "border-box"
+  }}
+/>
+
                             </div>
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", marginBottom: "10px", width: "100%" }}>
@@ -194,14 +200,18 @@ const Newcycles = () => {
                                 <input
                                     readOnly
                                     value={cycle.openInvestmentCycleDTO.currentTotalInvestment}
-                                    style={{
-                                        borderRadius: "5px",
-                                        borderColor: "#B4D3E0",
-                                        border: "solid #B4D3E0 1px",
-                                        padding: "3px 0",
-                                        width: "50%",
-                                        textAlign: "center"
-                                    }} />
+                                style={{
+    borderRadius: "5px",
+    borderColor: "#B4D3E0",
+    border: "solid #B4D3E0 1px",
+    padding: "6px 8px",
+    width: "60%",
+    maxWidth: "400px",         // limits growth on large screens
+    textAlign: "center",
+    fontSize: "1rem",
+    boxSizing: "border-box"
+  }}
+/>
                             </div>
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", marginBottom: "10px", width: "100%" }}>
@@ -210,14 +220,18 @@ const Newcycles = () => {
                                 <input
                                     readOnly
                                     value={cycle.openInvestmentCycleDTO.currentInvestorCount}
-                                    style={{
-                                        borderRadius: "5px",
-                                        borderColor: "#B4D3E0",
-                                        border: "solid #B4D3E0 1px",
-                                        padding: "3px 0",
-                                        width: "50%",
-                                        textAlign: "center"
-                                    }} />
+                                 style={{
+    borderRadius: "5px",
+    borderColor: "#B4D3E0",
+    border: "solid #B4D3E0 1px",
+    padding: "6px 8px",
+    width: "60%",
+    maxWidth: "400px",         // limits growth on large screens
+    textAlign: "center",
+    fontSize: "1rem",
+    boxSizing: "border-box"
+  }}
+/>
                             </div>
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", marginBottom: "10px", width: "100%" }}>
@@ -226,14 +240,18 @@ const Newcycles = () => {
                                 <input
                                     readOnly
                                     value={cycle.openInvestmentCycleDTO.availableProfitTypes}
-                                    style={{
-                                        borderRadius: "5px",
-                                        borderColor: "#B4D3E0",
-                                        border: "solid #B4D3E0 1px",
-                                        padding: "3px 0",
-                                        width: "50%",
-                                        textAlign: "center"
-                                    }} />
+                                style={{
+    borderRadius: "5px",
+    borderColor: "#B4D3E0",
+    border: "solid #B4D3E0 1px",
+    padding: "6px 8px",
+    width: "60%",
+    maxWidth: "400px",         // limits growth on large screens
+    textAlign: "center",
+    fontSize: "1rem",
+    boxSizing: "border-box"
+  }}
+/>
                             </div>
                         </div>
                         <div className="text-warning fs-4 mb-2 mb-md-0" style={{ display: "flex", gap: "20px", justifyContent: "center" }}>
@@ -245,10 +263,10 @@ const Newcycles = () => {
                         </div>
                     </div>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", justifyContent: "space-between",flexWrap:"wrap" }}>
                   <Link 
     to={`/SeeDetails/${cycle.cycleId}`} // Changed from to="/SeeDetails"
-    style={{ border: "none", borderRadius: "10px", backgroundColor: "black", color: "#fff", padding: "7px 30px", textDecoration:"none", fontSize:"1.2rem" }}
+    style={{ border: "none", borderRadius: "10px", backgroundColor: "black", color: "#fff", padding: "7px 30px", textDecoration:"none", fontSize:"1.2rem",marginBottom:"3px" }}
 >
     عرض التفاصيل
 </Link>
@@ -265,7 +283,7 @@ const Newcycles = () => {
             <NavbarInv />
             <div className="d-flex flex-grow-1">
                 <NavSideInv />
-                <main className="flex-grow-1 d-flex flex-column">
+                <main className={` flex-grow-1 ${styles.hid} `}>
                     <div
                         style={{
                             marginTop: '20px',
@@ -273,7 +291,7 @@ const Newcycles = () => {
                             width: '80%',
                             maxWidth: '800px',
                             padding: '0 10px',
-                            marginRight: "50px"
+                            marginRight: "30px"
                         }}
                     >
                         <div

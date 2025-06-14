@@ -5,6 +5,7 @@ import FooterInv from '../Main/FooterInv';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import api from '../../../API/axiosInstance';
+import styles from "../.././../Styles/style.module.css";
 
 const Privatecyles = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -126,7 +127,7 @@ const Privatecyles = () => {
             <NavbarInv />
             <div className="d-flex flex-grow-1">
                 <NavSideInv />
-                <main className="flex-grow-1 d-flex flex-column">
+                <main className={` flex-grow-1 ${styles.hid} `}>
                     <div
                         style={{
                             marginTop: '20px',
@@ -134,7 +135,7 @@ const Privatecyles = () => {
                             width: '80%',
                             maxWidth: '800px',
                             padding: '0 10px',
-                            marginRight: "50px"
+                            marginRight: "30px"
                         }}
                     >
                         <div
@@ -379,7 +380,7 @@ const Privatecyles = () => {
                                                             padding: "3px 0",
                                                             width: "50%",
                                                             textAlign: "center"
-                                                        }} value={cycle.openInvestmentCycleDTO?.currentTotalInvestment || 'N/A'} />
+                                                        }} value={cycle.openInvestmentCycleDTO?.currentTotalInvestment || '0 '} />
                                                 </div>
                                             </div>
                                             <div style={{ display: "flex", flexDirection: "column", marginBottom: "10px", width: "100%" }}>
@@ -394,7 +395,7 @@ const Privatecyles = () => {
                                                             padding: "3px 0",
                                                             width: "50%",
                                                             textAlign: "center"
-                                                        }} value={cycle.openInvestmentCycleDTO?.currentInvestorCount || 'N/A'} />
+                                                        }} value={cycle.openInvestmentCycleDTO?.currentInvestorCount || '0 '} />
                                                 </div>
                                             </div>
                                             <div style={{ display: "flex", flexDirection: "column", marginBottom: "10px", width: "100%" }}>
@@ -409,7 +410,7 @@ const Privatecyles = () => {
                                                             padding: "3px 0",
                                                             width: "50%",
                                                             textAlign: "center"
-                                                        }} value={cycle.openInvestmentCycleDTO?.availableProfitTypes || 'N/A'} />
+                                                        }} value={cycle.openInvestmentCycleDTO?.availableProfitTypes || 'لا يوجد'} />
                                                 </div>
                                             </div>
 

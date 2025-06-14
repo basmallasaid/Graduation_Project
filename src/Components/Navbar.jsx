@@ -28,10 +28,11 @@ const Navbar = () => {
     };
     const loginStyles = {
         content: {
-            Width: '100%', // Set your desired width
+            width: '75%', // Set your desired width
             margin: 'auto', // Centers the modal horizontally
             padding: '10px', // Add padding for better spacing
-            borderRadius: '10px', // Optional: round corners
+            borderRadius: '15px', // Optional: round corners
+            height:"665px"
         },
         overlay: {
             backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: dim background
@@ -59,8 +60,9 @@ const Navbar = () => {
                     aria-controls="navbarNav"
                     aria-expanded="false"
                     aria-label="Toggle navigation"
+                    style={{backgroundColor:"white"}}
                 >
-                    <span className="navbar-toggler-icon"></span>
+                    <span className="navbar-toggler-icon" ></span>
                 </button>
 
                 {/* Nav links and buttons */}
@@ -120,7 +122,7 @@ const Navbar = () => {
                 style={loginStyles}
                 ariaHideApp={false}
             >
-                <button onClick={() => setVisible(false)} className="btn-close" style={{ position: 'absolute', top: 10, right: 10 }} />
+                <button onClick={() => setVisible(false)} className="btn-close" style={{ position: 'absolute', top: 20, right: 20 }} />
                 <Login
                     onLoginSuccess={handleLoginSuccess}
                     setVisibleLogin={setVisible}

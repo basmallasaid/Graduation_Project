@@ -14,7 +14,7 @@ export default function Forget({onFlowComplete}) {
   const emailStyles = {
     content: {
       maxWidth: '800px',
-      margin: '0 auto',
+      margin: '70px auto',
       padding: '10px',
       borderRadius: '10px',
       height: '500px',

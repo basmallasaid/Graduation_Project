@@ -946,9 +946,9 @@ background-color:#fff;
   display: flex;
   flex-direction: column;
   background-color: #fff;
-  width: 600px;
+  width: 500px;
   max-width: 90%; /* Ensures form fits within smaller screens */
-  height: 690px;
+  height: 600px;
   justify-content: center;
   margin: 0 20px; /* Adjust spacing for smaller screens */
   border: 2px solid #F5F5F5;
@@ -1006,6 +1006,12 @@ background-color:#fff;
   font-size: 14px;
   text-decoration: none; /* Removes underline */
 }
+.logimg {
+  width: 500px;         /* or any size you prefer */
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+}
 
 /* Responsive styling for tablets */
 @media (max-width: 1272px) {
@@ -1053,6 +1059,8 @@ background-color:#fff;
     display: none;
    }
 }
+
+
 .forgetform{
   display: flex;
   flex-direction: column;

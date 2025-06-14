@@ -101,10 +101,20 @@ const handleCropDeleted = (deletedId) => {
     },
   };
 
-  const handleaddSuccess = () => {
+  // const handleaddSuccess = () => {
+  //   setVisiblecrop(false);
+  //   navigate("/viewcrops");
+  // };
+  // ViewCrops.jsx
+
+// THIS IS THE NEW, COMBINED FUNCTION
+const handleCropAdded = (newCrop) => {
+    // 1. Add the new crop to the top of the list for immediate visibility
+    setCrops(prevCrops => [newCrop, ...prevCrops]);
+    
+    // 2. Close the "Add Crop" modal
     setVisiblecrop(false);
-    navigate("/viewcrops");
-  };
+};
 
   return (
     <>
@@ -147,8 +157,7 @@ const handleCropDeleted = (deletedId) => {
                     right: "30px",
                   }}>
                 </i></button>
-                <Addcrop onCropAdded={(newCrop) => setCrops((prevCrops) => [...prevCrops, newCrop])} onaddSuccess={handleaddSuccess} />
-              </Modal>
+<Addcrop onCropAdded={handleCropAdded} />              </Modal>
 
               <div
                 className="d-flex align-items-center justify-content-center flex-grow-1"
@@ -210,16 +219,17 @@ const handleCropDeleted = (deletedId) => {
                         <p className="card-text">
                           الكمية: <span className={styles.propspan}>{crop.yield}</span>
                         </p>
-                        <button
-                          className={`btn ${crop.status === 'تحت_الطلب' ? styles.croppending : crop.status === 'نفذت_الكميه' ? styles.cropempty : styles.cropava}`}
-                          onClick={() => {
-                            // Pass the selected crop to state
-                            setSelectedCrop(crop);
-                            setSeecrop(true);
-                          }}
-                        >
-                          {crop.status}
-                        </button>
+                   <button
+  className={`btn ${crop.status === 'تحت_الطلب' ? styles.croppending : crop.status === 'نفذت_الكميه' ? styles.cropempty : styles.cropava}`}
+  onClick={() => {
+    console.log("Selected Crop:", crop); // ✅ Console log the full crop object
+    setSelectedCrop(crop);
+    setSeecrop(true);
+  }}
+>
+  {crop.status}
+</button>
+
                       </div>
                     </div>
                   </div>
@@ -253,7 +263,6 @@ const handleCropDeleted = (deletedId) => {
                       crop={selectedCrop}
                       onCropDeleted={handleCropDeleted}
                       onCropUpdated={handleCropUpdated}
-                      
                     />
                   </Modal>
                 )}

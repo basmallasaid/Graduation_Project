@@ -9,7 +9,7 @@ export default function Addopencycle({ isOpenForInvestment, onCropAdded, onaddSu
     const [vegetables, setVegetables] = useState([]);
     const [fruits, setFruits] = useState([]);
     const [seeds, setSeeds] = useState([]);
-
+const [cycleId,setcycleId]=[""];
     const [cycleName, setCycleName] = useState("");
     const [parcelName, setparcelName] = useState("");
     const [parcelId, setParcelId] = useState(null);
@@ -105,6 +105,7 @@ export default function Addopencycle({ isOpenForInvestment, onCropAdded, onaddSu
     };
 
     const resetForm = () => {
+        setcycleId("");
         setCycleName("");
         setparcelName("");
         setParcelId(null);
@@ -130,7 +131,7 @@ export default function Addopencycle({ isOpenForInvestment, onCropAdded, onaddSu
         }
 
         const data = {
-            parcelId: Number(parcelId),
+                        parcelId: Number(parcelId),
             cropId: Number(selectedCropId),
             cycleName,
             startDate: new Date(startDate).toISOString(), // Format the date
@@ -153,8 +154,9 @@ export default function Addopencycle({ isOpenForInvestment, onCropAdded, onaddSu
                 onaddSuccess();
             }, 2000);
             if (onCropAdded) {
-                onCropAdded({ id: response.data.id, ...data });
+                onCropAdded({ ...response.data, cycleId: response.data.cycleId});
             }
+            
         } catch (error) {
             const errorMessage = error.response?.data?.message || "حدث خطأ أثناء إضافة الدورة";
             toast.error(errorMessage);
@@ -196,7 +198,7 @@ export default function Addopencycle({ isOpenForInvestment, onCropAdded, onaddSu
                     {/* Land */}
                     <div className="col-md-6 mb-2">
                         <label className="form-label">الأرض المرتبطة بالدورة</label>
-                        <select
+                           <select
                             className="form-select"
                             value={parcelId ? JSON.stringify({ parcelId: parcelId, parcelName: parcelName }) : ""}
                             onChange={handleLandChange}

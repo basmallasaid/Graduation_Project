@@ -12,6 +12,7 @@ export default function Addcycletasks({ selectedCardId, onaddtasksSuccess }) {
         status: "لم تبدأ",
         TaskDescription: "",
     });
+    const [isLoading, setIsLoading] = useState(false); // Add loading state
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -39,34 +40,53 @@ export default function Addcycletasks({ selectedCardId, onaddtasksSuccess }) {
     
         console.log("Data to Submit:", dataToSubmit);
     
-        try {
+             try {
             const response = await api.post(
-              "Schedule/AddTask",
-              dataToSubmit,
-              {
-                headers: { "Content-Type": "application/json" },
-              }
+                "Schedule/AddTask",
+                dataToSubmit,
+                { headers: { "Content-Type": "application/json" } }
             );
-            console.log("Response:", response);
-          
+            
+            // A successful response is typically 200 (OK) or 201 (Created)
             if (response.status === 200 || response.status === 201) {
-              toast.success("تم الحفظ بنجاح");
-              setTimeout(() => onaddtasksSuccess(), 2000);
+                toast.success("تم الحفظ بنجاح");
+                setTimeout(() => onaddtasksSuccess(), 1500); // Call success callback after a short delay
             }
-          } catch (error) {
-            console.error("Error:", error);
-            if (error.response && error.response.data && error.response.data.errors) {
-              console.error("Validation Errors:", error.response.data.errors); // Log the errors object
-              // Display a more specific error message to the user
-              const errorMessages = Object.entries(error.response.data.errors)
-                .map(([field, messages]) => `${field}: ${messages.join(", ")}`)
-                .join("\n");
-              toast.error(`حدث خطأ في التحقق من الصحة:\n${errorMessages}`);
+        } catch (error) {
+            console.error("Error submitting form:", error);
+
+            // --- ENHANCED ERROR HANDLING ---
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                const responseData = error.response.data;
+
+                if (typeof responseData === 'string' && responseData) {
+                    // **THIS IS THE KEY PART FOR YOUR ERROR**
+                    // The server returned a plain text error message.
+                    toast.error(responseData);
+                } else if (responseData && responseData.errors) {
+                    // The server returned a structured validation error object.
+                    const errorMessages = Object.values(responseData.errors).flat().join('\n');
+                    toast.error(`حدث خطأ في التحقق من الصحة:\n${errorMessages}`);
+                } else if (responseData && responseData.message) {
+                    // The server returned an object with a 'message' property.
+                    toast.error(responseData.message);
+                } else {
+                    // Generic server error with an unknown format.
+                    toast.error(`حدث خطأ من الخادم: ${error.response.statusText || 'Error'}`);
+                }
+            } else if (error.request) {
+                // The request was made but no response was received
+                toast.error("لا يمكن الوصول إلى الخادم. يرجى التحقق من اتصالك بالإنترنت.");
             } else {
-              toast.error(`حدث خطأ أثناء الحفظ: ${error.message}`);
+                // Something happened in setting up the request that triggered an Error
+                toast.error(`حدث خطأ غير متوقع: ${error.message}`);
             }
-          }
+        } finally {
+            setIsLoading(false); // Set loading to false in all cases
         }
+    };
     return (
         <>
             <form onSubmit={handleSubmit} style={{padding:"20px"}}>

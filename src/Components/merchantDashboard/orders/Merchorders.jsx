@@ -185,7 +185,7 @@ const Merchorders = () => {
             <NavbarMer />
             <div className="d-flex flex-grow-1">
                 <NavSideMer />
-                <main className="flex-grow-1 d-flex flex-column ">
+                <main className={`flex-grow-1 ${styles.hid}`}>
 
                     {/* Container for Search Bar and Filter Buttons */}
                     <div
@@ -195,7 +195,7 @@ const Merchorders = () => {
                             width: '80%',
                             maxWidth: '800px',
                             padding: '0 10px',
-                            marginRight:"50px"
+                            marginRight:"30px"
                         }}
                     >
                         {/* Search Bar */}

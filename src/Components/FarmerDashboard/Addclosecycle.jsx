@@ -98,7 +98,6 @@ const handleLandChange = (e) => {
     setSelectedCropId(null);
     setSelectedProductType("");
     setexpectedProduction("");
-    setRoiUnit("");
     setStartDate("");
     setEndDate("");
   };
@@ -127,7 +126,7 @@ const handleLandChange = (e) => {
       }, 2000);
       if (onCropAdded) {
         // Assign cycleId from the id in the response.
-        onCropAdded({ ...response.data, cycleId: response.data.id });
+        onCropAdded({ ...response.data, cycleId: response.data.cycleId });
       }
       resetForm();
     } catch (error) {

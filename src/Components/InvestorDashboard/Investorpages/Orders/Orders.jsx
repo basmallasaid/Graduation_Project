@@ -170,7 +170,7 @@ const InvestorId = userData?.loggedId;
             <NavbarInv />
             <div className="d-flex flex-grow-1">
                 <NavSideInv />
-                <main className="flex-grow-1 d-flex flex-column ">
+                <main className={` flex-grow-1 ${styles.hid} `}>
 
                     {/* Container for Search Bar and Filter Buttons */}
                     <div

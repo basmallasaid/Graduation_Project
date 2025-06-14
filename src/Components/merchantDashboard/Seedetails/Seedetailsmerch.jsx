@@ -274,7 +274,7 @@ const handleRating = async (clickedRating) => {
             <NavbarMer />
             <div className="d-flex flex-grow-1">
                 <NavSideMer />
-                <main className="flex-grow-1">
+                <main className={`flex-grow-1 ${styles.hid}`}>
                     {error && harvestDetails && <div className="alert alert-warning m-3" role="alert">Minor issue during data refresh: {error}</div>}
 
                     <div style={{ display: "flex", justifyContent: isMerchantBuyer ? "space-between" : "flex-end", margin: "30px 70px", gap: "10px", flexWrap: "wrap" }}>

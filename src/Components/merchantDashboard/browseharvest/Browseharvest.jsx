@@ -4,6 +4,7 @@ import NavSideMer from '../Main/NavSideMer';
 import FooterMer from '../Main/FooterMer';
 import api from '../../../API/axiosInstance';
 import { Link } from 'react-router-dom';
+import styles from "../../../Styles/style.module.css";
 
 const Browseharvest = () => {
     const [harvests, setHarvests] = useState([]);
@@ -236,7 +237,7 @@ const fetchRecommendedCycles = async () => {
             <NavbarMer />
             <div className="d-flex flex-grow-1">
                 <NavSideMer />
-                <main className="flex-grow-1 d-flex flex-column">
+                <main className={`flex-grow-1 ${styles.hid}`}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '20px 50px' }}>
                         <div
                             className="search-bar"

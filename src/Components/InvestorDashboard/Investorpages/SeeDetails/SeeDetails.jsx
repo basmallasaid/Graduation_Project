@@ -262,7 +262,7 @@ const handleRating = async (clickedRating) => {
             <NavbarInv />
             <div className="d-flex flex-grow-1">
                 <NavSideInv />
-                <main className="flex-grow-1">
+                <main className={` flex-grow-1 ${styles.hid} `}>
                     {error && cycleDetails && <div className="alert alert-warning m-3" role="alert">Minor issue during data refresh: {error}</div>}
 
                     <div style={{ display: "flex", justifyContent: isInvestorSub ? "space-between" : "flex-end", margin: "30px 70px", gap: "10px", flexWrap: "wrap" }}>

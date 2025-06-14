@@ -24,7 +24,7 @@ export default function Login({ onLoginSuccess, setVisibleLogin, setVisibleRegis
     const forgetStyles = {
         content: {
             maxWidth: '600px',
-            margin: '0 auto',
+            margin: '70px auto',
             padding: '10px',
             borderRadius: '10px',
             height: '460px'

@@ -18,7 +18,7 @@ export default function Code({ email,onFlowComplete }) {
   const newStyles = {
     content: {
       maxWidth: '500px',
-      margin: '0 auto',
+      margin: '70px auto',
       padding: '20px', // Increased padding
       borderRadius: '10px',
       height: '500px', // Auto height

@@ -111,8 +111,8 @@ const RenderFooterByRole = ({ role }) => {
            <RenderNavbarByRole role={userRole} />
             <div className="d-flex flex-grow-1">
                 <RenderNavSideByRole role={userRole} />
-                <main className="flex-grow-1 p-3">
-                    <div className="position-relative w-25 m-5">
+                <main className={`flex-grow-1 p-3 ${stylesInv.hid}` }>
+                   <div className={`position-relative w-25 m-5 ${stylesInv.searchContainer}`}>
                         <input
                             type="search"
                             className={`form-control ps-5 ${stylesInv.ser}`}
@@ -122,8 +122,8 @@ const RenderFooterByRole = ({ role }) => {
                         />
                     </div>
 
-                    <div className="d-flex justify-content-center align-items-center mb-3">
-                        <select className={`form-select w-auto ms-5 ${stylesInv.filter}`} onChange={(e) => setSortOrder(e.target.value)}>
+                    <div className={`d-flex justify-content-center align-items-center mb-3 ${stylesInv.divfilter} `}>
+                        <select className={`form-select w-auto  ${stylesInv.filter}`} onChange={(e) => setSortOrder(e.target.value)}>
                             <option value="asc">فرز أبجدي تصاعدي</option>
                             <option value="desc">فرز أبجدي تنازلي</option>
                         </select>
@@ -137,12 +137,12 @@ const RenderFooterByRole = ({ role }) => {
                         </select>
                     </div>
 
-                    <div className={`${stylesInv.gridContainer}`}>
+                    <div className={`${stylesInv.gridContainer} `}>
                         {sortedFarmers.map((farmer, index) => (
-                            <div key={index} className={stylesInv.cardFav}>
+                            <div key={index} className={`${stylesInv.cardFav} `}>
                                 <div className={`card p-3 ${stylesInv.cardbg}`}>
                                     <div className="d-flex">
-                                        <div className="flex-grow-1">
+                                        <div className={`flex-grow-1 ${stylesInv.hid}`}>
                                             <div className={`d-flex  ${stylesInv.datacard}`}>
                                                 <h5 className="mb-0"><b>اسم المزارع</b></h5>
                                                 <h5 className={`mb-1 ${stylesInv.datatitle}`}>{farmer.name}</h5>
@@ -163,7 +163,7 @@ const RenderFooterByRole = ({ role }) => {
                                     </div>
                                     <h5><b>البايو</b></h5>
                                     <p className={` ${stylesInv.info}`}>{farmer.bio}</p>
-                                    <div className='d-flex justify-content-center align-items-center'>
+                                    <div className='d-flex justify-content-center align-items-center flex-wrap'>
                                         <h5 className='ms-3'><b>تقيمه العام</b></h5>
                                         <div>
                                             {[...Array(5)].map((_, starIndex) => (

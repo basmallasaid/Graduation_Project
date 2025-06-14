@@ -4,7 +4,8 @@
   background: linear-gradient(to bottom, #459595, #0f2c2c);
 }
 .cycles img , .FSMer img , .Browsecrops img{
-    width: 25%;
+    /* width: 25%; */
+    width: 100px;
     margin: 15px;
     
 }
@@ -103,12 +104,12 @@
   .FSMer, .cycles, .Browsecrops { /* تم إضافة كل الكلاسات لضمان التطبيق */
     width: 70%;       /* جعل كل بطاقة تأخذ 90% من عرض الشاشة */
     margin: 15px 0;   /* تقليل الهوامش وجعلها عمودية فقط */
-    height: 200px;     /* السماح للارتفاع بأن يتحدد بالمحتوى */
-    min-height: 200px;
+    height: 160px;     /* السماح للارتفاع بأن يتحدد بالمحتوى */
+    min-height: 160px;
   }
   
-  .cycles img , .FS img , .NewCycle img, .Browsecrops img {
-    width: 20%; /* يمكن تصغير حجم الأيقونة قليلًا */
+  .cycles img , .FSMer img , .NewCycle img, .Browsecrops img {
+   width: 40px;
   }
  /* .tooltip_textInv {
     

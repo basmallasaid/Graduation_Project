@@ -2039,7 +2039,8 @@ font-size: 20px;
   box-Shadow:5px 5px 15px rgba(0, 0, 0, 0.3);
 }
 .Crop_Services img ,.farm_management img,.agr_courses img,.fina_repo img{
-  width: 35%;
+  /* width: 35%; */
+  width: 100px;
 
 }
 .farm_management{

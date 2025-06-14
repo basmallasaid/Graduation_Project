@@ -3,7 +3,8 @@
   background: linear-gradient(to bottom, #5FBAEF, #192F31);
 }
 .cycles img , .FS img , .NewCycle img{
-    width: 25%;
+    /* width: 25%; */
+    width: 100px;
     margin: 15px;
     
 }
@@ -98,8 +99,8 @@
   .FS, .cycles, .Browsecrops, .NewCycle { /* تم إضافة كل الكلاسات لضمان التطبيق */
     width: 70%;       /* جعل كل بطاقة تأخذ 90% من عرض الشاشة */
     margin: 15px 0;   /* تقليل الهوامش وجعلها عمودية فقط */
-    height: 200px;     /* السماح للارتفاع بأن يتحدد بالمحتوى */
-    min-height: 200px;
+    height: 160px;     /* السماح للارتفاع بأن يتحدد بالمحتوى */
+    min-height: 160px;
   }
   
   .cycles img , .FS img , .NewCycle img, .Browsecrops img {
@@ -187,9 +188,128 @@ background-image: url('../../../../public/assets/cardbg.jpg');
 .filter{
   background-color: #e8f4f8;
   border: 1px solid #cce7f3;
+  margin-right: 10px;
 }
 .ser{
   background-color: #c9c5c6ad;
+}
+.hid{
+  overflow: hidden;
+}
+  /* ============================================ */
+ /*      Responsive Styles for Small Screens      */
+ /*         (تنسيقات الشاشات الصغيرة)         */
+ /* ============================================ */
+
+ @media (max-width: 550px) {
+
+  /* --- 1. إصلاح حاوية البحث --- */
+  /* اجعل حقل البحث أعرض بكثير على الشاشات الصغيرة */
+  .searchContainer {
+    width: 90% !important; /* استخدم !important لتجاوز w-25 من بووتستراب */
+    margin: 20px auto !important; /* تقليل الهامش وتوسيطه */
+  }
+
+  /* --- 2. إصلاح الفلاتر --- */
+  /* اجعل الفلاتر تترتب عموديًا */
+  .divfilter {
+    flex-direction: column;
+    gap: 15px; /* إضافة مسافة بين الفلاتر */
+    align-items: center; /* توسيط الفلاتر */
+  }
+
+  .filter {
+    margin-right: 0; /* إزالة الهامش الجانبي الذي لم يعد له داع */
+    width: 80%; /* جعل الفلاتر أعرض */
+  }
+  
+  /* --- 3. إصلاح شبكة عرض البطاقات --- */
+  /* اجعل الشبكة تعرض عمودًا واحدًا فقط */
+  .gridContainer {
+    grid-template-columns: 1fr; /* عمود واحد يملأ المساحة */
+    gap: 20px;
+    padding: 0 10px; /* إضافة padding لتجنب الالتصاق بالحواف */
+  }
+
+  /* --- 4. إصلاح تصميم البطاقة نفسها --- */
+  /* اجعل البطاقة مرنة */
+  .cardbg {
+    width: 100%; /* اجعلها تملأ حاويتها بالكامل */
+    height: auto; /* دع الارتفاع يتحدد تلقائيًا بناءً على المحتوى */
+    margin: 0;
+    padding: 15px;
+    box-shadow: 3px 3px 10px rgba(50, 50, 50, 0.2); /* تخفيف الظل */
+  }
+
+  .cardFav {
+    width:400px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* --- 5. إصلاح التنسيق داخل البطاقة (مهم جدًا) --- */
+  /* اجعل محتوى البطاقة (النصوص والصورة) يترتب عموديًا */
+  .cardContent {
+    flex-direction: column; /* الأهم: يضع النصوص فوق الصورة */
+    align-items: center; /* يوسّط المحتوى */
+    gap: 15px; /* مسافة بين قسم النصوص والصورة */
+  }
+
+  /* اجعل كل سطر بيانات (العنوان والبيانات) يترتب عموديًا */
+  .datacard {
+    flex-direction: column; /* يضع العنوان فوق حقل البيانات */
+    align-items: flex-start; /* محاذاة لليسار لتبدو منظمة */
+    gap: 5px; /* مسافة صغيرة بين العنوان والبيانات */
+    margin-bottom: 15px; /* تقليل المسافة بين سطور البيانات */
+    width: 100%;
+  }
+
+  /* اجعل حقول البيانات تملأ العرض */
+  .datatitle {
+    width: 100%; /* اجعلها تملأ العرض المتاح */
+    margin: 0;
+    font-size: 14px;
+    font-weight: bolder;
+  }
+  .email{
+    width: 100px;
+    margin: 0;
+    font-size: 12px;
+    font-weight:bolder;
+
+  }
+
+  .titemail {
+    width: auto;
+  }
+  
+  .email {
+    height: auto; /* السماح للارتفاع بالتمدد إذا كان النص طويلًا */
+    min-height: 30px;
+  }
+  
+  /* --- 6. إصلاح باقي العناصر --- */
+  .info {
+    margin: 10px 0; /* إزالة الهامش الجانبي */
+    height: auto;
+    font-size: 14px;
+  }
+
+  .imgfav {
+    width: 70px; /* يمكن تكبير الصورة قليلاً الآن لأنها في سطر وحدها */
+    height: 70px;
+    border-radius: 50%; /* جعلها دائرية لشكل أجمل */
+    object-fit: cover;
+  
+
+  }
+
+  .delete {
+    position: static; /* إزالة التموضع المطلق لجعله جزءًا من التدفق الطبيعي */
+    font-size: 24px;
+    margin-left: 15px; /* إضافة هامش لفصله عن النجوم */
+  }
 }
 @media (max-width: 768px) {
   .gridContainer {

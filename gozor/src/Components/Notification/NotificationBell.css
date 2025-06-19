@@ -1,0 +1,157 @@
+/* General Wrapper */
+.notification-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* Red count badge for unread notifications */
+.notification-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: red;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-weight: bold;
+  pointer-events: none; /* So it doesn't interfere with clicks */
+}
+
+/* Main notification dropdown box */
+.notification-box {
+  position: absolute;
+  right: 0;
+  top: 45px;
+  width: 370px;
+  background: white;
+ 
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  max-height: 450px;
+}
+
+/* The scrollable list container */
+.notification-list {
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+/* Header section */
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  background-color: #f9f9f9;
+  color: black;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* "Mark all as read" link in the header */
+.mark-all-read-link {
+  font-size: 12px;
+  font-weight: normal;
+  color: #007bff;
+  text-decoration: none;
+  cursor: pointer;
+}
+.mark-all-read-link:hover {
+  text-decoration: underline;
+}
+
+/* Individual notification item */
+.notification-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 15px;
+  border-bottom: 1px solid #f0f0f0;
+  direction: rtl; /* For Right-to-Left layout */
+  transition: background-color 0.2s ease;
+  color: #111;
+}
+.notification-item:last-child {
+  border-bottom: none;
+}
+.notification-item:hover {
+  background-color: #f5f5f5;
+}
+
+/* Styles for unread items */
+.notification-item.unread .notification-title,
+.notification-item.unread .notification-desc {
+  font-weight: bold;
+  color: #111;
+}
+
+/* Styles for read items */
+.notification-item.read {
+  opacity: 0.7;
+}
+.notification-item.read .notification-title,
+.notification-item.read .notification-desc {
+  font-weight: normal;
+  color: #666;
+}
+
+/* Icon (emoji) */
+.notification-icon {
+  font-size: 20px;
+  margin-top: 4px;
+}
+
+/* Title and Description */
+.notification-title {
+  font-size: 15px;
+  text-align: right;
+}
+.notification-desc {
+  font-size: 14px;
+  text-align: right;
+}
+
+/* "Mark as read" checkmark button */
+.mark-as-read-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: green;
+  padding: 0 5px;
+  align-self: center;
+}
+.mark-as-read-btn:hover {
+  opacity: 0.7;
+}
+
+/* Footer for "Show All / Show Less" */
+.notification-footer {
+  background: #fff;
+  text-align: center;
+  padding: 12px;
+  font-weight: bold;
+  color: #007bff;
+  border-top: 1px solid #eee;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.notification-footer:hover {
+  background-color: #f5f5f5;
+}
+
+/* Animation for new notifications */
+@keyframes pulse {
+  0% { background-color: #e6f7ff; }
+  100% { background-color: transparent; }
+}
+
+.new-notification {
+  animation: pulse 2s ease-out;
+}

@@ -1,70 +1,22 @@
-# Getting Started with Create React App
+Gzoor – Agri-Tech Investment Platform
+Tools & Technologies: React.js, Axios, React Router, SignalR ,SweetAlert2, Bootstrap 5, Chart.js, CSS Modules, Context API, Framer Motion, Responsive Web Design
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Designed and developed a responsive and interactive web interface for a scalable agri-tech platform connecting farmers, investors, and merchants, focused on usability and real-time user engagement.
 
-## Available Scripts
+Built role-based dashboards for three distinct user types (farmer, investor, merchant), streamlining access to relevant tools such as crop management, financial services, and market insights.
 
-In the project directory, you can run:
+Integrated AI-powered modules with FastAPI endpoints, enabling users to analyze plant health and receive personalized investment suggestions through an intuitive UI.
 
-### `npm start`
+Developed a real-time chat and notification system using SignalR and Context API, facilitating seamless communication and ensuring users are updated instantly.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Implemented custom modals and alerts using SweetAlert2 for feedback, confirmations, and errors, enhancing user experience and clarity of actions.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Integrated PayPal API for investment payments, allowing secure transactions through the UI with visual confirmation and success tracking.
 
-### `npm test`
+Visualized financial and agricultural cycle data using Chart.js, providing stakeholders with actionable insights through clean and informative charts.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Developed reusable UI components and maintained a modular component structure with CSS Modules, improving development speed and consistency.
 
-### `npm run build`
+Applied route guarding and conditional rendering based on user roles and authentication status using React Router and Context API.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Ensured full responsiveness and accessibility across devices using Bootstrap 5 grid system, Flexbox, and media queries.
